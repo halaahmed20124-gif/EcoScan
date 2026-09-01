@@ -1,109 +1,81 @@
-from openai import OpenAI
 import streamlit as st
+from openai import OpenAI
 
 
-def get_ai_response(
-    user_message,
-    conversation_history=None,
-    scan_context=None
-):
+def get_ai_response(user_question, conversation_history=None, eco_context=""):
     """
-    Generate an EcoScan AI Assistant response.
-
-    The assistant focuses on:
-    - Waste management
-    - Recycling
-    - Reuse
-    - Sustainability
-    - Environmental education
-    - Biotechnology related to waste
-    - Campus waste solutions
+    Generate a dynamic AI response for EcoScan.
     """
+
+    if not st.secrets.get("OPENAI_API_KEY"):
+        return (
+            "⚠️ AI Assistant is not connected yet. "
+            "Please add the OpenAI API key in Streamlit Secrets."
+        )
 
     client = OpenAI(
         api_key=st.secrets["OPENAI_API_KEY"]
     )
 
-    system_prompt = """
-You are EcoScan AI Assistant, an educational environmental
-assistant inside the EcoScan waste-management application.
+    system_prompt = f"""
+You are EcoScan AI Assistant.
 
-Your role is to help students and users understand:
-- Waste classification
-- Recycling
-- Reuse
-- Responsible disposal
-- Sustainability
-- Environmental impact
-- Organic waste
-- Composting
-- Biotechnology related to biodegradable waste
-- School and campus waste-management solutions
+EcoScan is an educational AI-powered waste management
+application focused on sustainability, recycling,
+waste sorting, environmental awareness, and biotechnology.
 
-Answer in a clear, friendly and educational way.
+Your job is to:
+- Answer the student's question naturally.
+- Generate a new answer based on the question.
+- Do NOT use fixed answers.
+- Explain difficult ideas in simple language.
+- Give practical and environmentally responsible suggestions.
+- When relevant, explain recycling, reuse, composting,
+  waste separation, environmental impact, and biotechnology.
+- If the question is unrelated to EcoScan, you may still
+  answer briefly and helpfully.
+- Never pretend to know something you do not know.
+- If information is uncertain, clearly say so.
+- Do not give dangerous instructions.
 
-Important rules:
-1. Give practical and easy-to-understand suggestions.
-2. Do not claim that every material is recyclable everywhere.
-3. When disposal depends on local rules, clearly say that the user
-   should check their local waste-management or recycling rules.
-4. For the nine EcoScan categories, use the provided EcoScan
-   information as the primary context when available.
-5. If a question is unrelated to environmental topics, politely
-   explain that you are specialized in EcoScan, environment,
-   sustainability and waste-management questions.
-6. Never invent a specific local recycling facility or collection
-   service.
-7. For biotechnology questions, explain concepts educationally
-   and safely.
-8. Keep answers appropriate for students.
-9. If the user asks a follow-up question, use the previous
-   conversation context.
-"""
+EcoScan knowledge available to you:
 
-    context_text = ""
+{eco_context}
 
-    if scan_context:
-        context_text = f"""
-Current EcoScan scan context:
-
-Waste type: {scan_context.get("waste_type", "Unknown")}
-Confidence: {scan_context.get("confidence", "Unknown")}
-EcoScore: {scan_context.get("eco_score", "Unknown")}/10
-Recommended action: {scan_context.get("action", "Unknown")}
-Disposal guidance: {scan_context.get("disposal", "Unknown")}
-Reuse idea: {scan_context.get("reuse", "Unknown")}
-Environmental impact: {scan_context.get("impact", "Unknown")}
+Answer in the same language used by the student.
+If the student asks in Arabic, answer in Arabic.
+If the student asks in English, answer in English.
 """
 
     messages = [
         {
-            "role": "system",
-            "content": system_prompt + context_text
+            "role": "developer",
+            "content": system_prompt
         }
     ]
 
     if conversation_history:
-
-        for message in conversation_history:
-
-            messages.append(
-                {
-                    "role": message["role"],
-                    "content": message["content"]
-                }
-            )
+        messages.extend(conversation_history)
 
     messages.append(
         {
             "role": "user",
-            "content": user_message
+            "content": user_question
         }
     )
 
-    response = client.responses.create(
-        model="gpt-5.6-luna",
-        input=messages
-    )
+    try:
 
-    return response.output_text
+        response = client.responses.create(
+            model="gpt-5.6-luna",
+            input=messages
+        )
+
+        return response.output_text
+
+    except Exception as error:
+
+        return (
+            "⚠️ Sorry, I couldn't connect to the AI service.\n\n"
+            f"Error: {error}"
+        )
