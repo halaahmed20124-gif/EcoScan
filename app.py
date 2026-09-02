@@ -1029,18 +1029,14 @@ elif page == "📷 Scan":
 
                     st.markdown(
                         f"""
-                        <div class="eco-card-green">
+                          <div class="eco-card-green">
 
-                            <div class="eco-card-title">
-                                {TEXT[language]["high_biological"]}
-                            </div>
+                    <div class="eco-card-title">
+                    {TEXT[language]["high_biological"]}
+                    </div>
 
-                            This waste can potentially be treated
-                            through biological processes and converted
-                            into useful organic matter.
-
-                        </div>
-                        """,
+                    This waste can potentially be treated through biological processes and converted into useful organic matter.
+                    </div>""",
                         unsafe_allow_html=True
                     )
 
