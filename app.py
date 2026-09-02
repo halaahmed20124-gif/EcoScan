@@ -1066,7 +1066,7 @@ elif page == "📷 Scan":
             with st.container(border=True):
 
                 st.markdown(
-                    f"### { TEXT[language][" EcoScore"]}
+                    f"###{TEXT[language]['EcoScore']}"
                 )
 
                 score = waste_info["eco_score"]
