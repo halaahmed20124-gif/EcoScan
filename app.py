@@ -1870,7 +1870,7 @@ elif page == "🏫 Campus Mode":
             # 🏫 College Selection
         college = None
 
-         if location == "Academic Building":
+      if location == "Academic Building":
 
              college = st.selectbox(
              "🏫 Select College",
