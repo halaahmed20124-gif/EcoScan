@@ -1045,7 +1045,7 @@ elif page == "📷 Scan":
                     )
 
                     st.write(
-                        f"**{ TEXT[language]['treatment_Pathway']}:** "
+                        f"**{ TEXT[language]['treatment_pathway']}:** "
                         f"{biotech_info['process']}"
                     )
 
