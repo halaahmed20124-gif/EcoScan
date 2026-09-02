@@ -336,6 +336,7 @@ with st.sidebar:
         "<h1>♻️ EcoScan</h1>",
         unsafe_allow_html=True
     )
+
     st.caption(
         "AI-Powered Waste Management Assistant"
     )
@@ -676,7 +677,9 @@ elif page == "📷 Scan":
                 unsafe_allow_html=True
             )
 
-            st.markdown("### 🔎 Top AI Predictions")
+            st.markdown(
+                "### 🔎 Top AI Predictions"
+            )
 
             for index, prediction in enumerate(top_predictions):
 
@@ -688,7 +691,10 @@ elif page == "📷 Scan":
                 )
 
                 st.progress(
-                    min(prediction["confidence"] / 100, 1.0)
+                    min(
+                        prediction["confidence"] / 100,
+                        1.0
+                    )
                 )
 
             # =================================================
@@ -784,12 +790,12 @@ elif page == "📷 Scan":
                     )
 
                     st.markdown(
-                         """
+                        """
                         <div class="eco-card-green">
 
                             <div class="eco-card-title">
                                 🌱 High Biological Potential
-                            </div>,
+                            </div>
 
                             This waste can potentially be treated
                             through biological processes and converted
@@ -887,6 +893,8 @@ elif page == "📷 Scan":
             ):
 
                 st.rerun()
+
+
 # ============================================================
 # AI ASSISTANT
 # ============================================================
@@ -952,7 +960,9 @@ elif page == "🤖 AI Assistant":
 
         if question.strip():
 
-            with st.spinner("🧠 EcoScan is thinking..."):
+            with st.spinner(
+                "🧠 EcoScan is thinking..."
+            ):
 
                 answer = assistant_response(
                     question
@@ -979,6 +989,7 @@ elif page == "🤖 AI Assistant":
                 "⚠️ Please enter a question first."
             )
 
+
 # ============================================================
 # HISTORY
 # ============================================================
@@ -998,11 +1009,13 @@ elif page == "📋 History":
     )
 
     history = get_history()
+
     if history:
 
         data = []
 
         for record in history:
+
             data.append({
                 "ID": record[0],
                 "Date": record[1],
@@ -1145,7 +1158,8 @@ elif page == "📋 History":
                         set(
                             str(record[5])
                             for record in history
-                            if len(record) > 5 and record[5] is not None
+                            if len(record) > 5
+                            and record[5] is not None
                         )
                     )
                 )
@@ -1165,7 +1179,8 @@ elif page == "📋 History":
                 search.lower() in str(record[2]).lower()
                 or (
                     len(record) > 7
-                    and search.lower() in str(record[7]).lower()
+                    and search.lower()
+                    in str(record[7]).lower()
                 )
             )
 
@@ -1234,7 +1249,10 @@ elif page == "📋 History":
 
                 with col1:
 
-                    if image_path and os.path.exists(image_path):
+                    if (
+                        image_path
+                        and os.path.exists(image_path)
+                    ):
 
                         st.image(
                             image_path,
@@ -1252,7 +1270,8 @@ elif page == "📋 History":
                     )
 
                     st.write(
-                        f"🧠 **Confidence:** {confidence:.2f}%"
+                        f"🧠 **Confidence:** "
+                        f"{confidence:.2f}%"
                     )
 
                     st.write(
@@ -1260,7 +1279,8 @@ elif page == "📋 History":
                     )
 
                     st.write(
-                        f"⭐ **EcoScore:** {eco_score}/10"
+                        f"⭐ **EcoScore:** "
+                        f"{eco_score}/10"
                     )
 
                     st.write(
@@ -1849,40 +1869,48 @@ elif page == "🏫 Campus Mode":
         # =====================================================
         # LOCATION
         # =====================================================
-    with st.container(border=True):
-       st.markdown(
-          "### 📍 Campus Location"
-      )
 
-       location = st.selectbox(
-           "Select campus area",
-         [
-               "All Campus",
-               "Academic Building",
-               "Cafeteria",
-               "Laboratories",
-               "Library",
-               "Student Area"
-         ]
-     )
+        with st.container(border=True):
 
-    # 🏛️ College Selection
-    college = None
+            st.markdown(
+                "### 📍 Campus Location"
+            )
 
-    if location == "Academic Building":
-        college = st.selectbox(
-            "🏫 Select College",
-            [
-                "Faculty of Medicine",
-                "Faculty of Pharmacy",
-                "Faculty of Biotechnology",
-                "Faculty of Physical Therapy"
-            ]
+            campus_location = st.selectbox(
+                "Select campus area",
+                [
+                    "All Campus",
+                    "Academic Building",
+                    "Cafeteria",
+                    "Laboratories",
+                    "Library",
+                    "Student Area"
+                ],
+                key="campus_location"
+            )
+
+        # =====================================================
+        # COLLEGE SELECTION
+        # =====================================================
+
+        college = None
+
+        if campus_location == "Academic Building":
+
+            college = st.selectbox(
+                "🏫 Select College",
+                [
+                    "Faculty of Medicine",
+                    "Faculty of Pharmacy",
+                    "Faculty of Biotechnology",
+                    "Faculty of Physical Therapy"
+                ],
+                key="college_selection"
+            )
+
+        st.info(
+            f"Currently viewing: **{campus_location}**"
         )
-
-    st.info(
-        f"Currently viewing: **{location}**"
-    )
 
         # =====================================================
         # DISTRIBUTION
