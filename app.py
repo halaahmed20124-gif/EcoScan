@@ -7,6 +7,7 @@ import os
 from datetime import datetime
 
 from waste_knowledge import get_waste_info, get_biotech_info
+from ai_assistant import assistant_response
 from history_manager import (
     init_database,
     save_analysis,
@@ -347,6 +348,7 @@ with st.sidebar:
         [
             "🏠 Home",
             "📷 Scan",
+            "🤖 AI Assistant",
             "📋 History",
             "📊 Dashboard",
             "🏫 Campus Mode",
@@ -782,7 +784,7 @@ elif page == "📷 Scan":
 
                             <div class="eco-card-title">
                                 🌱 High Biological Potential
-                            </div>',
+                            </div>,
 
                             This waste can potentially be treated
                             through biological processes and converted
@@ -880,7 +882,97 @@ elif page == "📷 Scan":
             ):
 
                 st.rerun()
+# ============================================================
+# AI ASSISTANT
+# ============================================================
 
+elif page == "🤖 AI Assistant":
+
+    st.markdown(
+        '<div class="eco-title">🤖 EcoScan AI Assistant</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="eco-subtitle">'
+        'Ask about waste, recycling, reuse, disposal, EcoScore, '
+        'environmental impact, or biotechnology.'
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        """
+        <div class="eco-card-green">
+
+        <div class="eco-card-title">
+        💬 Ask EcoScan
+        </div>
+
+        You can ask your question in <b>Arabic</b> or
+        <b>English</b>.
+
+        <br><br>
+
+        Examples:
+        <br>
+        ♻️ هل البلاستيك قابل لإعادة التدوير؟
+        <br>
+        🗑️ كيف أتخلص من بقايا الطعام؟
+        <br>
+        💡 How can I reuse cardboard?
+        <br>
+        🌍 What is the environmental impact of glass?
+        <br>
+        🧬 Can food waste be composted?
+
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    question = st.text_area(
+        "💬 Your Question / سؤالك",
+        placeholder=(
+            "اكتب سؤالك بالعربي أو الإنجليزي...\n"
+            "Ask your question in Arabic or English..."
+        ),
+        height=120
+    )
+
+    if st.button(
+        "🤖 Ask EcoScan",
+        use_container_width=True
+    ):
+
+        if question.strip():
+
+            with st.spinner("🧠 EcoScan is thinking..."):
+
+                answer = assistant_response(
+                    question
+                )
+
+            st.markdown(
+                """
+                <div class="eco-card">
+
+                <div class="eco-card-title">
+                🤖 EcoScan Answer
+                </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+            st.markdown(answer)
+
+        else:
+
+            st.warning(
+                "⚠️ Please enter a question first."
+            )
 
 # ============================================================
 # HISTORY
