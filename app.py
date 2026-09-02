@@ -969,7 +969,7 @@ elif page == "📷 Scan":
             else:
 
                 st.warning(
-                    f"{TEXT[language][ " manual verify "]}
+                    f"{TEXT[language][ ' manual_verify ']}
                     "because AI confidence is low."
                 )
 
