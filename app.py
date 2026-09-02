@@ -863,11 +863,11 @@ elif page == "📷 Scan":
             # =================================================
 
             st.markdown(
-                """
+                f"""
                 <div class="eco-card">
 
                 <div class="eco-card-title">
-                 {TEXT[language][" AI Result"]}
+                 {TEXT[language]['AI_Result']}"
                 </div>
                 """,
                 unsafe_allow_html=True
