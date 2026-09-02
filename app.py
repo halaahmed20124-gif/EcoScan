@@ -990,7 +990,7 @@ elif page == "📷 Scan":
             with st.container(border=True):
 
                 st.markdown(
-                    f"### {TEXT[language]['Reuse_Idea']}"
+                    f"### {TEXT[language]['reuse_idea']}"
                  )
 
                 st.write(
