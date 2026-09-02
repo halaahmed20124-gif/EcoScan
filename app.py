@@ -1849,42 +1849,40 @@ elif page == "🏫 Campus Mode":
         # =====================================================
         # LOCATION
         # =====================================================
+    with st.container(border=True):
+       st.markdown(
+          "### 📍 Campus Location"
+      )
 
-        with st.container(border=True):
+       location = st.selectbox(
+           "Select campus area",
+         [
+               "All Campus",
+               "Academic Building",
+               "Cafeteria",
+               "Laboratories",
+               "Library",
+               "Student Area"
+         ]
+     )
 
-            st.markdown(
-                "### 📍 Campus Location"
-            )
+    # 🏛️ College Selection
+    college = None
 
-            location = st.selectbox(
-                "Select campus area",
-                [
-                    "All Campus",
-                    "Academic Building",
-                    "Cafeteria",
-                    "Laboratories",
-                    "Library",
-                    "Student Area"
-                ]
-            )
-            # 🏫 College Selection
-        college = None
-
-      if location == "Academic Building":
-
-             college = st.selectbox(
-             "🏫 Select College",
+    if location == "Academic Building":
+        college = st.selectbox(
+            "🏫 Select College",
             [
-            "Faculty of Medicine",
-            "Faculty of Pharmacy",
-            "Faculty of Biotechnology",
-            "Faculty of Physical Therapy"
+                "Faculty of Medicine",
+                "Faculty of Pharmacy",
+                "Faculty of Biotechnology",
+                "Faculty of Physical Therapy"
             ]
-            )
+        )
 
-        st.info(
-            f"Currently viewing: **{location}**"
-            )
+    st.info(
+        f"Currently viewing: **{location}**"
+    )
 
         # =====================================================
         # DISTRIBUTION
