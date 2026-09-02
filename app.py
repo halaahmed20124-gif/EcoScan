@@ -84,7 +84,7 @@ TEXT = {
         "ecoscore": "⭐ EcoScore",
         "scan_another": "🔄 Scan Another Item",
         "saved_history": "✅ Analysis saved to your history.",
-        "manual_verify": "⚠️ Recommendation requires manual verification because AI confidence is low."
+        "manual_verify": "⚠️ Recommendation requires manual verification because AI confidence is low.",
 
         # History
         "history_title": "📋 History",
