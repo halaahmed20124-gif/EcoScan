@@ -990,8 +990,8 @@ elif page == "📷 Scan":
             with st.container(border=True):
 
                 st.markdown(
-                    f"###  {TEXT[language] ["Reuse Idea"]
-                )
+                    f"### {TEXT[language]['Reuse_Idea']}"
+                 )
 
                 st.write(
                     waste_info["reuse"]
@@ -1004,7 +1004,7 @@ elif page == "📷 Scan":
             with st.container(border=True):
 
                 st.markdown(
-                    f"###  { TEXT[language]["Environmental Impact"]
+                    f"### { TEXT[language]['Environmental_Impact']}"
                 )
 
                 st.write(
