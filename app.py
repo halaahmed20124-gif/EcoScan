@@ -1868,22 +1868,22 @@ elif page == "🏫 Campus Mode":
                 ]
             )
             # 🏫 College Selection
-college = None
+        college = None
 
-if location == "Academic Building":
+         if location == "Academic Building":
 
-    college = st.selectbox(
-        "🏫 Select College",
-        [
+             college = st.selectbox(
+             "🏫 Select College",
+            [
             "Faculty of Medicine",
             "Faculty of Pharmacy",
             "Faculty of Biotechnology",
             "Faculty of Physical Therapy"
-        ]
-    )
+            ]
+            )
 
-st.info(
-    f"Currently viewing: **{location}**"
+        st.info(
+            f"Currently viewing: **{location}**"
             )
 
         # =====================================================
