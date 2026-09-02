@@ -521,7 +521,24 @@ elif page == "📷 Scan":
                 "Student Area"
             ]
         )
+        # ============================================================
+        # College Selection
+        # ============================================================
 
+    college = None
+
+    if location == "Academic Building":
+
+          college = st.selectbox(
+               "🏫 Select College",
+        [
+            "College of Human Medicine",
+            "College of Pharmacy",
+            "College of Biotechnology",
+            "College of Physical Therapy"
+        ]
+     )
+    
     # --------------------------------------------------------
     # Input method
     # --------------------------------------------------------
@@ -857,25 +874,26 @@ elif page == "📷 Scan":
             image_path = save_scan_image(image)
 
             save_analysis(
-                waste_type=predicted_class,
-                confidence=confidence,
-                action=waste_info["action"],
-                eco_score=score,
-                image_path=image_path,
-                location=location,
-                biotech_potential=(
-                    "High"
-                    if biotech_info["is_organic"]
-                    else "Low"
-                ),
-                environmental_level=(
-                    "High Positive Impact"
-                    if score >= 9
-                    else "Moderate Positive Impact"
-                    if score >= 7
-                    else "Low Positive Impact"
-                )
-            )
+              waste_type=predicted_class,
+              confidence=confidence,
+              action=waste_info["action"],
+              eco_score=score,
+              image_path=image_path,
+              location=location,
+              college=college,
+              biotech_potential=(
+                "High"
+                if biotech_info["is_organic"]
+                else "Low"
+          ),
+          environmental_level=(
+                "High Positive Impact"
+                 if score >= 9
+                else "Moderate Positive Impact"
+                 if score >= 7
+                else "Low Positive Impact"
+          )
+)
 
             st.success(
                 "✅ Analysis saved to your history."
