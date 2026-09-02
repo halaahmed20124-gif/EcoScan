@@ -944,7 +944,7 @@ elif page == "📷 Scan":
 
                 <div class="eco-card-title">
                  {TEXT[language]
-                 ["Smart Recommendation"]}
+                 ["smart_recommendation"]}
                 </div>
                 """,
                 unsafe_allow_html=True
