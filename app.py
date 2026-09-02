@@ -35,6 +35,7 @@ TEXT = {
 
     "English": {
 
+        # Navigation
         "home": "🏠 Home",
         "scan": "📷 Scan",
         "assistant": "🤖 AI Assistant",
@@ -43,63 +44,90 @@ TEXT = {
         "campus": "🏫 Campus Mode",
         "about": "ℹ️ About",
 
+        # General
         "language": "🌐 Language / اللغة",
+        "navigation": "Navigation",
 
+        # Home
+        "home_subtitle": "AI-Powered Waste Management Assistant",
+        "make_every_waste_count": "🌍 Make Every Waste Count",
+        "start_scan": "📷 Start Waste Scan",
+        "what_ecoscan_can_do": "🚀 What EcoScan Can Do",
+
+        # Scan
         "scan_waste": "📷 Scan Waste",
-        "scan_subtitle": (
-            "Choose an image from your gallery or use your camera."
-        ),
-
+        "scan_subtitle": "Choose an image from your gallery or use your camera.",
         "scan_location": "📍 Scan Location",
         "where_found": "Where was this item found?",
-
-        "personal_scan": "Personal Scan",
-        "academic_building": "Academic Building",
-        "cafeteria": "Cafeteria",
-        "laboratories": "Laboratories",
-        "library": "Library",
-        "student_area": "Student Area",
-
-        "select_college": "🏫 Select College",
-
-        "human_medicine": "College of Human Medicine",
-        "pharmacy": "College of Pharmacy",
-        "biotechnology": "College of Biotechnology",
-        "physical_therapy": "College of Physical Therapy",
-
         "input_method": "Choose input method",
         "gallery": "🖼️ Gallery",
         "camera": "📷 Camera",
-
         "upload_image": "Upload waste image",
-        "analyze": "🔍 Analyze Waste",
-
+        "camera_picture": "Take a picture of the waste item",
         "preview": "### 🖼️ Preview",
+        "analyze": "🔍 Analyze Waste",
         "analyzing": "🧠 EcoScan is analyzing...",
-
         "ai_result": "🧠 AI Result",
-        "top_predictions": "### 🔎 Top AI Predictions",
-
+        "top_predictions": "🔎 Top AI Predictions",
         "recommendation": "♻️ Smart Recommendation",
-        "category": "Category",
-        "recommended_action": "Recommended Action",
-        "best_choice": "⭐ BEST CHOICE",
-        "disposal": "🗑️ Disposal Guidance",
+        "reuse": "💡 Reuse Idea",
+        "impact": "🌍 Environmental Impact",
+        "biotechnology": "🧬 Biotechnology & Organic Waste",
+        "ecoscore": "⭐ EcoScore",
+        "scan_another": "🔄 Scan Another Item",
 
-        "reuse": "### 💡 Reuse Idea",
-        "impact": "### 🌍 Environmental Impact",
-        "biotech": "### 🧬 Biotechnology & Organic Waste",
-        "ecoscore": "### ⭐ EcoScore",
+        # History
+        "history_title": "📋 History",
+        "history_subtitle": "Your previous EcoScan analyses",
+        "download_report": "📥 Download EcoScan Report",
+        "total_analyses": "📊 Total Analyses",
+        "search": "🔎 Search",
+        "waste_type": "🗑️ Waste Type",
+        "location": "📍 Location",
+        "college": "🏫 College",
+        "biotech_potential": "🌱 Biotech Potential",
+        "ecoscore_filter": "⭐ EcoScore",
+        "clear_history": "Clear History",
+        "delete": "🗑️ Delete",
 
-        "high_biological": "🌱 High Biological Potential",
-        "treatment": "Treatment Pathway",
+        # Dashboard
+        "dashboard_title": "📊 Dashboard",
+        "dashboard_subtitle": "Waste analysis overview",
+        "total_scans": "🔍 Total Scans",
+        "recyclable": "♻️ Recyclable %",
+        "organic": "🌱 Organic %",
+        "avg_confidence": "🧠 Avg Confidence",
+        "avg_ecoscore": "⭐ Avg EcoScore",
+        "ecopoints": "🌍 EcoPoints",
+        "waste_distribution": "📊 Waste Distribution",
+        "waste_location": "📍 Waste by Location",
+        "most_detected": "🏆 Most Detected Waste",
+        "waste_summary": "🗂️ Waste Summary",
+        "insight": "💡 EcoScan Insight",
 
-        "scan_saved": "✅ Analysis saved to your history.",
-        "scan_another": "🔄 Scan Another Item"
+        # Campus
+        "campus_title": "🏫 Campus Mode",
+        "campus_subtitle": "AI-powered campus waste insights",
+        "campus_location": "📍 Campus Location",
+        "select_area": "Select campus area",
+        "select_college": "🏫 Select College",
+        "campus_distribution": "♻️ Campus Waste Distribution",
+        "campus_insight": "💡 Campus Insight",
+        "management_recommendation": "🎯 Management Recommendation",
+
+        # About
+        "about_title": "ℹ️ About EcoScan",
+        "about_subtitle": "AI • Sustainability • Biotechnology",
+        "what_is_ecoscan": "♻️ What is EcoScan?",
+        "artificial_intelligence": "🧠 Artificial Intelligence",
+        "supported_categories": "🗑️ Supported Waste Categories",
+        "biotechnology_title": "🧬 Biotechnology",
+        "campus_impact": "🏫 Campus Impact"
     },
 
     "العربية": {
 
+        # Navigation
         "home": "🏠 الرئيسية",
         "scan": "📷 فحص المخلفات",
         "assistant": "🤖 المساعد الذكي",
@@ -108,59 +136,85 @@ TEXT = {
         "campus": "🏫 وضع الجامعة",
         "about": "ℹ️ عن EcoScan",
 
+        # General
         "language": "🌐 اللغة / Language",
+        "navigation": "التنقل",
 
+        # Home
+        "home_subtitle": "مساعد ذكي لإدارة المخلفات",
+        "make_every_waste_count": "🌍 اجعل لكل مخلف قيمة",
+        "start_scan": "📷 بدء فحص المخلفات",
+        "what_ecoscan_can_do": "🚀 ماذا يستطيع EcoScan أن يفعل؟",
+
+        # Scan
         "scan_waste": "📷 فحص المخلفات",
-        "scan_subtitle": (
-            "اختر صورة من المعرض أو استخدم الكاميرا."
-        ),
-
+        "scan_subtitle": "اختر صورة من المعرض أو استخدم الكاميرا.",
         "scan_location": "📍 مكان الفحص",
-        "where_found": "أين تم العثور على هذه المخلفات؟",
-
-        "personal_scan": "فحص شخصي",
-        "academic_building": "المبنى الأكاديمي",
-        "cafeteria": "الكافتيريا",
-        "laboratories": "المعامل",
-        "library": "المكتبة",
-        "student_area": "منطقة الطلاب",
-
-        "select_college": "🏫 اختر الكلية",
-
-        "human_medicine": "كلية الطب البشري",
-        "pharmacy": "كلية الصيدلة",
-        "biotechnology": "كلية التكنولوجيا الحيوية",
-        "physical_therapy": "كلية العلاج الطبيعي",
-
+        "where_found": "أين تم العثور على هذا العنصر؟",
         "input_method": "اختر طريقة الإدخال",
         "gallery": "🖼️ المعرض",
         "camera": "📷 الكاميرا",
-
-        "upload_image": "ارفع صورة المخلفات",
-        "analyze": "🔍 تحليل المخلفات",
-
+        "upload_image": "رفع صورة المخلف",
+        "camera_picture": "التقط صورة للمخلف",
         "preview": "### 🖼️ معاينة الصورة",
-        "analyzing": "🧠 EcoScan يقوم بتحليل الصورة...",
-
+        "analyze": "🔍 تحليل المخلفات",
+        "analyzing": "🧠 EcoScan يقوم بالتحليل...",
         "ai_result": "🧠 نتيجة الذكاء الاصطناعي",
-        "top_predictions": "### 🔎 أفضل توقعات الذكاء الاصطناعي",
-
+        "top_predictions": "🔎 أهم توقعات الذكاء الاصطناعي",
         "recommendation": "♻️ التوصية الذكية",
-        "category": "الفئة",
-        "recommended_action": "الإجراء الموصى به",
-        "best_choice": "⭐ أفضل اختيار",
-        "disposal": "🗑️ إرشادات التخلص",
+        "reuse": "💡 فكرة لإعادة الاستخدام",
+        "impact": "🌍 التأثير البيئي",
+        "biotechnology": "🧬 التكنولوجيا الحيوية والمخلفات العضوية",
+        "ecoscore": "⭐ التقييم البيئي",
+        "scan_another": "🔄 فحص عنصر آخر",
 
-        "reuse": "### 💡 فكرة لإعادة الاستخدام",
-        "impact": "### 🌍 التأثير البيئي",
-        "biotech": "### 🧬 التكنولوجيا الحيوية والمخلفات العضوية",
-        "ecoscore": "### ⭐ التقييم البيئي",
+        # History
+        "history_title": "📋 السجل",
+        "history_subtitle": "التحاليل السابقة في EcoScan",
+        "download_report": "📥 تحميل تقرير EcoScan",
+        "total_analyses": "📊 إجمالي التحليلات",
+        "search": "🔎 بحث",
+        "waste_type": "🗑️ نوع المخلف",
+        "location": "📍 المكان",
+        "college": "🏫 الكلية",
+        "biotech_potential": "🌱 الإمكانات الحيوية",
+        "ecoscore_filter": "⭐ التقييم البيئي",
+        "clear_history": "مسح السجل",
+        "delete": "🗑️ حذف",
 
-        "high_biological": "🌱 إمكانات حيوية عالية",
-        "treatment": "مسار المعالجة",
+        # Dashboard
+        "dashboard_title": "📊 لوحة المعلومات",
+        "dashboard_subtitle": "نظرة عامة على تحليل المخلفات",
+        "total_scans": "🔍 إجمالي عمليات الفحص",
+        "recyclable": "♻️ نسبة القابلة لإعادة التدوير",
+        "organic": "🌱 نسبة المخلفات العضوية",
+        "avg_confidence": "🧠 متوسط الثقة",
+        "avg_ecoscore": "⭐ متوسط التقييم البيئي",
+        "ecopoints": "🌍 النقاط البيئية",
+        "waste_distribution": "📊 توزيع المخلفات",
+        "waste_location": "📍 المخلفات حسب المكان",
+        "most_detected": "🏆 أكثر نوع مخلفات تم اكتشافه",
+        "waste_summary": "🗂️ ملخص المخلفات",
+        "insight": "💡 تحليل EcoScan",
 
-        "scan_saved": "✅ تم حفظ التحليل في السجل.",
-        "scan_another": "🔄 فحص عنصر آخر"
+        # Campus
+        "campus_title": "🏫 وضع الجامعة",
+        "campus_subtitle": "رؤى ذكية حول مخلفات الجامعة",
+        "campus_location": "📍 موقع الحرم الجامعي",
+        "select_area": "اختر منطقة الجامعة",
+        "select_college": "🏫 اختر الكلية",
+        "campus_distribution": "♻️ توزيع مخلفات الجامعة",
+        "campus_insight": "💡 تحليل مخلفات الجامعة",
+        "management_recommendation": "🎯 توصية إدارية",
+
+        # About
+        "about_title": "ℹ️ عن EcoScan",
+        "about_subtitle": "الذكاء الاصطناعي • الاستدامة • التكنولوجيا الحيوية",
+        "what_is_ecoscan": "♻️ ما هو EcoScan؟",
+        "artificial_intelligence": "🧠 الذكاء الاصطناعي",
+        "supported_categories": "🗑️ أنواع المخلفات المدعومة",
+        "biotechnology_title": "🧬 التكنولوجيا الحيوية",
+        "campus_impact": "🏫 تأثير النظام داخل الجامعة"
     }
 }
 
