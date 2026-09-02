@@ -867,7 +867,7 @@ elif page == "📷 Scan":
                 <div class="eco-card">
 
                 <div class="eco-card-title">
-                 {TEXT[language]['AI_Result']}"
+                  {TEXT[language]['ai_result']}"
                 </div>
                 """,
                 unsafe_allow_html=True
