@@ -1045,7 +1045,7 @@ elif page == "📷 Scan":
                     )
 
                     st.write(
-                        f"**{ TEXT[language]['Treatment Pathway']}:** "
+                        f"**{ TEXT[language]['treatment_Pathway']}:** "
                         f"{biotech_info['process']}"
                     )
 
@@ -1066,7 +1066,7 @@ elif page == "📷 Scan":
             with st.container(border=True):
 
                 st.markdown(
-                    f"###{TEXT[language]['EcoScore']}"
+                    f"###{TEXT[language]['ecoScore']}"
                 )
 
                 score = waste_info["eco_score"]
