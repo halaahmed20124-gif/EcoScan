@@ -55,26 +55,36 @@ TEXT = {
         "what_ecoscan_can_do": "🚀 What EcoScan Can Do",
 
         # Scan
-        "scan_waste": "📷 Scan Waste",
+        "scan_title": "📷 Scan Waste",
         "scan_subtitle": "Choose an image from your gallery or use your camera.",
         "scan_location": "📍 Scan Location",
         "where_found": "Where was this item found?",
+        "select_college": "🏫 Select College",
         "input_method": "Choose input method",
         "gallery": "🖼️ Gallery",
         "camera": "📷 Camera",
         "upload_image": "Upload waste image",
-        "camera_picture": "Take a picture of the waste item",
-        "preview": "### 🖼️ Preview",
+        "take_picture": "Take a picture of the waste item",
+        "preview": "🖼️ Preview",
         "analyze": "🔍 Analyze Waste",
         "analyzing": "🧠 EcoScan is analyzing...",
         "ai_result": "🧠 AI Result",
         "top_predictions": "🔎 Top AI Predictions",
-        "recommendation": "♻️ Smart Recommendation",
-        "reuse": "💡 Reuse Idea",
-        "impact": "🌍 Environmental Impact",
+        "smart_recommendation": "♻️ Smart Recommendation",
+        "category": "Category",
+        "recommended_action": "Recommended Action",
+        "best_choice": "⭐ BEST CHOICE",
+        "disposal_guidance": "🗑️ Disposal Guidance",
+        "reuse_idea": "💡 Reuse Idea",
+        "environmental_impact": "🌍 Environmental Impact",
         "biotechnology": "🧬 Biotechnology & Organic Waste",
+        "organic_detected": "🌱 Organic waste pathway detected.",
+        "high_biological": "🌱 High Biological Potential",
+        "treatment_pathway": "Treatment Pathway",
         "ecoscore": "⭐ EcoScore",
         "scan_another": "🔄 Scan Another Item",
+        "saved_history": "✅ Analysis saved to your history.",
+        "manual_verify": "⚠️ Recommendation requires manual verification because AI confidence is low."
 
         # History
         "history_title": "📋 History",
@@ -147,26 +157,37 @@ TEXT = {
         "what_ecoscan_can_do": "🚀 ماذا يستطيع EcoScan أن يفعل؟",
 
         # Scan
-        "scan_waste": "📷 فحص المخلفات",
+        "scan_title": "📷 فحص المخلفات",
         "scan_subtitle": "اختر صورة من المعرض أو استخدم الكاميرا.",
         "scan_location": "📍 مكان الفحص",
-        "where_found": "أين تم العثور على هذا العنصر؟",
+        "where_found": "أين تم العثور على هذه المخلفة؟",
+        "select_college": "🏫 اختر الكلية",
         "input_method": "اختر طريقة الإدخال",
         "gallery": "🖼️ المعرض",
         "camera": "📷 الكاميرا",
-        "upload_image": "رفع صورة المخلف",
-        "camera_picture": "التقط صورة للمخلف",
-        "preview": "### 🖼️ معاينة الصورة",
+        "upload_image": "ارفع صورة المخلفة",
+        "take_picture": "التقط صورة للمخلفة",
+        "preview": "🖼️ معاينة الصورة",
         "analyze": "🔍 تحليل المخلفات",
-        "analyzing": "🧠 EcoScan يقوم بالتحليل...",
+        "analyzing": "🧠 EcoScan يقوم بتحليل الصورة...",
         "ai_result": "🧠 نتيجة الذكاء الاصطناعي",
-        "top_predictions": "🔎 أهم توقعات الذكاء الاصطناعي",
-        "recommendation": "♻️ التوصية الذكية",
-        "reuse": "💡 فكرة لإعادة الاستخدام",
-        "impact": "🌍 التأثير البيئي",
+        "top_predictions": "🔎 أفضل توقعات الذكاء الاصطناعي",
+        "smart_recommendation": "♻️ التوصية الذكية",
+        "category": "الفئة",
+        "recommended_action": "الإجراء الموصى به",
+        "best_choice": "⭐ أفضل اختيار",
+        "disposal_guidance": "🗑️ إرشادات التخلص",
+        "reuse_idea": "💡 فكرة لإعادة الاستخدام",
+        "environmental_impact": "🌍 التأثير البيئي",
         "biotechnology": "🧬 التكنولوجيا الحيوية والمخلفات العضوية",
+        "organic_detected": "🌱 تم اكتشاف مسار للمخلفات العضوية.",
+        "high_biological": "🌱 إمكانات بيولوجية عالية",
+        "treatment_pathway": "مسار المعالجة",
         "ecoscore": "⭐ التقييم البيئي",
         "scan_another": "🔄 فحص عنصر آخر",
+        "saved_history": "✅ تم حفظ التحليل في السجل.",
+        "manual_verify": "⚠️ يوصى بالتحقق يدويًا لأن درجة ثقة الذكاء الاصطناعي منخفضة."
+        
 
         # History
         "history_title": "📋 السجل",
@@ -692,29 +713,28 @@ if page == "🏠 Home":
 # ============================================================
 # SCAN
 # ============================================================
-
 elif page == "📷 Scan":
 
     st.markdown(
-        '<div class="eco-title">📷 Scan Waste</div>',
+        f'<div class="eco-title">{TEXT[language]["scan_title"]}</div>',
         unsafe_allow_html=True
     )
 
     st.markdown(
-        '<div class="eco-subtitle">'
-        'Choose an image from your gallery or use your camera.'
-        '</div>',
+        f'<div class="eco-subtitle">'
+        f'{TEXT[language]["scan_subtitle"]}'
+        f'</div>',
         unsafe_allow_html=True
     )
 
     with st.container(border=True):
 
         st.markdown(
-            "### 📍 Scan Location"
+            f"### {TEXT[language]['scan_location']}"
         )
 
         location = st.selectbox(
-            "Where was this item found?",
+            TEXT[language]["where_found"],
             [
                 "Personal Scan",
                 "Academic Building",
@@ -724,33 +744,31 @@ elif page == "📷 Scan":
                 "Student Area"
             ]
         )
-        # ============================================================
-        # College Selection
-        # ============================================================
 
+    # 🏫 College Selection
     college = None
 
     if location == "Academic Building":
 
-          college = st.selectbox(
-               "🏫 Select College",
-        [
-            "College of Human Medicine",
-            "College of Pharmacy",
-            "College of Biotechnology",
-            "College of Physical Therapy"
-        ]
-     )
-    
+        college = st.selectbox(
+            TEXT[language]["select_college"],
+            [
+                "College of Human Medicine",
+                "College of Pharmacy",
+                "College of Biotechnology",
+                "College of Physical Therapy"
+            ]
+        )
+
     # --------------------------------------------------------
     # Input method
     # --------------------------------------------------------
 
     input_method = st.radio(
-        "Choose input method",
+        TEXT[language]["input_method"],
         [
-            "🖼️ Gallery",
-            "📷 Camera"
+            TEXT[language]["gallery"],
+            TEXT[language]["camera"]
         ],
         horizontal=True
     )
@@ -761,10 +779,10 @@ elif page == "📷 Scan":
     # Gallery
     # --------------------------------------------------------
 
-    if input_method == "🖼️ Gallery":
+    if input_method == TEXT[language]["gallery"]:
 
         uploaded_file = st.file_uploader(
-            "Upload waste image",
+            TEXT[language]["upload_image"],
             type=[
                 "jpg",
                 "jpeg",
@@ -786,7 +804,7 @@ elif page == "📷 Scan":
     else:
 
         camera_image = st.camera_input(
-            "Take a picture of the waste item"
+            TEXT[language]["take_picture"]
         )
 
         if camera_image is not None:
@@ -802,7 +820,7 @@ elif page == "📷 Scan":
     if image is not None:
 
         st.markdown(
-            "### 🖼️ Preview"
+            f"### {TEXT[language]['preview']}"
         )
 
         st.image(
@@ -813,14 +831,13 @@ elif page == "📷 Scan":
         st.markdown("")
 
         analyze_button = st.button(
-            "🔍 Analyze Waste",
+            TEXT[language]["analyze"],
             use_container_width=True
         )
-
         if analyze_button:
 
             with st.spinner(
-                "🧠 EcoScan is analyzing..."
+                TEXT[language] ["🧠 EcoScan is analyzing..."]
             ):
 
                 top_predictions = predict_waste(image)
@@ -850,7 +867,7 @@ elif page == "📷 Scan":
                 <div class="eco-card">
 
                 <div class="eco-card-title">
-                🧠 AI Result
+                 {TEXT[language][" AI Result"]}
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -898,7 +915,7 @@ elif page == "📷 Scan":
             )
 
             st.markdown(
-                "### 🔎 Top AI Predictions"
+                f"### { TEXT[language][' Top AI Predictions']}"
             )
 
             for index, prediction in enumerate(top_predictions):
@@ -926,32 +943,33 @@ elif page == "📷 Scan":
                 <div class="eco-card-green">
 
                 <div class="eco-card-title">
-                ♻️ Smart Recommendation
+                 {TEXT[language]
+                 ["Smart Recommendation"]}
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
             st.write(
-                f"**Category:** {waste_info['category']}"
+                f"**{ TEXT[language]['Category']}:** {waste_info['category']}"
             )
 
             st.write(
-                f"**Recommended Action:** "
+                f"**{ TEXT[language]['Recommended Action']}:** "
                 f"{waste_info['action']}"
             )
 
             if confidence >= 60:
 
                 st.success(
-                    f"⭐ BEST CHOICE — "
+                    f"{ TEXT[language][' BEST CHOICE']} — "
                     f"{waste_info['action']}"
                 )
 
             else:
 
                 st.warning(
-                    "⚠️ Recommendation requires manual verification "
+                    TEXT[language][ "⚠️ Recommendation requires manual verification "]
                     "because AI confidence is low."
                 )
 
@@ -972,7 +990,7 @@ elif page == "📷 Scan":
             with st.container(border=True):
 
                 st.markdown(
-                    "### 💡 Reuse Idea"
+                    f"###  {TEXT[language] ["Reuse Idea"]
                 )
 
                 st.write(
@@ -986,7 +1004,7 @@ elif page == "📷 Scan":
             with st.container(border=True):
 
                 st.markdown(
-                    "### 🌍 Environmental Impact"
+                    f"###  { TEXT[language]["Environmental Impact"]
                 )
 
                 st.write(
@@ -1000,13 +1018,13 @@ elif page == "📷 Scan":
             with st.container(border=True):
 
                 st.markdown(
-                    "### 🧬 Biotechnology & Organic Waste"
+                    f"### { TEXT[language]["Biotechnology & Organic Waste"]
                 )
 
                 if biotech_info["is_organic"]:
 
                     st.success(
-                        "🌱 Organic waste pathway detected."
+                         TEXT[language][" Organic waste pathway detected."]
                     )
 
                     st.markdown(
@@ -1014,7 +1032,7 @@ elif page == "📷 Scan":
                         <div class="eco-card-green">
 
                             <div class="eco-card-title">
-                                🌱 High Biological Potential
+                                {TEXT[language][" High Biological Potential"]}
                             </div>
 
                             This waste can potentially be treated
@@ -1027,7 +1045,7 @@ elif page == "📷 Scan":
                     )
 
                     st.write(
-                        f"**Treatment Pathway:** "
+                        f"**{ TEXT[language]['Treatment Pathway']}:** "
                         f"{biotech_info['process']}"
                     )
 
@@ -1048,7 +1066,7 @@ elif page == "📷 Scan":
             with st.container(border=True):
 
                 st.markdown(
-                    "### ⭐ EcoScore"
+                    f"### { TEXT[language][" EcoScore"]}
                 )
 
                 score = waste_info["eco_score"]
@@ -1099,7 +1117,7 @@ elif page == "📷 Scan":
 )
 
             st.success(
-                "✅ Analysis saved to your history."
+                 TEXT[language]["✅ Analysis saved to your history."]
             )
 
             # =================================================
@@ -1109,7 +1127,7 @@ elif page == "📷 Scan":
             st.markdown("")
 
             if st.button(
-                "🔄 Scan Another Item",
+                TEXT[language][ "🔄 Scan Another Item"],
                 use_container_width=True
             ):
 
