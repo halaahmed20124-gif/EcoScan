@@ -1043,8 +1043,9 @@ elif page == "📋 History":
                 "EcoScore": record[5],
                 "Image": record[6],
                 "Location": record[7],
-                "Biotech Potential": record[8],
-                "Environmental Level": record[9]
+                "College": record[8],
+                "Biotech Potential": record[9],
+                "Environmental Level": record[10]
             })
 
         df = pd.DataFrame(data)
@@ -1258,8 +1259,9 @@ elif page == "📋 History":
             eco_score = record[5]
             image_path = record[6]
             location = record[7]
-            biotech_potential = record[8]
-            environmental_level = record[9]
+            college = record[8]
+            biotech_potential = record[9]
+            environmental_level = record[10]
 
             with st.container(border=True):
 
@@ -1304,7 +1306,12 @@ elif page == "📋 History":
                     st.write(
                         f"📍 **Location:** {location}"
                     )
+                    if college:
 
+                      st.write(
+                        f"🏫 **College:** {college}"
+                    ) 
+                    
                     st.write(
                         f"🧬 **Biotech Potential:** "
                         f"{biotech_potential}"
