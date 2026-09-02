@@ -837,7 +837,7 @@ elif page == "📷 Scan":
         if analyze_button:
 
             with st.spinner(
-                TEXT[language] ["🧠 EcoScan is analyzing..."]
+                TEXT[language] ['analyzing']
             ):
 
                 top_predictions = predict_waste(image)
