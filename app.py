@@ -915,7 +915,7 @@ elif page == "📷 Scan":
             )
 
             st.markdown(
-                f"### {TEXT[language]['Top_Predictions']}"
+                f"### {TEXT[language]['top_predictions']}"
             )
 
             for index, prediction in enumerate(top_predictions):
