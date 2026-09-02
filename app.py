@@ -1004,7 +1004,7 @@ elif page == "📷 Scan":
             with st.container(border=True):
 
                 st.markdown(
-                    f"### { TEXT[language]['Environmental_Impact']}"
+                    f"### { TEXT[language]['environmental_impact']}"
                 )
 
                 st.write(
