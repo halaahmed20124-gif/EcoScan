@@ -1882,8 +1882,8 @@ if location == "Academic Building":
         ]
     )
 
-            st.info(
-                f"Currently viewing: **{location}**"
+st.info(
+    f"Currently viewing: **{location}**"
             )
 
         # =====================================================
