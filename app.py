@@ -1018,7 +1018,7 @@ elif page == "📷 Scan":
             with st.container(border=True):
 
                 st.markdown(
-                    f"### {TEXT[language]['biotechnology&_organic waste']}"
+                    f"### {TEXT[language]['biotechnology_organic_waste']}"
                 )
 
                 if biotech_info["is_organic"]:
