@@ -26,6 +26,7 @@ def init_database():
             eco_score INTEGER NOT NULL,
             image_path TEXT,
             location TEXT,
+            college TEXT,
             biotech_potential TEXT,
             environmental_level TEXT
         )
@@ -49,6 +50,7 @@ def init_database():
     new_columns = {
         "image_path": "TEXT",
         "location": "TEXT",
+        "college": "TEXT",
         "biotech_potential": "TEXT",
         "environmental_level": "TEXT"
     }
@@ -79,6 +81,7 @@ def save_analysis(
     eco_score,
     image_path=None,
     location="Personal Scan",
+    college=None,
     biotech_potential=None,
     environmental_level=None
 ):
@@ -100,10 +103,11 @@ def save_analysis(
             eco_score,
             image_path,
             location,
+            college,
             biotech_potential,
             environmental_level
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         timestamp,
         waste_type,
@@ -112,6 +116,7 @@ def save_analysis(
         eco_score,
         image_path,
         location,
+        college,
         biotech_potential,
         environmental_level
     ))
@@ -139,6 +144,7 @@ def get_history():
             eco_score,
             image_path,
             location,
+            college,
             biotech_potential,
             environmental_level
         FROM analysis_history
