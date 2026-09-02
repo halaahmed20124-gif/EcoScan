@@ -519,7 +519,7 @@ page = page_map[page_label]
 
   
 
-    st.markdown("---")
+  
 
     st.markdown(
         """
