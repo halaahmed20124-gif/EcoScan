@@ -962,7 +962,7 @@ elif page == "📷 Scan":
             if confidence >= 60:
 
                 st.success(
-                    f"{ TEXT[language][' BEST CHOICE']} — "
+                    f"{ TEXT[language]['best-choice']} — "
                     f"{waste_info['action']}"
                 )
 
