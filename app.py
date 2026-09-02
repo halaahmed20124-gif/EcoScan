@@ -1018,13 +1018,13 @@ elif page == "📷 Scan":
             with st.container(border=True):
 
                 st.markdown(
-                    f"### {TEXT[language]['biotechnology_organic_waste']}"
+                    f"### {TEXT[language]['biotechnology']}"
                 )
 
                 if biotech_info["is_organic"]:
 
                     st.success(
-                         TEXT[language][" Organic waste pathway detected."]
+                         TEXT[language]["organic_detected"]
                     )
 
                     st.markdown(
@@ -1032,7 +1032,7 @@ elif page == "📷 Scan":
                         <div class="eco-card-green">
 
                             <div class="eco-card-title">
-                                {TEXT[language]['high_biological_potential"]}
+                                {TEXT[language]["high_biological"]}
                             </div>
 
                             This waste can potentially be treated
