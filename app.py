@@ -939,7 +939,7 @@ elif page == "📷 Scan":
             # =================================================
 
             st.markdown(
-                """
+                f"""
                 <div class="eco-card-green">
 
                 <div class="eco-card-title">
