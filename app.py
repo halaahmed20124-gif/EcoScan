@@ -460,7 +460,6 @@ def save_scan_image(image):
 
     return image_path
 
-
 # ============================================================
 # SIDEBAR NAVIGATION
 # ============================================================
@@ -483,43 +482,38 @@ with st.sidebar:
     )
 
     st.markdown("---")
-    # ============================================================
-# TRANSLATED NAVIGATION
-# ============================================================
 
-page_label = st.radio(
-    "Navigation",
-    [
-        TEXT[language]["home"],
-        TEXT[language]["scan"],
-        TEXT[language]["assistant"],
-        TEXT[language]["history"],
-        TEXT[language]["dashboard"],
-        TEXT[language]["campus"],
-        TEXT[language]["about"]
-    ],
-    label_visibility="collapsed"
-)
+    # Navigation
+    page_label = st.radio(
+        "Navigation",
+        [
+            TEXT[language]["home"],
+            TEXT[language]["scan"],
+            TEXT[language]["assistant"],
+            TEXT[language]["history"],
+            TEXT[language]["dashboard"],
+            TEXT[language]["campus"],
+            TEXT[language]["about"]
+        ],
+        label_visibility="collapsed"
+    )
 
+    # Keep internal page names unchanged.
+    # This prevents breaking the existing page logic.
 
-# Keep internal page names unchanged
-# This prevents breaking the existing page logic.
+    page_map = {
+        TEXT[language]["home"]: "🏠 Home",
+        TEXT[language]["scan"]: "📷 Scan",
+        TEXT[language]["assistant"]: "🤖 AI Assistant",
+        TEXT[language]["history"]: "📋 History",
+        TEXT[language]["dashboard"]: "📊 Dashboard",
+        TEXT[language]["campus"]: "🏫 Campus Mode",
+        TEXT[language]["about"]: "ℹ️ About"
+    }
 
-page_map = {
-    TEXT[language]["home"]: "🏠 Home",
-    TEXT[language]["scan"]: "📷 Scan",
-    TEXT[language]["assistant"]: "🤖 AI Assistant",
-    TEXT[language]["history"]: "📋 History",
-    TEXT[language]["dashboard"]: "📊 Dashboard",
-    TEXT[language]["campus"]: "🏫 Campus Mode",
-    TEXT[language]["about"]: "ℹ️ About"
-}
+    page = page_map[page_label]
 
-page = page_map[page_label]
-
-  
-
-  
+    st.markdown("---")
 
     st.markdown(
         """
@@ -531,7 +525,6 @@ page = page_map[page_label]
         🧬 Biotechnology
         """
     )
-
 
 # ============================================================
 # HOME
