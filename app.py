@@ -27,7 +27,142 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+# ============================================================
+# LANGUAGE / TRANSLATION
+# ============================================================
 
+TEXT = {
+
+    "English": {
+
+        "home": "🏠 Home",
+        "scan": "📷 Scan",
+        "assistant": "🤖 AI Assistant",
+        "history": "📋 History",
+        "dashboard": "📊 Dashboard",
+        "campus": "🏫 Campus Mode",
+        "about": "ℹ️ About",
+
+        "language": "🌐 Language / اللغة",
+
+        "scan_waste": "📷 Scan Waste",
+        "scan_subtitle": (
+            "Choose an image from your gallery or use your camera."
+        ),
+
+        "scan_location": "📍 Scan Location",
+        "where_found": "Where was this item found?",
+
+        "personal_scan": "Personal Scan",
+        "academic_building": "Academic Building",
+        "cafeteria": "Cafeteria",
+        "laboratories": "Laboratories",
+        "library": "Library",
+        "student_area": "Student Area",
+
+        "select_college": "🏫 Select College",
+
+        "human_medicine": "College of Human Medicine",
+        "pharmacy": "College of Pharmacy",
+        "biotechnology": "College of Biotechnology",
+        "physical_therapy": "College of Physical Therapy",
+
+        "input_method": "Choose input method",
+        "gallery": "🖼️ Gallery",
+        "camera": "📷 Camera",
+
+        "upload_image": "Upload waste image",
+        "analyze": "🔍 Analyze Waste",
+
+        "preview": "### 🖼️ Preview",
+        "analyzing": "🧠 EcoScan is analyzing...",
+
+        "ai_result": "🧠 AI Result",
+        "top_predictions": "### 🔎 Top AI Predictions",
+
+        "recommendation": "♻️ Smart Recommendation",
+        "category": "Category",
+        "recommended_action": "Recommended Action",
+        "best_choice": "⭐ BEST CHOICE",
+        "disposal": "🗑️ Disposal Guidance",
+
+        "reuse": "### 💡 Reuse Idea",
+        "impact": "### 🌍 Environmental Impact",
+        "biotech": "### 🧬 Biotechnology & Organic Waste",
+        "ecoscore": "### ⭐ EcoScore",
+
+        "high_biological": "🌱 High Biological Potential",
+        "treatment": "Treatment Pathway",
+
+        "scan_saved": "✅ Analysis saved to your history.",
+        "scan_another": "🔄 Scan Another Item"
+    },
+
+    "العربية": {
+
+        "home": "🏠 الرئيسية",
+        "scan": "📷 فحص المخلفات",
+        "assistant": "🤖 المساعد الذكي",
+        "history": "📋 السجل",
+        "dashboard": "📊 لوحة المعلومات",
+        "campus": "🏫 وضع الجامعة",
+        "about": "ℹ️ عن EcoScan",
+
+        "language": "🌐 اللغة / Language",
+
+        "scan_waste": "📷 فحص المخلفات",
+        "scan_subtitle": (
+            "اختر صورة من المعرض أو استخدم الكاميرا."
+        ),
+
+        "scan_location": "📍 مكان الفحص",
+        "where_found": "أين تم العثور على هذه المخلفات؟",
+
+        "personal_scan": "فحص شخصي",
+        "academic_building": "المبنى الأكاديمي",
+        "cafeteria": "الكافتيريا",
+        "laboratories": "المعامل",
+        "library": "المكتبة",
+        "student_area": "منطقة الطلاب",
+
+        "select_college": "🏫 اختر الكلية",
+
+        "human_medicine": "كلية الطب البشري",
+        "pharmacy": "كلية الصيدلة",
+        "biotechnology": "كلية التكنولوجيا الحيوية",
+        "physical_therapy": "كلية العلاج الطبيعي",
+
+        "input_method": "اختر طريقة الإدخال",
+        "gallery": "🖼️ المعرض",
+        "camera": "📷 الكاميرا",
+
+        "upload_image": "ارفع صورة المخلفات",
+        "analyze": "🔍 تحليل المخلفات",
+
+        "preview": "### 🖼️ معاينة الصورة",
+        "analyzing": "🧠 EcoScan يقوم بتحليل الصورة...",
+
+        "ai_result": "🧠 نتيجة الذكاء الاصطناعي",
+        "top_predictions": "### 🔎 أفضل توقعات الذكاء الاصطناعي",
+
+        "recommendation": "♻️ التوصية الذكية",
+        "category": "الفئة",
+        "recommended_action": "الإجراء الموصى به",
+        "best_choice": "⭐ أفضل اختيار",
+        "disposal": "🗑️ إرشادات التخلص",
+
+        "reuse": "### 💡 فكرة لإعادة الاستخدام",
+        "impact": "### 🌍 التأثير البيئي",
+        "biotech": "### 🧬 التكنولوجيا الحيوية والمخلفات العضوية",
+        "ecoscore": "### ⭐ التقييم البيئي",
+
+        "high_biological": "🌱 إمكانات حيوية عالية",
+        "treatment": "مسار المعالجة",
+
+        "scan_saved": "✅ تم حفظ التحليل في السجل.",
+        "scan_another": "🔄 فحص عنصر آخر"
+    }
+}
 
 # ============================================================
 # PROFESSIONAL ECO UI
@@ -348,20 +483,41 @@ with st.sidebar:
     )
 
     st.markdown("---")
+    # ============================================================
+# TRANSLATED NAVIGATION
+# ============================================================
 
-    page = st.radio(
-        "Navigation",
-        [
-            "🏠 Home",
-            "📷 Scan",
-            "🤖 AI Assistant",
-            "📋 History",
-            "📊 Dashboard",
-            "🏫 Campus Mode",
-            "ℹ️ About"
-        ],
-        label_visibility="collapsed"
-    )
+page_label = st.radio(
+    "Navigation",
+    [
+        TEXT[language]["home"],
+        TEXT[language]["scan"],
+        TEXT[language]["assistant"],
+        TEXT[language]["history"],
+        TEXT[language]["dashboard"],
+        TEXT[language]["campus"],
+        TEXT[language]["about"]
+    ],
+    label_visibility="collapsed"
+)
+
+
+# Keep internal page names unchanged
+# This prevents breaking the existing page logic.
+
+page_map = {
+    TEXT[language]["home"]: "🏠 Home",
+    TEXT[language]["scan"]: "📷 Scan",
+    TEXT[language]["assistant"]: "🤖 AI Assistant",
+    TEXT[language]["history"]: "📋 History",
+    TEXT[language]["dashboard"]: "📊 Dashboard",
+    TEXT[language]["campus"]: "🏫 Campus Mode",
+    TEXT[language]["about"]: "ℹ️ About"
+}
+
+page = page_map[page_label]
+
+  
 
     st.markdown("---")
 
