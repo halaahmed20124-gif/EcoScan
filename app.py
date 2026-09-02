@@ -336,9 +336,14 @@ with st.sidebar:
         "<h1>♻️ EcoScan</h1>",
         unsafe_allow_html=True
     )
-
     st.caption(
         "AI-Powered Waste Management Assistant"
+    )
+
+    # 🌐 Language
+    language = st.selectbox(
+        "🌐 Language / اللغة",
+        ["English", "العربية"]
     )
 
     st.markdown("---")
@@ -1862,6 +1867,20 @@ elif page == "🏫 Campus Mode":
                     "Student Area"
                 ]
             )
+            # 🏫 College Selection
+college = None
+
+if location == "Academic Building":
+
+    college = st.selectbox(
+        "🏫 Select College",
+        [
+            "Faculty of Medicine",
+            "Faculty of Pharmacy",
+            "Faculty of Biotechnology",
+            "Faculty of Physical Therapy"
+        ]
+    )
 
             st.info(
                 f"Currently viewing: **{location}**"
