@@ -951,7 +951,7 @@ elif page == "📷 Scan":
             )
 
             st.write(
-                f"**{ TEXT[language]['Category']}:** {waste_info['category']}"
+                f"**{ TEXT[language]['category']}:** {waste_info['category']}"
             )
 
             st.write(
