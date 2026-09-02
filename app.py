@@ -1117,7 +1117,7 @@ elif page == "📷 Scan":
 )
 
             st.success(
-                 TEXT[language]["✅ Analysis saved to your history."]
+                 TEXT[language]["saved_history"]
             )
 
             # =================================================
@@ -1127,7 +1127,7 @@ elif page == "📷 Scan":
             st.markdown("")
 
             if st.button(
-                TEXT[language][ "🔄 Scan Another Item"],
+                TEXT[language]["scan_another"],
                 use_container_width=True
             ):
 
