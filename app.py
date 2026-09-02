@@ -1569,429 +1569,176 @@ elif page == "📊 Dashboard":
     )
 
     st.markdown(
-        '<div class="eco-subtitle">'
-        'Waste analysis overview'
-        '</div>',
+        '<div class="eco-subtitle">Waste analysis overview</div>',
         unsafe_allow_html=True
     )
 
     history = get_history()
 
     if not history:
-
-        st.info(
-            "Analyze some waste items first to populate the dashboard."
-        )
-
+        st.info("Analyze some waste items first to populate the dashboard.")
     else:
-
         total_analyses = len(history)
-
         waste_counts = {}
-
         recyclable_count = 0
-
         organic_count = 0
-
         total_confidence = 0
-
         total_ecoscore = 0
-
         total_ecopoints = 0
-
         loc_records = []
 
         for record in history:
-
             waste_type = record[2]
-
             confidence = record[3]
+            location = record[7] if len(record) > 7 and record[7] else "Main Campus"
 
-            location = (
-                record[7]
-                if len(record) > 7 and record[7]
-                else "Main Campus"
-            )
-
-            waste_counts[waste_type] = (
-                waste_counts.get(
-                    waste_type,
-                    0
-                ) + 1
-            )
-
+            waste_counts[waste_type] = waste_counts.get(waste_type, 0) + 1
             total_confidence += confidence
+            waste_info = get_waste_info(waste_type)
 
-            waste_info = get_waste_info(
-                waste_type
-            )
-
-            if waste_info.get(
-                "recyclable",
-                False
-            ):
-
+            if waste_info.get("recyclable", False):
                 recyclable_count += 1
 
-            if waste_type.lower() in [
-                "food organics",
-                "vegetation"
-            ]:
-
+            if waste_type.lower() in ["food organics", "vegetation"]:
                 organic_count += 1
 
-            eco_score = waste_info.get(
-                "eco_score",
-                5
-            )
-
-            action = waste_info.get(
-                "action",
-                ""
-            )
-
+            eco_score = waste_info.get("eco_score", 5)
+            action = waste_info.get("action", "")
             total_ecoscore += eco_score
 
             if action == "Recycle":
-
                 action_pts = 10
-
             elif action == "Compost":
-
                 action_pts = 12
-
             elif "Reuse" in action:
-
                 action_pts = 8
-
             else:
-
                 action_pts = 5
 
-            total_ecopoints += (
-                action_pts + eco_score
-            )
+            total_ecopoints += (action_pts + eco_score)
 
-            loc_records.append(
-                {
-                    "Location": location,
-                    "Waste Type": waste_type
-                }
-            )
+            loc_records.append({
+                "Location": location,
+                "Waste Type": waste_type
+            })
 
-        # ----------------------------------------------------
-        # Statistical Calculations
-        # ----------------------------------------------------
-
-        recyclable_percentage = (
-            recyclable_count /
-            total_analyses
-        ) * 100
-
-        organic_percentage = (
-            organic_count /
-            total_analyses
-        ) * 100
-
-        average_confidence = (
-            total_confidence /
-            total_analyses
-        )
-
+        # Calculations
+        recyclable_percentage = (recyclable_count / total_analyses) * 100
+        organic_percentage = (organic_count / total_analyses) * 100
+        average_confidence = (total_confidence / total_analyses)
         if average_confidence <= 1.0:
-
             average_confidence *= 100
-
-        average_ecoscore = (
-            total_ecoscore /
-            total_analyses
-        )
+        average_ecoscore = (total_ecoscore / total_analyses)
 
         # ----------------------------------------------------
-        # KPI Cards
-        # ----------------------------------------------------
-
-        st.markdown(
-            "### 📈 Key Performance Indicators (KPIs)"
-        )
-
-        col1, col2, col3 = st.columns(3)
-
-        col1.metric(
-            "🔍 Total Scans",
-            f"{total_analyses}"
-        )
-
-        col2.metric(
-            "♻️ Recyclable %",
-            f"{recyclable_percentage:.1f}%"
-        )
-
-        col3.metric(
-            "🌱 Organic %",
-            f"{organic_percentage:.1f}%"
-        )
-
-        col4, col5, col6 = st.columns(3)
-
-        col4.metric(
-            "🧠 Avg Confidence",
-            f"{average_confidence:.1f}%"
-        )
-
-        col5.metric(
-            "⭐ Avg EcoScore",
-            f"{average_ecoscore:.1f} / 10"
-        )
-
-        col6.metric(
-            "🌍 EcoPoints",
-            f"{int(total_ecopoints)} pts"
-        )
-
-        st.markdown("---")
-
-        # ----------------------------------------------------
-        # Waste Distribution
-        # ----------------------------------------------------
-
-        st.markdown(
-            "### 📊 Waste Distribution"
-        )
-
-        df_counts = pd.DataFrame(
-            list(waste_counts.items()),
-            columns=[
-                "Waste Type",
-                "Count"
-            ]
-        ).set_index(
-            "Waste Type"
-        )
-
-        st.bar_chart(
-            df_counts
-        )
-
-        st.markdown("---")
-
-        # ----------------------------------------------------
-        # Waste by Location
-        # ----------------------------------------------------
-
-        st.markdown(
-            "### 📍 Waste by Location"
-        )
-
-        df_loc = pd.DataFrame(
-            loc_records
-        )
-
-        if not df_loc.empty:
-
-            pivot_df = (
-                df_loc
-                .groupby(
-                    [
-                        "Location",
-                        "Waste Type"
-                    ]
-                )
-                .size()
-                .unstack(
-                    fill_value=0
-                )
-            )
-
-            st.bar_chart(
-                pivot_df
-            )
-
-            with st.expander(
-                "📑 View Breakdown Numbers by Location"
-            ):
-
-                st.dataframe(
-                    pivot_df,
-                    use_container_width=True
-                )
-
-        # =====================================================
         # KPI CARDS
-        # =====================================================
-
+        # ----------------------------------------------------
         col1, col2, col3, col4 = st.columns(4)
 
         with col1:
-
             st.markdown(
                 f"""
                 <div class="kpi-card">
                     <div class="kpi-icon">🔍</div>
-                    <div class="kpi-number">
-                    {total_analyses}
-                    </div>
-                    <div class="kpi-label">
-                    Total Analyses
-                    </div>
+                    <div class="kpi-number">{total_analyses}</div>
+                    <div class="kpi-label">Total Analyses</div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
         with col2:
-
             st.markdown(
                 f"""
                 <div class="kpi-card">
                     <div class="kpi-icon">♻️</div>
-                    <div class="kpi-number">
-                    {recyclable_percentage:.1f}%
-                    </div>
-                    <div class="kpi-label">
-                    Potentially Recyclable
-                    </div>
+                    <div class="kpi-number">{recyclable_percentage:.1f}%</div>
+                    <div class="kpi-label">Potentially Recyclable</div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
         with col3:
-
             st.markdown(
                 f"""
                 <div class="kpi-card">
                     <div class="kpi-icon">🌱</div>
-                    <div class="kpi-number">
-                    {organic_percentage:.1f}%
-                    </div>
-                    <div class="kpi-label">
-                    Organic Waste
-                    </div>
+                    <div class="kpi-number">{organic_percentage:.1f}%</div>
+                    <div class="kpi-label">Organic Waste</div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
         with col4:
-
             st.markdown(
                 f"""
                 <div class="kpi-card">
                     <div class="kpi-icon">🧠</div>
-                    <div class="kpi-number">
-                    {average_confidence:.1f}%
-                    </div>
-                    <div class="kpi-label">
-                    Avg. Confidence
-                    </div>
+                    <div class="kpi-number">{average_confidence:.1f}%</div>
+                    <div class="kpi-label">Avg. Confidence</div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
-        st.markdown("")
+        st.markdown("<br>", unsafe_allow_html=True)
 
-        # =====================================================
+        # ----------------------------------------------------
         # MOST DETECTED
-        # =====================================================
-
-        most_detected = (
-            max(
-                waste_counts,
-                key=waste_counts.get
-            )
-            if waste_counts
-            else "N/A"
-        )
+        # ----------------------------------------------------
+        most_detected = max(waste_counts, key=waste_counts.get) if waste_counts else "N/A"
 
         with st.container(border=True):
-
+            st.markdown("### 🏆 Most Detected Waste")
             st.markdown(
-                "### 🏆 Most Detected Waste"
-            )
-
-            st.markdown(
-                f"""
-                <div class="result-name">
-                {most_detected}
-                </div>
-                """,
+                f'<div class="result-name">{most_detected}</div>',
                 unsafe_allow_html=True
             )
 
-        # =====================================================
-        # DISTRIBUTION
-        # =====================================================
-
+        # ----------------------------------------------------
+        # WASTE DISTRIBUTION CHART
+        # ----------------------------------------------------
         with st.container(border=True):
+            st.markdown("### 📈 Waste Distribution")
+            df_counts = pd.DataFrame(
+                list(waste_counts.items()),
+                columns=["Waste Type", "Count"]
+            ).set_index("Waste Type")
+            st.bar_chart(df_counts)
 
-            st.markdown(
-                "### 📈 Waste Distribution"
-            )
+        # ----------------------------------------------------
+        # WASTE BY LOCATION
+        # ----------------------------------------------------
+        df_loc = pd.DataFrame(loc_records)
+        if not df_loc.empty:
+            with st.container(border=True):
+                st.markdown("### 📍 Waste by Location")
+                pivot_df = df_loc.groupby(["Location", "Waste Type"]).size().unstack(fill_value=0)
+                st.bar_chart(pivot_df)
+                with st.expander("📑 View Breakdown Numbers by Location"):
+                    st.dataframe(pivot_df, use_container_width=True)
 
-            st.bar_chart(
-                waste_counts
-            )
-
-        # =====================================================
+        # ----------------------------------------------------
         # SUMMARY
-        # =====================================================
-
+        # ----------------------------------------------------
         with st.container(border=True):
+            st.markdown("### 🗂️ Waste Summary")
+            for waste_type, count in sorted(waste_counts.items(), key=lambda x: x[1], reverse=True):
+                percentage = (count / total_analyses) * 100
+                st.write(f"**{waste_type}** — {count} analyses ({percentage:.1f}%)")
 
-            st.markdown(
-                "### 🗂️ Waste Summary"
-            )
-
-            for waste_type, count in sorted(
-                waste_counts.items(),
-                key=lambda x: x[1],
-                reverse=True
-            ):
-
-                percentage = (
-                    count /
-                    total_analyses
-                ) * 100
-
-                st.write(
-                    f"**{waste_type}** — "
-                    f"{count} analyses "
-                    f"({percentage:.1f}%)"
-                )
-
-        # =====================================================
+        # ----------------------------------------------------
         # INSIGHT
-        # =====================================================
-
+        # ----------------------------------------------------
         with st.container(border=True):
-
-            st.markdown(
-                "### 💡 EcoScan Insight"
-            )
-
-            st.info(
-                f"{most_detected} is currently the "
-                f"most frequently detected waste category."
-            )
-
+            st.markdown("### 💡 EcoScan Insight")
+            st.info(f"{most_detected} is currently the most frequently detected waste category.")
             if recyclable_percentage >= 50:
-
-                st.success(
-                    "♻️ More than half of the analyzed "
-                    "items were potentially recyclable."
-                )
-
+                st.success("♻️ More than half of the analyzed items were potentially recyclable.")
             if organic_percentage > 0:
-
-                st.success(
-                    "🌱 Organic waste was detected. "
-                    "These materials may be suitable "
-                    "for biological treatment such as composting."
-                )
-
-
+                st.success("🌱 Organic waste was detected. These materials may be suitable for biological treatment such as composting.")
 # ============================================================
 # CAMPUS MODE
 # ============================================================
