@@ -701,7 +701,7 @@ if page == "🏠 Home":
     st.markdown("")
 
     # =========================================================
-    # FEATURE 3: VIRTUAL CAMPUS TREE (شجرة الكلية الرقمية)
+    # FEATURE: VIRTUAL CAMPUS TREE
     # =========================================================
     history = get_history()
     total_campus_scans = len(history) if history else 0
@@ -766,6 +766,7 @@ if page == "🏠 Home":
 # ============================================================
 # SCAN
 # ============================================================
+
 elif page == "📷 Scan":
 
     st.markdown(
@@ -875,6 +876,7 @@ elif page == "📷 Scan":
             TEXT[language]["analyze"],
             use_container_width=True
         )
+
         if analyze_button:
 
             with st.spinner(
@@ -1007,8 +1009,9 @@ elif page == "📷 Scan":
                 )
 
             else:
+
                 st.warning(
-                  f"{TEXT[language]['manual_verify']}"
+                    f"{TEXT[language]['manual_verify']}"
                 )
 
             st.info(
@@ -1029,7 +1032,7 @@ elif page == "📷 Scan":
 
                 st.markdown(
                     f"### {TEXT[language]['reuse_idea']}"
-                 )
+                )
 
                 st.write(
                     waste_info["reuse"]
@@ -1062,19 +1065,19 @@ elif page == "📷 Scan":
                 if biotech_info["is_organic"]:
 
                     st.success(
-                         TEXT[language]["organic_detected"]
+                        TEXT[language]["organic_detected"]
                     )
 
                     st.markdown(
                         f"""
-                          <div class="eco-card-green">
+                        <div class="eco-card-green">
 
-                    <div class="eco-card-title">
-                    {TEXT[language]["high_biological"]}
-                    </div>
+                        <div class="eco-card-title">
+                        {TEXT[language]["high_biological"]}
+                        </div>
 
-                    This waste can potentially be treated through biological processes and converted into useful organic matter.
-                    </div>""",
+                        This waste can potentially be treated through biological processes and converted into useful organic matter.
+                        </div>""",
                         unsafe_allow_html=True
                     )
 
@@ -1151,11 +1154,11 @@ elif page == "📷 Scan":
             )
 
             st.success(
-                 TEXT[language]["saved_history"]
+                TEXT[language]["saved_history"]
             )
 
             # =========================================================
-            # FEATURE 2: ECO BADGES (شارات الإنجاز)
+            # FEATURE: ECO BADGES
             # =========================================================
             history_now = get_history()
             user_scans_count = len(history_now) if history_now else 1
@@ -1585,12 +1588,13 @@ elif page == "📋 History":
                     st.write(
                         f"📍 **Location:** {location}"
                     )
+
                     if college:
 
                         st.write(
                             f"🏫 **College:** {college}"
-                        ) 
-                    
+                        )
+
                     st.write(
                         f"🧬 **Biotech Potential:** "
                         f"{biotech_potential}"
@@ -1638,46 +1642,89 @@ elif page == "📊 Dashboard":
     history = get_history()
 
     if not history:
-        st.info("Analyze some waste items first to populate the dashboard.")
+
+        st.info(
+            "Analyze some waste items first to populate the dashboard."
+        )
+
     else:
+
         total_analyses = len(history)
+
         waste_counts = {}
+
         recyclable_count = 0
+
         organic_count = 0
+
         total_confidence = 0
+
         total_ecoscore = 0
+
         total_ecopoints = 0
+
         loc_records = []
 
         for record in history:
+
             waste_type = record[2]
+
             confidence = record[3]
+
             location = record[7] if len(record) > 7 and record[7] else "Main Campus"
 
-            waste_counts[waste_type] = waste_counts.get(waste_type, 0) + 1
-            total_confidence += confidence
-            waste_info = get_waste_info(waste_type)
+            waste_counts[waste_type] = (
+                waste_counts.get(
+                    waste_type,
+                    0
+                ) + 1
+            )
 
-            if waste_info.get("recyclable", False):
+            total_confidence += confidence
+
+            waste_info = get_waste_info(
+                waste_type
+            )
+
+            if waste_info.get(
+                "recyclable",
+                False
+            ):
                 recyclable_count += 1
 
-            if waste_type.lower() in ["food organics", "vegetation"]:
+            if waste_type.lower() in [
+                "food organics",
+                "vegetation"
+            ]:
                 organic_count += 1
 
-            eco_score = waste_info.get("eco_score", 5)
-            action = waste_info.get("action", "")
+            eco_score = waste_info.get(
+                "eco_score",
+                5
+            )
+
+            action = waste_info.get(
+                "action",
+                ""
+            )
+
             total_ecoscore += eco_score
 
             if action == "Recycle":
                 action_pts = 10
+
             elif action == "Compost":
                 action_pts = 12
+
             elif "Reuse" in action:
                 action_pts = 8
+
             else:
                 action_pts = 5
 
-            total_ecopoints += (action_pts + eco_score)
+            total_ecopoints += (
+                action_pts + eco_score
+            )
 
             loc_records.append({
                 "Location": location,
@@ -1685,95 +1732,611 @@ elif page == "📊 Dashboard":
             })
 
         # Calculations
-        recyclable_percentage = (recyclable_count / total_analyses) * 100
-        organic_percentage = (organic_count / total_analyses) * 100
-        average_confidence = (total_confidence / total_analyses)
+        recyclable_percentage = (
+            recyclable_count / total_analyses
+        ) * 100
+
+        organic_percentage = (
+            organic_count / total_analyses
+        ) * 100
+
+        average_confidence = (
+            total_confidence / total_analyses
+        )
+
         if average_confidence <= 1.0:
             average_confidence *= 100
-        average_ecoscore = (total_ecoscore / total_analyses)
+
+        average_ecoscore = (
+            total_ecoscore / total_analyses
+        )
 
         # ----------------------------------------------------
         # KPI CARDS
         # ----------------------------------------------------
+
         col1, col2, col3, col4 = st.columns(4)
 
         with col1:
+
             st.markdown(
                 f"""
                 <div class="kpi-card">
                     <div class="kpi-icon">🔍</div>
-                    <div class="kpi-number">{total_analyses}</div>
-                    <div class="kpi-label">{TEXT[language]["total_scans"]}</div>
+                    <div class="kpi-number">
+                    {total_analyses}
+                    </div>
+                    <div class="kpi-label">
+                    {TEXT[language]["total_scans"]}
+                    </div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
         with col2:
+
             st.markdown(
                 f"""
                 <div class="kpi-card">
                     <div class="kpi-icon">♻️</div>
-                    <div class="kpi-number">{recyclable_percentage:.1f}%</div>
-                    <div class="kpi-label">{TEXT[language]["recyclable"]}</div>
+                    <div class="kpi-number">
+                    {recyclable_percentage:.1f}%
+                    </div>
+                    <div class="kpi-label">
+                    {TEXT[language]["recyclable"]}
+                    </div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
         with col3:
+
             st.markdown(
                 f"""
                 <div class="kpi-card">
                     <div class="kpi-icon">🌱</div>
-                    <div class="kpi-number">{organic_percentage:.1f}%</div>
-                    <div class="kpi-label">{TEXT[language]["organic"]}</div>
+                    <div class="kpi-number">
+                    {organic_percentage:.1f}%
+                    </div>
+                    <div class="kpi-label">
+                    {TEXT[language]["organic"]}
+                    </div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
         with col4:
+
             st.markdown(
                 f"""
                 <div class="kpi-card">
                     <div class="kpi-icon">🧠</div>
-                    <div class="kpi-number">{average_confidence:.1f}%</div>
-                    <div class="kpi-label">{TEXT[language]["avg_confidence"]}</div>
+                    <div class="kpi-number">
+                    {average_confidence:.1f}%
+                    </div>
+                    <div class="kpi-label">
+                    {TEXT[language]["avg_confidence"]}
+                    </div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
-        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown(
+            "<br>",
+            unsafe_allow_html=True
+        )
 
         # ----------------------------------------------------
         # MOST DETECTED
         # ----------------------------------------------------
-        most_detected = max(waste_counts, key=waste_counts.get) if waste_counts else "N/A"
+
+        most_detected = (
+            max(
+                waste_counts,
+                key=waste_counts.get
+            )
+            if waste_counts
+            else "N/A"
+        )
 
         with st.container(border=True):
-            st.markdown(f"### {TEXT[language]['most_detected']}")
+
             st.markdown(
-                f'<div class="result-name">{most_detected}</div>',
+                f"### {TEXT[language]['most_detected']}"
+            )
+
+            st.markdown(
+                f"""
+                <div class="result-name">
+                {most_detected}
+                </div>
+                """,
                 unsafe_allow_html=True
             )
 
         # ----------------------------------------------------
         # WASTE DISTRIBUTION CHART
         # ----------------------------------------------------
+
         with st.container(border=True):
-            st.markdown(f"### {TEXT[language]['waste_distribution']}")
+
+            st.markdown(
+                f"### {TEXT[language]['waste_distribution']}"
+            )
+
             df_counts = pd.DataFrame(
                 list(waste_counts.items()),
                 columns=["Waste Type", "Count"]
             ).set_index("Waste Type")
+
             st.bar_chart(df_counts)
 
         # ----------------------------------------------------
         # WASTE BY LOCATION
         # ----------------------------------------------------
+
         df_loc = pd.DataFrame(loc_records)
+
         if not df_loc.empty:
+
             with st.container(border=True):
-                st.markdown(f"### {TEXT[language]['waste_location']}")
+
+                st.markdown(
+                    f"### {TEXT[language]['waste_location']}"
+                )
+
+                pivot_df = df_loc.groupby(
+                    ["Location", "Waste Type"]
+                ).size().unstack(fill_value=0)
+
+                st.bar_chart(pivot_df)
+
+                with st.expander("📑 View Breakdown Numbers by Location"):
+
+                    st.dataframe(
+                        pivot_df,
+                        use_container_width=True
+                    )
+
+        # ----------------------------------------------------
+        # SUMMARY
+        # ----------------------------------------------------
+
+        with st.container(border=True):
+
+            st.markdown(
+                f"### {TEXT[language]['waste_summary']}"
+            )
+
+            for waste_type, count in sorted(
+                waste_counts.items(),
+                key=lambda x: x[1],
+                reverse=True
+            ):
+
+                percentage = (
+                    count / total_analyses
+                ) * 100
+
+                st.write(
+                    f"**{waste_type}** — "
+                    f"{count} analyses ({percentage:.1f}%)"
+                )
+
+        # ----------------------------------------------------
+        # INSIGHT
+        # ----------------------------------------------------
+
+        with st.container(border=True):
+
+            st.markdown(
+                f"### {TEXT[language]['insight']}"
+            )
+
+            st.info(
+                f"{most_detected} is currently the most "
+                f"frequently detected waste category."
+            )
+
+            if recyclable_percentage >= 50:
+
+                st.success(
+                    "♻️ More than half of the analyzed items "
+                    "were potentially recyclable."
+                )
+
+            if organic_percentage > 0:
+
+                st.success(
+                    "🌱 Organic waste was detected. These "
+                    "materials may be suitable for biological "
+                    "treatment such as composting."
+                )
+
+
+# ============================================================
+# CAMPUS MODE
+# ============================================================
+
+elif page == "🏫 Campus Mode":
+
+    st.markdown(
+        f'<div class="eco-title">{TEXT[language]["campus_title"]}</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        f'<div class="eco-subtitle">{TEXT[language]["campus_subtitle"]}</div>',
+        unsafe_allow_html=True
+    )
+
+    history = get_history()
+
+    # =========================================================
+    # FEATURE: COLLEGE LEADERBOARD
+    # =========================================================
+    with st.container(border=True):
+        st.markdown(f"### {TEXT[language]['leaderboard_title']}")
+        
+        faculty_data = {
+            'Faculty': [
+                'Faculty of Medicine', 
+                'Faculty of Pharmacy', 
+                'Faculty of Biotechnology', 
+                'Faculty of Physical Therapy'
+            ],
+            'Scans': [12, 8, 5, 3]
+        }
+        
+        if history:
+            for rec in history:
+                if len(rec) > 8 and rec[8]:
+                    col_name = rec[8]
+                    if col_name in faculty_data['Faculty']:
+                        idx = faculty_data['Faculty'].index(col_name)
+                        faculty_data['Scans'][idx] += 1
+
+        df_leaderboard = pd.DataFrame(faculty_data).sort_values(by='Scans', ascending=False)
+        top_faculty = df_leaderboard.iloc[0]['Faculty']
+        
+        st.success(f"{TEXT[language]['top_faculty_msg']} **{top_faculty}** 🏆")
+        st.bar_chart(df_leaderboard.set_index('Faculty'))
+
+    st.markdown("")
+
+    if not history:
+
+        st.info(
+            "Start analyzing waste items to generate campus insights."
+        )
+
+    else:
+
+        waste_counts = {}
+
+        for record in history:
+
+            waste_type = record[2]
+
+            waste_counts[waste_type] = (
+                waste_counts.get(
+                    waste_type,
+                    0
+                ) + 1
+            )
+
+        total = len(history)
+
+        most_common = max(
+            waste_counts,
+            key=waste_counts.get
+        )
+
+        most_common_count = waste_counts[
+            most_common
+        ]
+
+        most_common_percentage = (
+            most_common_count /
+            total
+        ) * 100
+
+        # =====================================================
+        # CAMPUS KPIs
+        # =====================================================
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+
+            st.markdown(
+                f"""
+                <div class="kpi-card">
+                    <div class="kpi-icon">🔍</div>
+                    <div class="kpi-number">
+                    {total}
+                    </div>
+                    <div class="kpi-label">
+                    Campus Analyses
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        with col2:
+
+            st.markdown(
+                f"""
+                <div class="kpi-card">
+                    <div class="kpi-icon">🗑️</div>
+                    <div class="kpi-number">
+                    {most_common}
+                    </div>
+                    <div class="kpi-label">
+                    Most Common Waste
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        with col3:
+
+            st.markdown(
+                f"""
+                <div class="kpi-card">
+                    <div class="kpi-icon">📊</div>
+                    <div class="kpi-number">
+                    {most_common_percentage:.1f}%
+                    </div>
+                    <div class="kpi-label">
+                    Category Share
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        st.markdown("")
+
+        # =====================================================
+        # LOCATION
+        # =====================================================
+
+        with st.container(border=True):
+
+            st.markdown(
+                f"### {TEXT[language]['campus_location']}"
+            )
+
+            campus_location = st.selectbox(
+                TEXT[language]["select_area"],
+                [
+                    "All Campus",
+                    "Academic Building",
+                    "Cafeteria",
+                    "Laboratories",
+                    "Library",
+                    "Student Area"
+                ],
+                key="campus_location"
+            )
+
+        # =====================================================
+        # COLLEGE SELECTION
+        # =====================================================
+
+        college = None
+
+        if campus_location == "Academic Building":
+
+            college = st.selectbox(
+                TEXT[language]["select_college"],
+                [
+                    "Faculty of Medicine",
+                    "Faculty of Pharmacy",
+                    "Faculty of Biotechnology",
+                    "Faculty of Physical Therapy"
+                ],
+                key="college_selection"
+            )
+
+        st.info(
+            f"Currently viewing: **{campus_location}**"
+        )
+
+        # =====================================================
+        # DISTRIBUTION
+        # =====================================================
+
+        with st.container(border=True):
+
+            st.markdown(
+                f"### {TEXT[language]['campus_distribution']}"
+            )
+
+            st.bar_chart(
+                waste_counts
+            )
+
+        # =====================================================
+        # INSIGHT
+        # =====================================================
+
+        with st.container(border=True):
+
+            st.markdown(
+                f"### {TEXT[language]['campus_insight']}"
+            )
+
+            st.info(
+                f"{most_common} is currently the most "
+                f"frequently detected waste category, "
+                f"representing {most_common_percentage:.1f}% "
+                f"of recorded analyses."
+            )
+
+        # =====================================================
+        # RECOMMENDATION
+        # =====================================================
+
+        with st.container(border=True):
+
+            st.markdown(
+                f"### {TEXT[language]['management_recommendation']}"
+            )
+
+            if most_common.lower() == "plastic":
+
+                st.success(
+                    "♻️ Increase awareness about plastic "
+                    "waste reduction and provide accessible "
+                    "recycling collection points."
+                )
+
+            elif most_common.lower() in [
+                "paper",
+                "cardboard"
+            ]:
+
+                st.success(
+                    "📄 Increase paper recycling points "
+                    "and promote digital alternatives."
+                )
+
+            elif most_common.lower() in [
+                "food organics",
+                "vegetation"
+            ]:
+
+                st.success(
+                    "🌱 Consider dedicated organic waste "
+                    "collection and biological treatment."
+                )
+
+            elif most_common.lower() == "glass":
+
+                st.success(
+                    "🍾 Provide dedicated glass collection "
+                    "containers and improve separation."
+                )
+
+            elif most_common.lower() == "metal":
+
+                st.success(
+                    "🔩 Increase collection capacity "
+                    "for recyclable metal waste."
+                )
+
+            else:
+
+                st.warning(
+                    "⚠️ Review waste composition and improve "
+                    "separation and collection practices."
+                )
+
+
+# ============================================================
+# ABOUT
+# ============================================================
+
+elif page == "ℹ️ About":
+
+    st.markdown(
+        f'<div class="eco-title">{TEXT[language]["about_title"]}</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        f'<div class="eco-subtitle">{TEXT[language]["about_subtitle"]}</div>',
+        unsafe_allow_html=True
+    )
+
+    with st.container(border=True):
+
+        st.markdown(
+            f"### {TEXT[language]['what_is_ecoscan']}"
+        )
+
+        st.write(
+            "EcoScan is an AI-powered waste management "
+            "assistant designed to classify waste items "
+            "and provide responsible disposal guidance."
+        )
+
+    with st.container(border=True):
+
+        st.markdown(
+            f"### {TEXT[language]['artificial_intelligence']}"
+        )
+
+        st.write(
+            "EcoScan uses a deep learning image "
+            "classification model trained to recognize "
+            "9 waste categories."
+        )
+
+        st.write(
+            "**Production Model Accuracy:** 80.62%"
+        )
+
+    with st.container(border=True):
+
+        st.markdown(
+            f"### {TEXT[language]['supported_categories']}"
+        )
+
+        for waste_class in class_names:
+
+            display_class = waste_class.split(
+                "-",
+                1
+            )[-1]
+
+            st.write(
+                f"♻️ {display_class}"
+            )
+
+    with st.container(border=True):
+
+        st.markdown(
+            f"### {TEXT[language]['biotechnology_title']}"
+        )
+
+        st.write(
+            "For biodegradable organic waste, EcoScan "
+            "introduces an educational pathway involving "
+            "biological treatment and composting."
+        )
+
+    with st.container(border=True):
+
+        st.markdown(
+            f"### {TEXT[language]['campus_impact']}"
+        )
+
+        st.write(
+            "Campus Mode transforms individual waste "
+            "analyses into aggregated insights that "
+            "can support better waste-management decisions."
+        )
+
+
+# ============================================================
+# FOOTER
+# ============================================================
+
+st.markdown(
+    """
+    <div class="eco-footer">
+        ♻️ <b>EcoScan</b> — AI-Powered Waste Management Assistant<br>
+        Building smarter and more sustainable communities 🌱
+    </div>
+    """,
+    unsafe_allow_html=True
+)
