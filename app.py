@@ -422,47 +422,121 @@ def safe_percent(value, total):
     return round((value / total) * 100, 1) if total else 0
 
 # ============================================================
-# SIDEBAR
+# ECOSCAN NAVIGATION
+# Same pages/functions — presentation only
 # ============================================================
 
-with st.sidebar:
-    st.markdown("""
-    <div class="eco-brand">
-        <div class="eco-logo">♻️</div>
-        <div class="eco-brand-title">EcoScan</div>
-        <div class="eco-brand-subtitle">AI-Powered Waste Management</div>
-    </div>
-    """, unsafe_allow_html=True)
+# Hide Streamlit's default sidebar so the interface stays closer
+# to the agreed EcoScan mobile-style reference.
+st.markdown("""
+<style>
+section[data-testid="stSidebar"] {display: none !important;}
+button[kind="header"] {display: none !important;}
 
+.eco-topbar {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 4px 18px;
+}
+.eco-top-brand {
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+.eco-mini-logo {
+    width:42px;height:42px;border-radius:13px;
+    background:linear-gradient(135deg,#1f8f5f,#58bd7f);
+    display:flex;align-items:center;justify-content:center;
+    font-size:23px;
+}
+.eco-mini-name {
+    font-size:22px;font-weight:800;color:#123b2a;
+}
+.eco-mini-sub {
+    font-size:10px;color:#6d7f76;margin-top:-2px;
+}
+.eco-nav {
+    background:rgba(255,255,255,.96);
+    border:1px solid #dcebe2;
+    border-radius:18px;
+    padding:8px;
+    box-shadow:0 8px 25px rgba(18,59,42,.06);
+    margin-bottom:22px;
+}
+.eco-nav-label {
+    color:#6d7f76;font-size:11px;margin:0 0 6px 4px;
+}
+@media (max-width: 700px) {
+    .eco-mini-name {font-size:19px;}
+    .eco-mini-sub {display:none;}
+    .block-container {padding-top:.55rem !important;}
+}
+</style>
+""", unsafe_allow_html=True)
+
+# Keep the exact same seven destinations.
+nav_items = [
+    ("🏠", "Home"),
+    ("📸", "Scan"),
+    ("🤖", "AI Assistant"),
+    ("📋", "History"),
+    ("📊", "Dashboard"),
+    ("🏫", "Campus Mode"),
+    ("ℹ️", "About"),
+]
+
+if "eco_page" not in st.session_state:
+    st.session_state["eco_page"] = "Home"
+
+# Preserve language choice while moving it out of the sidebar.
+if "eco_language" not in st.session_state:
+    st.session_state["eco_language"] = "English"
+
+st.markdown("""
+<div class="eco-topbar">
+    <div class="eco-top-brand">
+        <div class="eco-mini-logo">♻️</div>
+        <div>
+            <div class="eco-mini-name">EcoScan</div>
+            <div class="eco-mini-sub">AI-Powered Waste Management Assistant</div>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+lang_col, nav_col = st.columns([1, 5])
+
+with lang_col:
     language = st.radio(
         "Language / اللغة",
         ["English", "العربية"],
+        index=0 if st.session_state["eco_language"] == "English" else 1,
         horizontal=True,
         label_visibility="collapsed",
+        key="eco_language_radio",
     )
+    st.session_state["eco_language"] = language
     lang = "ar" if language == "العربية" else "en"
 
-    nav_items = [
-        TEXT[lang]["home"],
-        TEXT[lang]["scan"],
-        TEXT[lang]["assistant"],
-        TEXT[lang]["history"],
-        TEXT[lang]["dashboard"],
-        TEXT[lang]["campus"],
-        TEXT[lang]["about"],
-    ]
-
-    page = st.radio(
+with nav_col:
+    labels = [f"{icon} {name}" for icon, name in nav_items]
+    current_label = next(
+        f"{icon} {name}" for icon, name in nav_items
+        if name == st.session_state["eco_page"]
+    )
+    selected = st.radio(
         "Navigation",
-        nav_items,
+        labels,
+        index=labels.index(current_label),
+        horizontal=True,
         label_visibility="collapsed",
+        key="eco_navigation",
     )
+    selected_name = selected.split(" ", 1)[1]
+    st.session_state["eco_page"] = selected_name
 
-    st.markdown("---")
-    st.markdown(
-        '<div class="small-muted">♻️ Smart sorting • 🧠 AI • 🌱 Sustainability</div>',
-        unsafe_allow_html=True,
-    )
+page = st.session_state["eco_page"]
 
 # ============================================================
 # HOME
@@ -497,7 +571,7 @@ if page == TEXT[lang]["home"]:
         """, unsafe_allow_html=True)
 
         if st.button("📸 Start Scanning", type="primary", use_container_width=True):
-            st.session_state["go_scan"] = True
+            st.session_state["eco_page"] = "Scan"
             st.rerun()
 
     with c2:
@@ -1162,13 +1236,25 @@ elif page == TEXT[lang]["about"]:
     </div>
     """, unsafe_allow_html=True)
 
+
+<style>
+.eco-bottom-spacer {height:8px;}
+.eco-bottom-note {
+    text-align:center;color:#7a8a83;font-size:11px;
+    padding:14px 0 2px;border-top:1px solid #dcebe2;
+}
+</style>
+
 # ============================================================
 # FOOTER
 # ============================================================
 
 st.markdown("""
+<div class="eco-bottom-note">
+    ♻️ Smart sorting &nbsp;•&nbsp; 🧠 AI &nbsp;•&nbsp; 🌱 Sustainability
+</div>
 <div class="eco-footer">
-    ♻️ <b>EcoScan</b> — AI-Powered Waste Management Assistant<br>
+    <b>EcoScan</b> — AI-Powered Waste Management Assistant<br>
     Building smarter and more sustainable communities 🌱
 </div>
 """, unsafe_allow_html=True)
