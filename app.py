@@ -27,6 +27,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
 # ============================================================
 # LANGUAGE / TRANSLATION
 # ============================================================
@@ -187,7 +188,6 @@ TEXT = {
         "scan_another": "🔄 فحص عنصر آخر",
         "saved_history": "✅ تم حفظ التحليل في السجل.",
         "manual_verify": "⚠️ يوصى بالتحقق يدويًا لأن درجة ثقة الذكاء الاصطناعي منخفضة.",
-        
 
         # History
         "history_title": "📋 السجل",
@@ -240,7 +240,7 @@ TEXT = {
 }
 
 # ============================================================
-# PROFESSIONAL ECO UI
+# PROFESSIONAL ECO UI & MOBILE RESPONSIVENESS
 # ============================================================
 
 st.markdown("""
@@ -251,7 +251,7 @@ st.markdown("""
         background: #f7faf8;
     }
 
-    /* Main content */
+    /* Main content container */
     .block-container {
         padding-top: 2rem;
         padding-bottom: 3rem;
@@ -317,6 +317,7 @@ st.markdown("""
         padding: 20px;
         text-align: center;
         min-height: 130px;
+        margin-bottom: 10px;
     }
 
     .kpi-icon {
@@ -339,6 +340,7 @@ st.markdown("""
         font-size: 34px;
         font-weight: 800;
         color: #126b3f;
+        word-wrap: break-word;
     }
 
     .confidence-number {
@@ -378,6 +380,71 @@ st.markdown("""
         margin-top: 50px;
         padding: 20px;
         border-top: 1px solid #dcebe2;
+    }
+
+    /* ============================================================ */
+    /* MOBILE & TABLET RESPONSIVE MEDIA QUERIES                     */
+    /* ============================================================ */
+    @media only screen and (max-width: 768px) {
+        .block-container {
+            padding-top: 1rem;
+            padding-bottom: 1.5rem;
+            padding-left: 0.8rem;
+            padding-right: 0.8rem;
+        }
+
+        .eco-title {
+            font-size: 32px;
+        }
+
+        .eco-subtitle {
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        .eco-card, .eco-card-green {
+            padding: 15px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+        }
+
+        .eco-card-title {
+            font-size: 18px;
+        }
+
+        .result-name {
+            font-size: 26px;
+        }
+
+        .confidence-number {
+            font-size: 24px;
+        }
+
+        .kpi-card {
+            padding: 12px;
+            min-height: auto;
+        }
+
+        .kpi-number {
+            font-size: 22px;
+        }
+
+        .kpi-icon {
+            font-size: 24px;
+        }
+
+        /* Full width touch buttons for mobile */
+        .stButton button {
+            width: 100% !important;
+            padding-top: 12px !important;
+            padding-bottom: 12px !important;
+            font-size: 16px !important;
+        }
+
+        /* Adjust images inside cards for smaller screens */
+        div[data-testid="stImage"] img {
+            border-radius: 12px;
+        }
     }
 
 </style>
@@ -572,9 +639,6 @@ with st.sidebar:
         ],
         label_visibility="collapsed"
     )
-
-    # Keep internal page names unchanged.
-    # This prevents breaking the existing page logic.
 
     page_map = {
         TEXT[language]["home"]: "🏠 Home",
@@ -837,7 +901,7 @@ elif page == "📷 Scan":
         if analyze_button:
 
             with st.spinner(
-                TEXT[language] ['analyzing']
+                TEXT[language]['analyzing']
             ):
 
                 top_predictions = predict_waste(image)
@@ -867,7 +931,7 @@ elif page == "📷 Scan":
                 <div class="eco-card">
 
                 <div class="eco-card-title">
-                  {TEXT[language]['ai_result']}"
+                  {TEXT[language]['ai_result']}
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -943,35 +1007,32 @@ elif page == "📷 Scan":
                 <div class="eco-card-green">
 
                 <div class="eco-card-title">
-                 {TEXT[language]
-                 ["smart_recommendation"]}
+                 {TEXT[language]["smart_recommendation"]}
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
             st.write(
-                f"**{ TEXT[language]['category']}:** {waste_info['category']}"
+                f"**{TEXT[language]['category']}:** {waste_info['category']}"
             )
 
             st.write(
-                f"**{ TEXT[language]['recommended_action']}:** "
+                f"**{TEXT[language]['recommended_action']}:** "
                 f"{waste_info['action']}"
             )
 
             if confidence >= 60:
 
                 st.success(
-                    f"{ TEXT[language]['best_choice']} — "
+                    f"{TEXT[language]['best_choice']} — "
                     f"{waste_info['action']}"
                 )
 
             else:
                 st.warning(
-                  f"{TEXT[language]['manual_verify']} because AI confidence is low."
-              )
-
-                
+                    f"{TEXT[language]['manual_verify']}"
+                )
 
             st.info(
                 f"🗑️ **Disposal Guidance:** "
@@ -991,7 +1052,7 @@ elif page == "📷 Scan":
 
                 st.markdown(
                     f"### {TEXT[language]['reuse_idea']}"
-                 )
+                )
 
                 st.write(
                     waste_info["reuse"]
@@ -1004,7 +1065,7 @@ elif page == "📷 Scan":
             with st.container(border=True):
 
                 st.markdown(
-                    f"### { TEXT[language]['environmental_impact']}"
+                    f"### {TEXT[language]['environmental_impact']}"
                 )
 
                 st.write(
@@ -1024,24 +1085,24 @@ elif page == "📷 Scan":
                 if biotech_info["is_organic"]:
 
                     st.success(
-                         TEXT[language]["organic_detected"]
+                        TEXT[language]["organic_detected"]
                     )
 
                     st.markdown(
                         f"""
-                          <div class="eco-card-green">
+                        <div class="eco-card-green">
 
-                    <div class="eco-card-title">
-                    {TEXT[language]["high_biological"]}
-                    </div>
+                        <div class="eco-card-title">
+                        {TEXT[language]["high_biological"]}
+                        </div>
 
-                    This waste can potentially be treated through biological processes and converted into useful organic matter.
-                    </div>""",
+                        This waste can potentially be treated through biological processes and converted into useful organic matter.
+                        </div>""",
                         unsafe_allow_html=True
                     )
 
                     st.write(
-                        f"**{ TEXT[language]['treatment_pathway']}:** "
+                        f"**{TEXT[language]['treatment_pathway']}:** "
                         f"{biotech_info['process']}"
                     )
 
@@ -1091,29 +1152,29 @@ elif page == "📷 Scan":
             image_path = save_scan_image(image)
 
             save_analysis(
-              waste_type=predicted_class,
-              confidence=confidence,
-              action=waste_info["action"],
-              eco_score=score,
-              image_path=image_path,
-              location=location,
-              college=college,
-              biotech_potential=(
-                "High"
-                if biotech_info["is_organic"]
-                else "Low"
-          ),
-          environmental_level=(
-                "High Positive Impact"
-                 if score >= 9
-                else "Moderate Positive Impact"
-                 if score >= 7
-                else "Low Positive Impact"
-          )
-)
+                waste_type=predicted_class,
+                confidence=confidence,
+                action=waste_info["action"],
+                eco_score=score,
+                image_path=image_path,
+                location=location,
+                college=college,
+                biotech_potential=(
+                    "High"
+                    if biotech_info["is_organic"]
+                    else "Low"
+                ),
+                environmental_level=(
+                    "High Positive Impact"
+                    if score >= 9
+                    else "Moderate Positive Impact"
+                    if score >= 7
+                    else "Low Positive Impact"
+                )
+            )
 
             st.success(
-                 TEXT[language]["saved_history"]
+                TEXT[language]["saved_history"]
             )
 
             # =================================================
@@ -1525,9 +1586,9 @@ elif page == "📋 History":
                     )
                     if college:
 
-                      st.write(
-                        f"🏫 **College:** {college}"
-                    ) 
+                        st.write(
+                            f"🏫 **College:** {college}"
+                        ) 
                     
                     st.write(
                         f"🧬 **Biotech Potential:** "
@@ -1739,6 +1800,7 @@ elif page == "📊 Dashboard":
                 st.success("♻️ More than half of the analyzed items were potentially recyclable.")
             if organic_percentage > 0:
                 st.success("🌱 Organic waste was detected. These materials may be suitable for biological treatment such as composting.")
+
 # ============================================================
 # CAMPUS MODE
 # ============================================================
