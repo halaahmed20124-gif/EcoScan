@@ -1394,35 +1394,30 @@ with st.sidebar:
 
 if page == "🏠 Home":
 
-    # --------------------------------------------------------
-    # HEADER
-    # --------------------------------------------------------
-
     st.markdown(
         """
-        <div class="eco-card-green">
+        <div class="hero-section">
 
-            <div class="eco-card-title">
-                ♻️ Welcome to EcoScan
-            </div>
+            <div class="hero-content">
 
-            <div style="
-                font-size:16px;
-                color:#557060;
-                margin-top:8px;
-            ">
-                AI-Powered Waste Management Assistant
-            </div>
+                <div class="hero-badge">
+                    🌱 AI-POWERED WASTE MANAGEMENT
+                </div>
 
-            <div style="
-                font-size:14px;
-                color:#6b7d72;
-                line-height:1.7;
-                margin-top:14px;
-            ">
-                Turn everyday waste into smarter environmental decisions.
-                Identify waste, understand its impact, and discover
-                the right action using Artificial Intelligence.
+                <div class="hero-title">
+                    Welcome to <span>EcoScan</span>
+                </div>
+
+                <div class="hero-subtitle">
+                    Smart Waste Management Assistant
+                </div>
+
+                <div class="hero-description">
+                    Turn everyday waste into smarter environmental decisions.
+                    Identify waste using Artificial Intelligence, understand
+                    its environmental impact, and discover the right action.
+                </div>
+
             </div>
 
         </div>
@@ -1430,58 +1425,40 @@ if page == "🏠 Home":
         unsafe_allow_html=True
     )
 
-    st.markdown("")
-
     # --------------------------------------------------------
     # MAIN ACTION
     # --------------------------------------------------------
 
-    scan_col1, scan_col2 = st.columns(
-        [2, 1]
-    )
+    st.markdown(
+        """
+        <div class="main-action-card">
 
-    with scan_col1:
+            <div class="action-icon">
+                📷
+            </div>
 
-        st.markdown(
-            """
-            <div class="eco-card">
-
-                <div style="
-                    font-size:34px;
-                    margin-bottom:10px;
-                ">
-                    📷
-                </div>
-
-                <div class="eco-card-title">
+            <div>
+                <div class="action-title">
                     Ready to Scan?
                 </div>
 
-                <div style="
-                    color:#68796f;
-                    font-size:14px;
-                    line-height:1.6;
-                    margin-top:8px;
-                ">
-                    Take a photo or upload an image of waste
-                    and let EcoScan analyze it.
+                <div class="action-text">
+                    Upload an image or use your camera to let
+                    EcoScan identify your waste.
                 </div>
-
             </div>
-            """,
-            unsafe_allow_html=True
-        )
 
-    with scan_col2:
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-        if st.button(
-            "📷 Scan Waste",
-            use_container_width=True
-        ):
-
-            st.info(
-                "Choose **📷 Scan** from the sidebar to start."
-            )
+    if st.button(
+        "📷  Start Waste Scan",
+        use_container_width=True,
+        type="primary"
+    ):
+        st.info("Choose 📷 Scan from the sidebar to start.")
 
     st.markdown("")
 
@@ -1490,16 +1467,7 @@ if page == "🏠 Home":
     # --------------------------------------------------------
 
     st.markdown(
-        """
-        <div style="
-            font-size:22px;
-            font-weight:800;
-            color:#173f29;
-            margin-bottom:14px;
-        ">
-            ⚡ Quick Actions
-        </div>
-        """,
+        '<div class="section-heading">⚡ Quick Actions</div>',
         unsafe_allow_html=True
     )
 
@@ -1509,22 +1477,19 @@ if page == "🏠 Home":
 
         st.markdown(
             """
-            <div class="eco-card">
+            <div class="quick-card">
 
-                <div style="font-size:28px;">
+                <div class="quick-icon">
                     🔍
                 </div>
 
-                <div class="eco-card-title">
+                <div class="quick-title">
                     Identify Waste
                 </div>
 
-                <div style="
-                    color:#708077;
-                    font-size:13px;
-                    margin-top:7px;
-                ">
-                    Use AI to recognize the waste category.
+                <div class="quick-text">
+                    Use the trained AI model to recognize
+                    the waste category.
                 </div>
 
             </div>
@@ -1536,22 +1501,19 @@ if page == "🏠 Home":
 
         st.markdown(
             """
-            <div class="eco-card">
+            <div class="quick-card">
 
-                <div style="font-size:28px;">
+                <div class="quick-icon">
                     ♻️
                 </div>
 
-                <div class="eco-card-title">
+                <div class="quick-title">
                     Find the Right Action
                 </div>
 
-                <div style="
-                    color:#708077;
-                    font-size:13px;
-                    margin-top:7px;
-                ">
-                    Learn how to recycle, reuse, or dispose of waste.
+                <div class="quick-text">
+                    Discover whether the item should be
+                    recycled, reused, or properly disposed.
                 </div>
 
             </div>
@@ -1563,22 +1525,19 @@ if page == "🏠 Home":
 
         st.markdown(
             """
-            <div class="eco-card">
+            <div class="quick-card">
 
-                <div style="font-size:28px;">
+                <div class="quick-icon">
                     💬
                 </div>
 
-                <div class="eco-card-title">
+                <div class="quick-title">
                     Ask EcoScan
                 </div>
 
-                <div style="
-                    color:#708077;
-                    font-size:13px;
-                    margin-top:7px;
-                ">
-                    Get waste-management guidance from EcoScan.
+                <div class="quick-text">
+                    Get practical waste-management guidance
+                    from the EcoScan assistant.
                 </div>
 
             </div>
@@ -1593,22 +1552,13 @@ if page == "🏠 Home":
     # --------------------------------------------------------
 
     st.markdown(
-        """
-        <div style="
-            font-size:22px;
-            font-weight:800;
-            color:#173f29;
-            margin-bottom:14px;
-        ">
-            📊 EcoScan at a Glance
-        </div>
-        """,
+        '<div class="section-heading">📊 EcoScan at a Glance</div>',
         unsafe_allow_html=True
     )
 
-    col1, col2, col3 = st.columns(3)
+    c1, c2, c3 = st.columns(3)
 
-    with col1:
+    with c1:
 
         st.markdown(
             """
@@ -1631,7 +1581,7 @@ if page == "🏠 Home":
             unsafe_allow_html=True
         )
 
-    with col2:
+    with c2:
 
         st.markdown(
             """
@@ -1654,7 +1604,7 @@ if page == "🏠 Home":
             unsafe_allow_html=True
         )
 
-    with col3:
+    with c3:
 
         st.markdown(
             """
@@ -1688,20 +1638,54 @@ if page == "🏠 Home":
         <div class="eco-card">
 
             <div class="eco-card-title">
-                🌱 From Image → AI → Action
+                🌱 How EcoScan Works
             </div>
 
-            <div style="
-                font-size:14px;
-                color:#68796f;
-                line-height:1.8;
-                margin-top:10px;
-            ">
+            <div class="process-row">
 
-                📷 <b>Scan</b>
-                → 🧠 <b>Analyze</b>
-                → ♻️ <b>Recommended Action</b>
-                → 🌍 <b>Eco Impact</b>
+                <div class="process-item">
+                    <div class="process-icon">
+                        📷
+                    </div>
+                    <b>Scan</b>
+                    <span>Upload or capture waste</span>
+                </div>
+
+                <div class="process-arrow">
+                    →
+                </div>
+
+                <div class="process-item">
+                    <div class="process-icon">
+                        🧠
+                    </div>
+                    <b>Analyze</b>
+                    <span>AI classification</span>
+                </div>
+
+                <div class="process-arrow">
+                    →
+                </div>
+
+                <div class="process-item">
+                    <div class="process-icon">
+                        ♻️
+                    </div>
+                    <b>Decide</b>
+                    <span>Recommended action</span>
+                </div>
+
+                <div class="process-arrow">
+                    →
+                </div>
+
+                <div class="process-item">
+                    <div class="process-icon">
+                        🌍
+                    </div>
+                    <b>Impact</b>
+                    <span>Environmental insight</span>
+                </div>
 
             </div>
 
@@ -1716,29 +1700,30 @@ if page == "🏠 Home":
     # FEATURES
     # --------------------------------------------------------
 
+    st.markdown(
+        '<div class="section-heading">✨ EcoScan Features</div>',
+        unsafe_allow_html=True
+    )
+
     f1, f2, f3 = st.columns(3)
 
     with f1:
 
         st.markdown(
             """
-            <div class="eco-card">
+            <div class="feature-card">
 
-                <div style="font-size:28px;">
+                <div class="feature-icon">
                     🧠
                 </div>
 
-                <div class="eco-card-title">
+                <div class="feature-title">
                     AI Classification
                 </div>
 
-                <div style="
-                    color:#708077;
-                    font-size:13px;
-                    line-height:1.6;
-                    margin-top:7px;
-                ">
-                    Identify waste using the trained EcoScan AI model.
+                <div class="feature-text">
+                    Identify waste using the trained
+                    EcoScan Artificial Intelligence model.
                 </div>
 
             </div>
@@ -1750,24 +1735,19 @@ if page == "🏠 Home":
 
         st.markdown(
             """
-            <div class="eco-card">
+            <div class="feature-card">
 
-                <div style="font-size:28px;">
+                <div class="feature-icon">
                     🧬
                 </div>
 
-                <div class="eco-card-title">
+                <div class="feature-title">
                     Biotechnology
                 </div>
 
-                <div style="
-                    color:#708077;
-                    font-size:13px;
-                    line-height:1.6;
-                    margin-top:7px;
-                ">
-                    Explore biological treatment pathways for suitable
-                    organic waste.
+                <div class="feature-text">
+                    Explore biological treatment pathways
+                    for suitable organic waste.
                 </div>
 
             </div>
@@ -1779,24 +1759,19 @@ if page == "🏠 Home":
 
         st.markdown(
             """
-            <div class="eco-card">
+            <div class="feature-card">
 
-                <div style="font-size:28px;">
+                <div class="feature-icon">
                     🏫
                 </div>
 
-                <div class="eco-card-title">
+                <div class="feature-title">
                     Smart Campus
                 </div>
 
-                <div style="
-                    color:#708077;
-                    font-size:13px;
-                    line-height:1.6;
-                    margin-top:7px;
-                ">
-                    Understand waste patterns and support smarter
-                    campus management.
+                <div class="feature-text">
+                    Track waste patterns and support
+                    smarter campus management.
                 </div>
 
             </div>
@@ -1806,12 +1781,7 @@ if page == "🏠 Home":
 
     st.markdown(
         """
-        <div style="
-            text-align:center;
-            color:#71917c;
-            font-size:13px;
-            margin:30px 0 10px 0;
-        ">
+        <div class="eco-home-footer">
             🌿 EcoScan — Smart choices for a cleaner campus
         </div>
         """,
@@ -1831,18 +1801,13 @@ elif page == "📷 Scan":
 
     st.markdown(
         f"""
-        <div class="eco-card-green">
+        <div class="eco-hero">
 
-            <div class="eco-card-title">
+            <div class="eco-hero-title">
                 📷 {TEXT[language]["scan_title"]}
             </div>
 
-            <div style="
-                color:#557060;
-                font-size:14px;
-                line-height:1.7;
-                margin-top:8px;
-            ">
+            <div class="eco-hero-text">
                 {TEXT[language]["scan_subtitle"]}
             </div>
 
@@ -1851,29 +1816,16 @@ elif page == "📷 Scan":
         unsafe_allow_html=True
     )
 
-    st.markdown("")
-
     # --------------------------------------------------------
     # LOCATION
     # --------------------------------------------------------
 
     st.markdown(
-        """
-        <div style="
-            font-size:20px;
-            font-weight:800;
-            color:#173f29;
-            margin-bottom:12px;
-        ">
-            📍 Scan Location
-        </div>
-        """,
+        '<div class="section-heading">📍 Scan Location</div>',
         unsafe_allow_html=True
     )
 
-    location_col1, location_col2 = st.columns(
-        [1.3, 1]
-    )
+    location_col1, location_col2 = st.columns([1.3, 1])
 
     with location_col1:
 
@@ -1909,14 +1861,16 @@ elif page == "📷 Scan":
 
             st.markdown(
                 """
-                <div class="eco-card">
+                <div class="eco-card-green">
 
-                    🏫 <b>Campus Location</b>
+                    <div class="eco-card-title">
+                        🏫 Campus Location
+                    </div>
 
                     <div style="
-                        color:#708077;
-                        font-size:12px;
-                        margin-top:6px;
+                        color:#607568;
+                        font-size:13px;
+                        line-height:1.6;
                     ">
                         This scan location will be stored
                         for campus analysis.
@@ -1934,16 +1888,7 @@ elif page == "📷 Scan":
     # --------------------------------------------------------
 
     st.markdown(
-        """
-        <div style="
-            font-size:20px;
-            font-weight:800;
-            color:#173f29;
-            margin-bottom:12px;
-        ">
-            📸 Choose Scan Method
-        </div>
-        """,
+        '<div class="section-heading">📸 Choose Scan Method</div>',
         unsafe_allow_html=True
     )
 
@@ -1968,21 +1913,14 @@ elif page == "📷 Scan":
             """
             <div class="eco-card">
 
-                <div style="
-                    font-size:32px;
-                    margin-bottom:8px;
-                ">
-                    🖼️
-                </div>
-
                 <div class="eco-card-title">
-                    Upload Waste Image
+                    🖼️ Upload Waste Image
                 </div>
 
                 <div style="
                     color:#708077;
                     font-size:13px;
-                    margin-top:6px;
+                    line-height:1.6;
                 ">
                     Choose a clear image for AI classification.
                 </div>
@@ -2018,21 +1956,14 @@ elif page == "📷 Scan":
             """
             <div class="eco-card">
 
-                <div style="
-                    font-size:32px;
-                    margin-bottom:8px;
-                ">
-                    📷
-                </div>
-
                 <div class="eco-card-title">
-                    Capture Waste
+                    📷 Capture Waste
                 </div>
 
                 <div style="
                     color:#708077;
                     font-size:13px;
-                    margin-top:6px;
+                    line-height:1.6;
                 ">
                     Take a clear photo for AI classification.
                 </div>
@@ -2058,25 +1989,12 @@ elif page == "📷 Scan":
 
     if image is not None:
 
-        st.markdown("")
-
         st.markdown(
-            """
-            <div style="
-                font-size:20px;
-                font-weight:800;
-                color:#173f29;
-                margin-bottom:12px;
-            ">
-                👁️ Preview
-            </div>
-            """,
+            '<div class="section-heading">👁️ Preview</div>',
             unsafe_allow_html=True
         )
 
-        preview_col1, preview_col2 = st.columns(
-            [1.2, 0.8]
-        )
+        preview_col1, preview_col2 = st.columns([1.2, 0.8])
 
         with preview_col1:
 
@@ -2092,7 +2010,8 @@ elif page == "📷 Scan":
                 <div class="eco-card-green">
 
                     <div style="
-                        font-size:30px;
+                        font-size:32px;
+                        margin-bottom:8px;
                     ">
                         🧠
                     </div>
@@ -2105,7 +2024,6 @@ elif page == "📷 Scan":
                         color:#607568;
                         font-size:13px;
                         line-height:1.7;
-                        margin-top:8px;
                     ">
                         EcoScan will analyze the image and
                         identify the most likely waste category.
@@ -2118,12 +2036,13 @@ elif page == "📷 Scan":
 
             analyze_button = st.button(
                 TEXT[language]["analyze"],
-                use_container_width=True
+                use_container_width=True,
+                type="primary"
             )
 
-        # ====================================================
+        # ----------------------------------------------------
         # AI ANALYSIS
-        # ====================================================
+        # ----------------------------------------------------
 
         if analyze_button:
 
@@ -2131,9 +2050,7 @@ elif page == "📷 Scan":
                 TEXT[language]["analyzing"]
             ):
 
-                top_predictions = predict_waste(
-                    image
-                )
+                top_predictions = predict_waste(image)
 
                 predicted_class = top_predictions[0]["class"]
 
@@ -2152,54 +2069,63 @@ elif page == "📷 Scan":
                 )
 
             # ------------------------------------------------
-            # AI RESULT
+            # RESULT HEADER
             # ------------------------------------------------
 
-            st.markdown("")
-
             st.markdown(
-                """
-                <div style="
-                    font-size:22px;
-                    font-weight:800;
-                    color:#173f29;
-                    margin-bottom:12px;
-                ">
-                    🧠 AI Analysis Result
-                </div>
-                """,
+                '<div class="section-heading">🧠 AI Analysis Result</div>',
                 unsafe_allow_html=True
             )
 
-            st.markdown(
-                f"""
-                <div class="eco-card-green">
+            result_col1, result_col2 = st.columns([1.4, 0.6])
 
-                    <div style="
-                        font-size:13px;
-                        color:#557060;
-                    ">
-                        Detected Waste
+            with result_col1:
+
+                st.markdown(
+                    f"""
+                    <div class="eco-card-green">
+
+                        <div style="
+                            font-size:13px;
+                            color:#557060;
+                        ">
+                            Detected Waste
+                        </div>
+
+                        <div class="result-name">
+                            {predicted_class}
+                        </div>
+
                     </div>
+                    """,
+                    unsafe_allow_html=True
+                )
 
-                    <div class="result-name">
-                        {predicted_class}
+            with result_col2:
+
+                st.markdown(
+                    f"""
+                    <div class="kpi-card">
+
+                        <div class="kpi-icon">
+                            🎯
+                        </div>
+
+                        <div class="kpi-number">
+                            {confidence:.2f}%
+                        </div>
+
+                        <div class="kpi-label">
+                            Confidence
+                        </div>
+
                     </div>
-
-                    <div class="confidence-number">
-                        {confidence:.2f}%
-                    </div>
-
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+                    """,
+                    unsafe_allow_html=True
+                )
 
             st.progress(
-                min(
-                    confidence / 100,
-                    1.0
-                )
+                min(confidence / 100, 1.0)
             )
 
             st.markdown(
@@ -2339,9 +2265,15 @@ elif page == "📷 Scan":
                                 Biological Treatment
                             </div>
 
-                            This waste can potentially be treated
-                            through biological processes and converted
-                            into useful organic matter.
+                            <div style="
+                                color:#607568;
+                                font-size:14px;
+                                line-height:1.7;
+                            ">
+                                This waste can potentially be treated
+                                through biological processes and converted
+                                into useful organic matter.
+                            </div>
 
                         </div>
                         """,
@@ -2396,9 +2328,7 @@ elif page == "📷 Scan":
             # SAVE TO HISTORY
             # ------------------------------------------------
 
-            image_path = save_scan_image(
-                image
-            )
+            image_path = save_scan_image(image)
 
             save_analysis(
                 waste_type=predicted_class,
@@ -2435,7 +2365,7 @@ elif page == "📷 Scan":
                 use_container_width=True
             ):
 
-                st.rerun()
+                st.rerun()    
 
 # ============================================================
 # AI ASSISTANT
