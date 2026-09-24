@@ -477,13 +477,13 @@ button[kind="header"] {display: none !important;}
 
 # Keep the exact same seven destinations.
 nav_items = [
-    ("🏠", "Home"),
-    ("📸", "Scan"),
-    ("🤖", "AI Assistant"),
-    ("📋", "History"),
-    ("📊", "Dashboard"),
-    ("🏫", "Campus Mode"),
-    ("ℹ️", "About"),
+    ("home", "🏠", "Home"),
+    ("scan", "📸", "Scan"),
+    ("assistant", "🤖", "AI Assistant"),
+    ("history", "📋", "History"),
+    ("dashboard", "📊", "Dashboard"),
+    ("campus", "🏫", "Campus Mode"),
+    ("about", "ℹ️", "About"),
 ]
 
 if "eco_page" not in st.session_state:
@@ -520,9 +520,9 @@ with lang_col:
     lang = "ar" if language == "العربية" else "en"
 
 with nav_col:
-    labels = [f"{icon} {name}" for icon, name in nav_items]
+    labels = [f"{icon} {name}" for key, icon, name in nav_items]
     current_label = next(
-        f"{icon} {name}" for icon, name in nav_items
+        f"{icon} {name}" for key, icon, name in nav_items
         if name == st.session_state["eco_page"]
     )
     selected = st.radio(
@@ -536,7 +536,11 @@ with nav_col:
     selected_name = selected.split(" ", 1)[1]
     st.session_state["eco_page"] = selected_name
 
-page = st.session_state["eco_page"]
+selected_key = next(
+    key for key, icon, name in nav_items
+    if name == st.session_state["eco_page"]
+)
+page = TEXT[lang][selected_key]
 
 # ============================================================
 # HOME
@@ -1237,6 +1241,7 @@ elif page == TEXT[lang]["about"]:
     """, unsafe_allow_html=True)
 
 
+st.markdown("""
 <style>
 .eco-bottom-spacer {height:8px;}
 .eco-bottom-note {
@@ -1244,6 +1249,7 @@ elif page == TEXT[lang]["about"]:
     padding:14px 0 2px;border-top:1px solid #dcebe2;
 }
 </style>
+""", unsafe_allow_html=True)
 
 # ============================================================
 # FOOTER
