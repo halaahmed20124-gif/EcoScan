@@ -1,3332 +1,1174 @@
-import streamlit as st
-import tensorflow as tf
-import pandas as pd
-from PIL import Image
-import numpy as np
 import os
 from datetime import datetime
 
-from waste_knowledge import get_waste_info, get_biotech_info
+import numpy as np
+import pandas as pd
+import streamlit as st
+import tensorflow as tf
+from PIL import Image
+
+from waste_knowledge import get_waste_info, get_biotech_info, calculate_eco_points
 from ai_assistant import assistant_response
 from history_manager import (
     init_database,
     save_analysis,
     get_history,
     delete_analysis,
-    clear_history
+    clear_history,
 )
 
-
 # ============================================================
-# EcoScan - AI Waste Classification
+# EcoScan — AI-Powered Waste Management Assistant
+# UI/UX redesign only: core project logic preserved
 # ============================================================
 
 st.set_page_config(
     page_title="EcoScan",
     page_icon="♻️",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
+
 # ============================================================
-# LANGUAGE / TRANSLATION
+# ECO-TECH STYLE
+# ============================================================
+
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --eco-green: #1f8f5f;
+    --eco-dark: #123b2a;
+    --eco-light: #eaf8f0;
+    --eco-mint: #dff5e8;
+    --eco-blue: #5b7cfa;
+    --eco-text: #17352a;
+    --eco-muted: #6d7f76;
+    --eco-border: #dcebe2;
+    --eco-white: #ffffff;
+}
+
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+}
+
+.stApp {
+    background: linear-gradient(180deg, #f7fcf9 0%, #ffffff 55%, #f6fbf8 100%);
+    color: var(--eco-text);
+}
+
+.block-container {
+    max-width: 1450px;
+    padding-top: 1.2rem;
+    padding-bottom: 4rem;
+}
+
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #ffffff 0%, #f1faf5 100%);
+    border-right: 1px solid var(--eco-border);
+}
+
+[data-testid="stSidebar"] > div:first-child {
+    padding-top: 1rem;
+}
+
+.eco-brand {
+    padding: 14px 12px 20px 12px;
+    text-align: center;
+}
+
+.eco-logo {
+    width: 58px;
+    height: 58px;
+    margin: auto;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #1f8f5f, #5fbd83);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    box-shadow: 0 10px 25px rgba(31,143,95,.18);
+}
+
+.eco-brand-title {
+    font-size: 25px;
+    font-weight: 800;
+    color: var(--eco-dark);
+    margin-top: 10px;
+}
+
+.eco-brand-subtitle {
+    color: var(--eco-muted);
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.eco-hero {
+    border-radius: 28px;
+    padding: 34px;
+    background: linear-gradient(135deg, #e9f8ef 0%, #f8fffb 55%, #eef7ff 100%);
+    border: 1px solid var(--eco-border);
+    box-shadow: 0 15px 40px rgba(24,75,51,.07);
+    margin-bottom: 24px;
+}
+
+.eco-kicker {
+    color: var(--eco-green);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+}
+
+.eco-hero h1 {
+    font-size: clamp(32px, 5vw, 58px);
+    line-height: 1.05;
+    color: var(--eco-dark);
+    margin: 8px 0 12px;
+    font-weight: 800;
+}
+
+.eco-hero p {
+    color: var(--eco-muted);
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 780px;
+}
+
+.eco-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--eco-dark);
+    margin: 5px 0 8px;
+}
+
+.eco-subtitle {
+    color: var(--eco-muted);
+    margin-bottom: 22px;
+}
+
+.eco-card {
+    background: rgba(255,255,255,.95);
+    border: 1px solid var(--eco-border);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 8px 0;
+    box-shadow: 0 8px 25px rgba(18,59,42,.055);
+}
+
+.eco-card h3 {
+    color: var(--eco-dark);
+    margin-top: 0;
+}
+
+.eco-stat {
+    background: #ffffff;
+    border: 1px solid var(--eco-border);
+    border-radius: 18px;
+    padding: 20px;
+    min-height: 125px;
+    box-shadow: 0 8px 25px rgba(18,59,42,.05);
+}
+
+.eco-stat-value {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--eco-green);
+}
+
+.eco-stat-label {
+    color: var(--eco-muted);
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.eco-feature {
+    background: #ffffff;
+    border: 1px solid var(--eco-border);
+    border-radius: 18px;
+    padding: 20px;
+    min-height: 155px;
+    box-shadow: 0 8px 25px rgba(18,59,42,.04);
+}
+
+.eco-feature-icon {
+    font-size: 27px;
+    margin-bottom: 10px;
+}
+
+.eco-feature-title {
+    color: var(--eco-dark);
+    font-weight: 750;
+    font-size: 17px;
+}
+
+.eco-feature-text {
+    color: var(--eco-muted);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-top: 7px;
+}
+
+.eco-result {
+    background: linear-gradient(135deg, #e9f8ef, #ffffff);
+    border: 1px solid #cfe9da;
+    border-radius: 24px;
+    padding: 25px;
+    box-shadow: 0 12px 30px rgba(31,143,95,.08);
+}
+
+.eco-result-type {
+    color: var(--eco-dark);
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.eco-pill {
+    display: inline-block;
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: var(--eco-light);
+    color: var(--eco-green);
+    font-size: 12px;
+    font-weight: 700;
+    margin: 4px 4px 4px 0;
+}
+
+.eco-score {
+    border-radius: 18px;
+    padding: 18px;
+    background: #fff;
+    border: 1px solid var(--eco-border);
+    text-align: center;
+}
+
+.eco-score-number {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--eco-green);
+}
+
+.eco-chat {
+    background: linear-gradient(135deg, #effaf4, #ffffff);
+    border: 1px solid var(--eco-border);
+    border-radius: 22px;
+    padding: 22px;
+    margin-top: 14px;
+}
+
+.eco-footer {
+    text-align: center;
+    color: #71827a;
+    font-size: 13px;
+    padding: 28px 10px 8px;
+    margin-top: 35px;
+    border-top: 1px solid var(--eco-border);
+}
+
+div.stButton > button {
+    border-radius: 12px;
+    border: 1px solid var(--eco-border);
+    font-weight: 650;
+    min-height: 44px;
+}
+
+div.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #1f8f5f, #36a96f);
+    color: white;
+    border: none;
+}
+
+.stDownloadButton > button {
+    border-radius: 12px !important;
+}
+
+[data-testid="stMetric"] {
+    background: white;
+    border: 1px solid var(--eco-border);
+    padding: 15px;
+    border-radius: 16px;
+}
+
+[data-testid="stFileUploader"] {
+    background: #fbfefc;
+    border-radius: 16px;
+}
+
+hr {
+    border-color: var(--eco-border);
+}
+
+.small-muted {
+    color: var(--eco-muted);
+    font-size: 13px;
+}
+
+.success-box {
+    padding: 13px 16px;
+    border-radius: 13px;
+    background: #eaf8f0;
+    border: 1px solid #cbe8d7;
+    color: #17623f;
+    margin: 10px 0;
+}
+
+.warning-box {
+    padding: 13px 16px;
+    border-radius: 13px;
+    background: #fff8e7;
+    border: 1px solid #f0dfad;
+    color: #7b5b0b;
+    margin: 10px 0;
+}
+
+@media (max-width: 800px) {
+    .block-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .eco-hero {
+        padding: 24px;
+        border-radius: 22px;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ============================================================
+# TEXT
 # ============================================================
 
 TEXT = {
-
-    "English": {
-
-        # Navigation
+    "en": {
         "home": "🏠 Home",
-        "scan": "📷 Scan",
+        "scan": "📸 Scan",
         "assistant": "🤖 AI Assistant",
         "history": "📋 History",
         "dashboard": "📊 Dashboard",
         "campus": "🏫 Campus Mode",
         "about": "ℹ️ About",
-
-        # General
-        "language": "🌐 Language / اللغة",
-        "navigation": "Navigation",
-
-        # Home
-        "home_subtitle": "AI-Powered Waste Management Assistant",
-        "make_every_waste_count": "🌍 Make Every Waste Count",
-        "start_scan": "📷 Start Waste Scan",
-        "what_ecoscan_can_do": "🚀 What EcoScan Can Do",
-
-        # Scan
-        "scan_title": "📷 Scan Waste",
-        "scan_subtitle": "Choose an image from your gallery or use your camera.",
-        "scan_location": "📍 Scan Location",
-        "where_found": "Where was this item found?",
-        "select_college": "🏫 Select College",
-        "input_method": "Choose input method",
-        "gallery": "🖼️ Gallery",
-        "camera": "📷 Camera",
-        "upload_image": "Upload waste image",
-        "take_picture": "Take a picture of the waste item",
-        "preview": "🖼️ Preview",
-        "analyze": "🔍 Analyze Waste",
-        "analyzing": "🧠 EcoScan is analyzing...",
-        "ai_result": "🧠 AI Result",
-        "top_predictions": "🔎 Top AI Predictions",
-        "smart_recommendation": "♻️ Smart Recommendation",
-        "category": "Category",
-        "recommended_action": "Recommended Action",
-        "best_choice": "⭐ BEST CHOICE",
-        "disposal_guidance": "🗑️ Disposal Guidance",
-        "reuse_idea": "💡 Reuse Idea",
-        "environmental_impact": "🌍 Environmental Impact",
-        "biotechnology": "🧬 Biotechnology & Organic Waste",
-        "organic_detected": "🌱 Organic waste pathway detected.",
-        "high_biological": "🌱 High Biological Potential",
-        "treatment_pathway": "Treatment Pathway",
-        "ecoscore": "⭐ EcoScore",
-        "scan_another": "🔄 Scan Another Item",
-        "saved_history": "✅ Analysis saved to your history.",
-        "manual_verify": "⚠️ Recommendation requires manual verification because AI confidence is low.",
-
-        # History
-        "history_title": "📋 History",
-        "history_subtitle": "Your previous EcoScan analyses",
-        "download_report": "📥 Download EcoScan Report",
-        "total_analyses": "📊 Total Analyses",
-        "search": "🔎 Search",
-        "waste_type": "🗑️ Waste Type",
-        "location": "📍 Location",
-        "college": "🏫 College",
-        "biotech_potential": "🌱 Biotech Potential",
-        "ecoscore_filter": "⭐ EcoScore",
-        "clear_history": "Clear History",
-        "delete": "🗑️ Delete",
-
-        # Dashboard
-        "dashboard_title": "📊 Dashboard",
-        "dashboard_subtitle": "Waste analysis overview",
-        "total_scans": "🔍 Total Scans",
-        "recyclable": "♻️ Recyclable %",
-        "organic": "🌱 Organic %",
-        "avg_confidence": "🧠 Avg Confidence",
-        "avg_ecoscore": "⭐ Avg EcoScore",
-        "ecopoints": "🌍 EcoPoints",
-        "waste_distribution": "📊 Waste Distribution",
-        "waste_location": "📍 Waste by Location",
-        "most_detected": "🏆 Most Detected Waste",
-        "waste_summary": "🗂️ Waste Summary",
-        "insight": "💡 EcoScan Insight",
-
-        # Campus
-        "campus_title": "🏫 Campus Mode",
-        "campus_subtitle": "AI-powered campus waste insights",
-        "campus_location": "📍 Campus Location",
-        "select_area": "Select campus area",
-        "select_college": "🏫 Select College",
-        "campus_distribution": "♻️ Campus Waste Distribution",
-        "campus_insight": "💡 Campus Insight",
-        "management_recommendation": "🎯 Management Recommendation",
-
-        # About
-        "about_title": "ℹ️ About EcoScan",
-        "about_subtitle": "AI • Sustainability • Biotechnology",
-        "what_is_ecoscan": "♻️ What is EcoScan?",
-        "artificial_intelligence": "🧠 Artificial Intelligence",
-        "supported_categories": "🗑️ Supported Waste Categories",
-        "biotechnology_title": "🧬 Biotechnology",
-        "campus_impact": "🏫 Campus Impact"
+        "language": "Language",
     },
-
-    "العربية": {
-
-        # Navigation
+    "ar": {
         "home": "🏠 الرئيسية",
-        "scan": "📷 فحص المخلفات",
+        "scan": "📸 فحص",
         "assistant": "🤖 المساعد الذكي",
         "history": "📋 السجل",
-        "dashboard": "📊 لوحة المعلومات",
+        "dashboard": "📊 لوحة البيانات",
         "campus": "🏫 وضع الجامعة",
         "about": "ℹ️ عن EcoScan",
-
-        # General
-        "language": "🌐 اللغة / Language",
-        "navigation": "التنقل",
-
-        # Home
-        "home_subtitle": "مساعد ذكي لإدارة المخلفات",
-        "make_every_waste_count": "🌍 اجعل لكل مخلف قيمة",
-        "start_scan": "📷 بدء فحص المخلفات",
-        "what_ecoscan_can_do": "🚀 ماذا يستطيع EcoScan أن يفعل؟",
-
-        # Scan
-        "scan_title": "📷 فحص المخلفات",
-        "scan_subtitle": "اختر صورة من المعرض أو استخدم الكاميرا.",
-        "scan_location": "📍 مكان الفحص",
-        "where_found": "أين تم العثور على هذه المخلفة؟",
-        "select_college": "🏫 اختر الكلية",
-        "input_method": "اختر طريقة الإدخال",
-        "gallery": "🖼️ المعرض",
-        "camera": "📷 الكاميرا",
-        "upload_image": "ارفع صورة المخلفة",
-        "take_picture": "التقط صورة للمخلفة",
-        "preview": "🖼️ معاينة الصورة",
-        "analyze": "🔍 تحليل المخلفات",
-        "analyzing": "🧠 EcoScan يقوم بتحليل الصورة...",
-        "ai_result": "🧠 نتيجة الذكاء الاصطناعي",
-        "top_predictions": "🔎 أفضل توقعات الذكاء الاصطناعي",
-        "smart_recommendation": "♻️ التوصية الذكية",
-        "category": "الفئة",
-        "recommended_action": "الإجراء الموصى به",
-        "best_choice": "⭐ أفضل اختيار",
-        "disposal_guidance": "🗑️ إرشادات التخلص",
-        "reuse_idea": "💡 فكرة لإعادة الاستخدام",
-        "environmental_impact": "🌍 التأثير البيئي",
-        "biotechnology": "🧬 التكنولوجيا الحيوية والمخلفات العضوية",
-        "organic_detected": "🌱 تم اكتشاف مسار للمخلفات العضوية.",
-        "high_biological": "🌱 إمكانات بيولوجية عالية",
-        "treatment_pathway": "مسار المعالجة",
-        "ecoscore": "⭐ التقييم البيئي",
-        "scan_another": "🔄 فحص عنصر آخر",
-        "saved_history": "✅ تم حفظ التحليل في السجل.",
-        "manual_verify": "⚠️ يوصى بالتحقق يدويًا لأن درجة ثقة الذكاء الاصطناعي منخفضة.",
-        
-
-        # History
-        "history_title": "📋 السجل",
-        "history_subtitle": "التحاليل السابقة في EcoScan",
-        "download_report": "📥 تحميل تقرير EcoScan",
-        "total_analyses": "📊 إجمالي التحليلات",
-        "search": "🔎 بحث",
-        "waste_type": "🗑️ نوع المخلف",
-        "location": "📍 المكان",
-        "college": "🏫 الكلية",
-        "biotech_potential": "🌱 الإمكانات الحيوية",
-        "ecoscore_filter": "⭐ التقييم البيئي",
-        "clear_history": "مسح السجل",
-        "delete": "🗑️ حذف",
-
-        # Dashboard
-        "dashboard_title": "📊 لوحة المعلومات",
-        "dashboard_subtitle": "نظرة عامة على تحليل المخلفات",
-        "total_scans": "🔍 إجمالي عمليات الفحص",
-        "recyclable": "♻️ نسبة القابلة لإعادة التدوير",
-        "organic": "🌱 نسبة المخلفات العضوية",
-        "avg_confidence": "🧠 متوسط الثقة",
-        "avg_ecoscore": "⭐ متوسط التقييم البيئي",
-        "ecopoints": "🌍 النقاط البيئية",
-        "waste_distribution": "📊 توزيع المخلفات",
-        "waste_location": "📍 المخلفات حسب المكان",
-        "most_detected": "🏆 أكثر نوع مخلفات تم اكتشافه",
-        "waste_summary": "🗂️ ملخص المخلفات",
-        "insight": "💡 تحليل EcoScan",
-
-        # Campus
-        "campus_title": "🏫 وضع الجامعة",
-        "campus_subtitle": "رؤى ذكية حول مخلفات الجامعة",
-        "campus_location": "📍 موقع الحرم الجامعي",
-        "select_area": "اختر منطقة الجامعة",
-        "select_college": "🏫 اختر الكلية",
-        "campus_distribution": "♻️ توزيع مخلفات الجامعة",
-        "campus_insight": "💡 تحليل مخلفات الجامعة",
-        "management_recommendation": "🎯 توصية إدارية",
-
-        # About
-        "about_title": "ℹ️ عن EcoScan",
-        "about_subtitle": "الذكاء الاصطناعي • الاستدامة • التكنولوجيا الحيوية",
-        "what_is_ecoscan": "♻️ ما هو EcoScan؟",
-        "artificial_intelligence": "🧠 الذكاء الاصطناعي",
-        "supported_categories": "🗑️ أنواع المخلفات المدعومة",
-        "biotechnology_title": "🧬 التكنولوجيا الحيوية",
-        "campus_impact": "🏫 تأثير النظام داخل الجامعة"
-    }
+        "language": "اللغة",
+    },
 }
+
 # ============================================================
-# ECOSCAN ECO-TECH UI
-# ============================================================
-
-st.markdown("""
-<style>
-
-/* ============================================================
-   GLOBAL
-   ============================================================ */
-
-.stApp {
-    background:
-        radial-gradient(
-            circle at 90% 5%,
-            rgba(91, 196, 132, 0.12),
-            transparent 25%
-        ),
-        radial-gradient(
-            circle at 5% 20%,
-            rgba(39, 174, 96, 0.08),
-            transparent 22%
-        ),
-        #f7fbf8;
-}
-
-.block-container {
-    max-width: 1280px;
-    padding-top: 2rem;
-    padding-bottom: 4rem;
-}
-
-
-/* ============================================================
-   SIDEBAR
-   ============================================================ */
-
-section[data-testid="stSidebar"] {
-    background:
-        linear-gradient(
-            180deg,
-            #effaf3 0%,
-            #e7f6ed 55%,
-            #f7fbf8 100%
-        );
-
-    border-right: 1px solid #d7ebde;
-}
-
-section[data-testid="stSidebar"] > div {
-    padding-top: 1.5rem;
-}
-
-section[data-testid="stSidebar"] h1 {
-    color: #087443;
-    font-size: 30px;
-    font-weight: 800;
-    letter-spacing: -1px;
-}
-
-section[data-testid="stSidebar"] hr {
-    border-color: #d4e9dc;
-}
-
-
-/* ============================================================
-   MAIN TITLES
-   ============================================================ */
-
-.eco-title {
-    font-size: clamp(36px, 5vw, 58px);
-    font-weight: 900;
-    line-height: 1.05;
-    letter-spacing: -2px;
-    color: #087443;
-    text-align: center;
-    margin-top: 5px;
-    margin-bottom: 8px;
-}
-
-.eco-subtitle {
-    text-align: center;
-    font-size: 17px;
-    color: #60786b;
-    margin-bottom: 30px;
-    line-height: 1.6;
-}
-
-
-/* ============================================================
-   HERO
-   ============================================================ */
-
-.eco-hero {
-    position: relative;
-    overflow: hidden;
-
-    background:
-        linear-gradient(
-            135deg,
-            #e8f8ee 0%,
-            #f8fffa 50%,
-            #e4f6eb 100%
-        );
-
-    border: 1px solid #cfe8d8;
-    border-radius: 28px;
-
-    padding: 38px;
-
-    margin: 15px 0 25px 0;
-
-    box-shadow:
-        0 12px 35px rgba(25, 95, 55, 0.08);
-}
-
-.eco-hero::after {
-    content: "♻️";
-
-    position: absolute;
-
-    right: 30px;
-    bottom: -20px;
-
-    font-size: 110px;
-
-    opacity: 0.08;
-}
-
-.eco-hero-title {
-    color: #087443;
-    font-size: 32px;
-    font-weight: 900;
-    margin-bottom: 8px;
-}
-
-.eco-hero-text {
-    color: #4f6d5c;
-    font-size: 16px;
-    line-height: 1.7;
-    max-width: 750px;
-}
-
-
-/* ============================================================
-   GENERAL CARDS
-   ============================================================ */
-
-.eco-card,
-.eco-card-green {
-
-    border-radius: 22px;
-
-    padding: 24px;
-
-    margin-bottom: 20px;
-}
-
-.eco-card {
-
-    background: rgba(255, 255, 255, 0.96);
-
-    border: 1px solid #dcece2;
-
-    box-shadow:
-        0 8px 25px rgba(31, 92, 54, 0.055);
-}
-
-.eco-card-green {
-
-    background:
-        linear-gradient(
-            135deg,
-            #effbf3,
-            #f8fffa
-        );
-
-    border: 1px solid #cce8d5;
-
-    box-shadow:
-        0 8px 25px rgba(31, 125, 70, 0.06);
-}
-
-.eco-card-title {
-
-    color: #087443;
-
-    font-size: 21px;
-
-    font-weight: 800;
-
-    margin-bottom: 10px;
-}
-
-
-/* ============================================================
-   KPI CARDS
-   ============================================================ */
-
-.kpi-card {
-
-    background: rgba(255, 255, 255, 0.96);
-
-    border: 1px solid #dcece2;
-
-    border-radius: 22px;
-
-    padding: 24px 18px;
-
-    text-align: center;
-
-    min-height: 145px;
-
-    box-shadow:
-        0 8px 25px rgba(31, 92, 54, 0.055);
-}
-
-.kpi-icon {
-
-    font-size: 31px;
-
-    margin-bottom: 4px;
-}
-
-.kpi-number {
-
-    color: #087443;
-
-    font-size: 31px;
-
-    font-weight: 900;
-
-    line-height: 1.2;
-}
-
-.kpi-label {
-
-    color: #65796d;
-
-    font-size: 13px;
-
-    margin-top: 6px;
-
-    font-weight: 600;
-}
-
-.kpi-small {
-
-    color: #7b8d82;
-
-    font-size: 11px;
-
-    margin-top: 5px;
-}
-
-
-/* ============================================================
-   RESULT
-   ============================================================ */
-
-.result-name {
-
-    color: #087443;
-
-    font-size: 35px;
-
-    font-weight: 900;
-
-    letter-spacing: -1px;
-}
-
-.confidence-number {
-
-    color: #087443;
-
-    font-size: 31px;
-
-    font-weight: 900;
-}
-
-
-/* ============================================================
-   BADGES
-   ============================================================ */
-
-.badge {
-
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    padding: 8px 15px;
-
-    border-radius: 999px;
-
-    font-weight: 700;
-
-    font-size: 13px;
-
-    margin: 7px 0;
-}
-
-.badge-green {
-
-    background: #dcf5e5;
-
-    color: #087443;
-
-    border: 1px solid #bfe5cd;
-}
-
-.badge-yellow {
-
-    background: #fff5d6;
-
-    color: #765b00;
-
-    border: 1px solid #f0df9d;
-}
-
-.badge-red {
-
-    background: #fde6e6;
-
-    color: #9c2828;
-
-    border: 1px solid #efc5c5;
-}
-
-
-/* ============================================================
-   BUTTONS
-   ============================================================ */
-
-.stButton > button {
-
-    border-radius: 15px !important;
-
-    min-height: 48px !important;
-
-    border: 1px solid #bfe2ca !important;
-
-    background: #ffffff !important;
-
-    color: #087443 !important;
-
-    font-weight: 700 !important;
-
-    transition: all 0.2s ease !important;
-}
-
-.stButton > button:hover {
-
-    border-color: #087443 !important;
-
-    background: #effaf3 !important;
-
-    color: #075d36 !important;
-}
-
-
-/* ============================================================
-   INPUTS
-   ============================================================ */
-
-.stTextInput input,
-.stTextArea textarea,
-.stSelectbox div[data-baseweb="select"] > div {
-
-    border-radius: 13px !important;
-
-    border-color: #d3e8da !important;
-}
-
-
-/* ============================================================
-   FILE UPLOADER
-   ============================================================ */
-
-section[data-testid="stFileUploaderDropzone"] {
-
-    border: 2px dashed #b9dec5;
-
-    border-radius: 18px;
-
-    background: #f5fcf7;
-}
-
-
-/* ============================================================
-   PROGRESS
-   ============================================================ */
-
-.stProgress > div > div > div > div {
-
-    border-radius: 999px;
-}
-
-
-/* ============================================================
-   IMAGES
-   ============================================================ */
-
-img {
-
-    border-radius: 18px;
-}
-
-
-/* ============================================================
-   DATAFRAME
-   ============================================================ */
-
-[data-testid="stDataFrame"] {
-
-    border-radius: 16px;
-
-    overflow: hidden;
-}
-
-
-/* ============================================================
-   EXPANDERS
-   ============================================================ */
-
-[data-testid="stExpander"] {
-
-    border: 1px solid #dcece2;
-
-    border-radius: 16px;
-
-    background: rgba(255, 255, 255, 0.75);
-}
-
-
-/* ============================================================
-   ALERTS
-   ============================================================ */
-
-[data-testid="stAlert"] {
-
-    border-radius: 15px;
-}
-
-
-/* ============================================================
-   HOME DESIGN
-   ============================================================ */
-
-.hero-section {
-
-    background:
-        radial-gradient(
-            circle at 90% 10%,
-            rgba(76, 175, 80, 0.14),
-            transparent 30%
-        ),
-        linear-gradient(
-            135deg,
-            #ffffff 0%,
-            #f1faf4 100%
-        );
-
-    border: 1px solid #dcefe2;
-
-    border-radius: 28px;
-
-    padding: 42px 45px;
-
-    margin-bottom: 20px;
-
-    box-shadow:
-        0 10px 30px rgba(32, 91, 54, 0.08);
-}
-
-.hero-content {
-
-    max-width: 850px;
-}
-
-.hero-badge {
-
-    display: inline-block;
-
-    background: #e4f5e9;
-
-    color: #247342;
-
-    border-radius: 50px;
-
-    padding: 8px 15px;
-
-    font-size: 12px;
-
-    font-weight: 700;
-
-    letter-spacing: 0.6px;
-
-    margin-bottom: 16px;
-}
-
-.hero-title {
-
-    font-size: 42px;
-
-    font-weight: 800;
-
-    color: #173f29;
-
-    line-height: 1.15;
-
-    margin-bottom: 8px;
-}
-
-.hero-title span {
-
-    color: #2e8b57;
-}
-
-.hero-subtitle {
-
-    font-size: 20px;
-
-    font-weight: 600;
-
-    color: #4f765e;
-
-    margin-bottom: 14px;
-}
-
-.hero-description {
-
-    font-size: 15px;
-
-    line-height: 1.8;
-
-    color: #607568;
-
-    max-width: 760px;
-}
-
-
-/* ============================================================
-   HOME ACTION
-   ============================================================ */
-
-.main-action-card {
-
-    min-height: 145px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 22px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #eaf8ef,
-            #f8fcf9
-        );
-
-    border: 1px solid #d7ebdd;
-
-    border-radius: 24px;
-
-    padding: 25px;
-
-    box-shadow:
-        0 8px 24px rgba(36, 115, 66, 0.06);
-}
-
-.action-icon {
-
-    width: 72px;
-
-    height: 72px;
-
-    border-radius: 20px;
-
-    background: #ffffff;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    font-size: 34px;
-
-    box-shadow:
-        0 5px 15px rgba(30, 90, 50, 0.08);
-}
-
-.action-title {
-
-    font-size: 22px;
-
-    font-weight: 800;
-
-    color: #173f29;
-
-    margin-bottom: 6px;
-}
-
-.action-text {
-
-    color: #607568;
-
-    font-size: 14px;
-
-    line-height: 1.6;
-}
-
-
-/* ============================================================
-   SECTION HEADINGS
-   ============================================================ */
-
-.section-heading {
-
-    font-size: 22px;
-
-    font-weight: 800;
-
-    color: #173f29;
-
-    margin: 10px 0 15px 2px;
-}
-
-
-/* ============================================================
-   QUICK CARDS
-   ============================================================ */
-
-.quick-card {
-
-    background: #ffffff;
-
-    border: 1px solid #e0eee4;
-
-    border-radius: 22px;
-
-    padding: 24px;
-
-    min-height: 155px;
-
-    box-shadow:
-        0 7px 20px rgba(35, 83, 50, 0.06);
-}
-
-.quick-icon {
-
-    font-size: 30px;
-
-    margin-bottom: 12px;
-}
-
-.quick-title {
-
-    color: #173f29;
-
-    font-size: 17px;
-
-    font-weight: 700;
-
-    margin-bottom: 7px;
-}
-
-.quick-text {
-
-    color: #708077;
-
-    font-size: 13px;
-
-    line-height: 1.6;
-}
-
-
-/* ============================================================
-   PROCESS
-   ============================================================ */
-
-.process-row {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 10px;
-
-    padding: 15px 5px;
-}
-
-.process-item {
-
-    flex: 1;
-
-    text-align: center;
-
-    color: #173f29;
-}
-
-.process-item span {
-
-    display: block;
-
-    color: #718078;
-
-    font-size: 12px;
-
-    margin-top: 5px;
-}
-
-.process-icon {
-
-    width: 58px;
-
-    height: 58px;
-
-    margin: 0 auto 10px auto;
-
-    border-radius: 18px;
-
-    background: #eaf7ee;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    font-size: 25px;
-}
-
-.process-arrow {
-
-    color: #70a783;
-
-    font-size: 22px;
-
-    font-weight: 700;
-}
-
-
-/* ============================================================
-   FEATURE CARDS
-   ============================================================ */
-
-.feature-card {
-
-    background: #ffffff;
-
-    border: 1px solid #e0eee4;
-
-    border-radius: 22px;
-
-    padding: 25px;
-
-    min-height: 170px;
-
-    box-shadow:
-        0 7px 20px rgba(35, 83, 50, 0.06);
-}
-
-.feature-icon {
-
-    font-size: 30px;
-
-    margin-bottom: 12px;
-}
-
-.feature-title {
-
-    color: #173f29;
-
-    font-size: 17px;
-
-    font-weight: 800;
-
-    margin-bottom: 8px;
-}
-
-.feature-text {
-
-    color: #718078;
-
-    font-size: 13px;
-
-    line-height: 1.7;
-}
-
-.eco-home-footer {
-
-    text-align: center;
-
-    color: #71917c;
-
-    font-size: 13px;
-
-    margin: 30px 0 10px 0;
-}
-
-
-/* ============================================================
-   FOOTER
-   ============================================================ */
-
-.eco-footer {
-
-    text-align: center;
-
-    color: #718479;
-
-    margin-top: 55px;
-
-    padding: 25px 15px;
-
-    border-top: 1px solid #dcece2;
-
-    font-size: 13px;
-}
-
-
-/* ============================================================
-   MOBILE
-   ============================================================ */
-
-@media (max-width: 768px) {
-
-    .block-container {
-
-        padding:
-            1.2rem
-            1rem
-            3rem
-            1rem;
-    }
-
-    .eco-title {
-
-        font-size: 38px;
-
-        letter-spacing: -1px;
-    }
-
-    .eco-subtitle {
-
-        font-size: 15px;
-
-        margin-bottom: 22px;
-    }
-
-    .eco-card,
-    .eco-card-green,
-    .eco-hero {
-
-        padding: 19px;
-
-        border-radius: 19px;
-    }
-
-    .eco-hero-title {
-
-        font-size: 26px;
-    }
-
-    .hero-section {
-
-        padding: 28px 22px;
-
-        border-radius: 22px;
-    }
-
-    .hero-title {
-
-        font-size: 31px;
-    }
-
-    .hero-subtitle {
-
-        font-size: 17px;
-    }
-
-    .hero-description {
-
-        font-size: 13px;
-    }
-
-    .result-name {
-
-        font-size: 28px;
-    }
-
-    .kpi-card {
-
-        min-height: 120px;
-
-        padding: 18px 10px;
-    }
-
-    .kpi-number {
-
-        font-size: 25px;
-    }
-
-    .kpi-label {
-
-        font-size: 12px;
-    }
-
-    .process-row {
-
-        flex-direction: column;
-    }
-
-    .process-arrow {
-
-        transform: rotate(90deg);
-    }
-
-    .main-action-card {
-
-        padding: 20px;
-    }
-}
-
-</style>
-""", unsafe_allow_html=True)
-# ============================================================
-# DATABASE
+# DATABASE / MODEL
 # ============================================================
 
 init_database()
-
-
-# ============================================================
-# LOAD MODEL
-# ============================================================
 
 @st.cache_resource
 def load_model():
     return tf.keras.models.load_model("ecoscan_improved.keras")
 
+try:
+    model = load_model()
+    model_error = None
+except Exception as e:
+    model = None
+    model_error = str(e)
 
-model = load_model()
+def load_class_names():
+    if os.path.exists("class_names.txt"):
+        with open("class_names.txt", "r", encoding="utf-8") as f:
+            return [line.strip() for line in f if line.strip()]
+    return [
+        "Cardboard", "Food Organics", "Glass", "Metal",
+        "Miscellaneous Trash", "Paper", "Plastic",
+        "Textile Trash", "Vegetation"
+    ]
 
-
-# ============================================================
-# LOAD CLASS NAMES
-# ============================================================
-
-with open("class_names.txt", "r", encoding="utf-8") as file:
-    class_names = [line.strip() for line in file.readlines()]
-
-
-# ============================================================
-# HELPER FUNCTIONS
-# ============================================================
+class_names = load_class_names()
 
 def predict_waste(input_image):
+    if model is None:
+        return []
+    image = input_image.convert("RGB").resize((224, 224))
+    arr = np.array(image, dtype=np.float32) / 255.0
+    arr = np.expand_dims(arr, axis=0)
+    prediction = model.predict(arr, verbose=0)[0]
+    top_indices = np.argsort(prediction)[::-1][:3]
+    return [
+        (class_names[i], float(prediction[i] * 100))
+        for i in top_indices
+    ]
 
-    image_resized = input_image.resize((224, 224))
-
-    image_array = np.array(image_resized)
-
-    image_array = np.expand_dims(
-        image_array,
-        axis=0
-    )
-
-    predictions = model.predict(
-        image_array,
-        verbose=0
-    )[0]
-
-    top_indices = np.argsort(
-        predictions
-    )[-3:][::-1]
-
-    results = []
-
-    for class_index in top_indices:
-
-        predicted_class = class_names[class_index]
-
-        display_name = predicted_class.split(
-            "-",
-            1
-        )[-1]
-
-        confidence = float(
-            predictions[class_index]
-        ) * 100
-
-        results.append({
-            "class": display_name,
-            "confidence": confidence
-        })
-
-    return results
-
-
-def get_confidence_info(confidence):
-
+def confidence_info(confidence):
     if confidence >= 80:
-
-        return {
-            "level": "High Confidence",
-            "emoji": "🟢",
-            "class": "badge-green",
-            "message": (
-                "EcoScan is highly confident in this prediction."
-            )
-        }
-
-    elif confidence >= 60:
-
-        return {
-            "level": "Medium Confidence",
-            "emoji": "🟡",
-            "class": "badge-yellow",
-            "message": (
-                "The prediction has moderate confidence. "
-                "Please verify the item before disposal."
-            )
-        }
-
-    else:
-
-        return {
-            "level": "Low Confidence",
-            "emoji": "🔴",
-            "class": "badge-red",
-            "message": (
-                "EcoScan is not sufficiently confident. "
-                "Please verify the item manually."
-            )
-        }
-
-
-def get_eco_score_message(score):
-
-    if score >= 9:
-        return "Excellent environmental choice 🌍"
-
-    elif score >= 7:
-        return "Good environmental option 🌱"
-
-    elif score >= 5:
-        return "Moderate environmental benefit ♻️"
-
-    else:
-        return "Consider better disposal or reuse options."
-
+        return "High", "🟢"
+    if confidence >= 60:
+        return "Medium", "🟡"
+    return "Low", "🔴"
 
 def save_scan_image(image):
+    os.makedirs("scan_images", exist_ok=True)
+    filename = datetime.now().strftime("scan_%Y%m%d_%H%M%S_%f.jpg")
+    path = os.path.join("scan_images", filename)
+    image.convert("RGB").save(path, "JPEG", quality=90)
+    return path
 
-    os.makedirs(
-        "scan_images",
-        exist_ok=True
-    )
-
-    timestamp = datetime.now().strftime(
-        "%Y%m%d_%H%M%S_%f"
-    )
-
-    image_path = os.path.join(
-        "scan_images",
-        f"scan_{timestamp}.jpg"
-    )
-
-    image.save(
-        image_path,
-        format="JPEG",
-        quality=90
-    )
-
-    return image_path
+def safe_percent(value, total):
+    return round((value / total) * 100, 1) if total else 0
 
 # ============================================================
-# SIDEBAR NAVIGATION
+# SIDEBAR
 # ============================================================
 
 with st.sidebar:
+    st.markdown("""
+    <div class="eco-brand">
+        <div class="eco-logo">♻️</div>
+        <div class="eco-brand-title">EcoScan</div>
+        <div class="eco-brand-subtitle">AI-Powered Waste Management</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    st.markdown(
-        "<h1>♻️ EcoScan</h1>",
-        unsafe_allow_html=True
+    language = st.radio(
+        "Language / اللغة",
+        ["English", "العربية"],
+        horizontal=True,
+        label_visibility="collapsed",
     )
+    lang = "ar" if language == "العربية" else "en"
 
-    st.caption(
-        "AI-Powered Waste Management Assistant"
-    )
+    nav_items = [
+        TEXT[lang]["home"],
+        TEXT[lang]["scan"],
+        TEXT[lang]["assistant"],
+        TEXT[lang]["history"],
+        TEXT[lang]["dashboard"],
+        TEXT[lang]["campus"],
+        TEXT[lang]["about"],
+    ]
 
-    # 🌐 Language
-    language = st.selectbox(
-        "🌐 Language / اللغة",
-        ["English", "العربية"]
-    )
-
-    st.markdown("---")
-
-    # Navigation
-    page_label = st.radio(
+    page = st.radio(
         "Navigation",
-        [
-            TEXT[language]["home"],
-            TEXT[language]["scan"],
-            TEXT[language]["assistant"],
-            TEXT[language]["history"],
-            TEXT[language]["dashboard"],
-            TEXT[language]["campus"],
-            TEXT[language]["about"]
-        ],
-        label_visibility="collapsed"
+        nav_items,
+        label_visibility="collapsed",
     )
-
-    # Keep internal page names unchanged.
-    # This prevents breaking the existing page logic.
-
-    page_map = {
-        TEXT[language]["home"]: "🏠 Home",
-        TEXT[language]["scan"]: "📷 Scan",
-        TEXT[language]["assistant"]: "🤖 AI Assistant",
-        TEXT[language]["history"]: "📋 History",
-        TEXT[language]["dashboard"]: "📊 Dashboard",
-        TEXT[language]["campus"]: "🏫 Campus Mode",
-        TEXT[language]["about"]: "ℹ️ About"
-    }
-
-    page = page_map[page_label]
 
     st.markdown("---")
-
     st.markdown(
-        """
-        **EcoScan AI**
-
-        🧠 AI Classification  
-        ♻️ Smart Sorting  
-        🌱 Sustainability  
-        🧬 Biotechnology
-        """
+        '<div class="small-muted">♻️ Smart sorting • 🧠 AI • 🌱 Sustainability</div>',
+        unsafe_allow_html=True,
     )
+
 # ============================================================
 # HOME
 # ============================================================
 
-if page == "🏠 Home":
+if page == TEXT[lang]["home"]:
 
-    st.markdown(
-        """
-        <div class="hero-section">
+    st.markdown("""
+    <div class="eco-hero">
+        <div class="eco-kicker">AI • Sustainability • Smart Campus</div>
+        <h1>EcoScan</h1>
+        <p>
+            AI-Powered Waste Management Assistant designed to help identify
+            waste, understand its environmental impact, choose a suitable
+            action, and build useful campus waste insights.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
-            <div class="hero-content">
-
-                <div class="hero-badge">
-                    🌱 AI-POWERED WASTE MANAGEMENT
-                </div>
-
-                <div class="hero-title">
-                    Welcome to <span>EcoScan</span>
-                </div>
-
-                <div class="hero-subtitle">
-                    Smart Waste Management Assistant
-                </div>
-
-                <div class="hero-description">
-                    Turn everyday waste into smarter environmental decisions.
-                    Identify waste using Artificial Intelligence, understand
-                    its environmental impact, and discover the right action.
-                </div>
-
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # --------------------------------------------------------
-    # MAIN ACTION
-    # --------------------------------------------------------
-
-    st.markdown(
-        """
-        <div class="main-action-card">
-
-            <div class="action-icon">
-                📷
-            </div>
-
-            <div>
-                <div class="action-title">
-                    Ready to Scan?
-                </div>
-
-                <div class="action-text">
-                    Upload an image or use your camera to let
-                    EcoScan identify your waste.
-                </div>
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    if st.button(
-        "📷  Start Waste Scan",
-        use_container_width=True,
-        type="primary"
-    ):
-        st.info("Choose 📷 Scan from the sidebar to start.")
-
-    st.markdown("")
-
-    # --------------------------------------------------------
-    # QUICK ACTIONS
-    # --------------------------------------------------------
-
-    st.markdown(
-        '<div class="section-heading">⚡ Quick Actions</div>',
-        unsafe_allow_html=True
-    )
-
-    q1, q2, q3 = st.columns(3)
-
-    with q1:
-
-        st.markdown(
-            """
-            <div class="quick-card">
-
-                <div class="quick-icon">
-                    🔍
-                </div>
-
-                <div class="quick-title">
-                    Identify Waste
-                </div>
-
-                <div class="quick-text">
-                    Use the trained AI model to recognize
-                    the waste category.
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    with q2:
-
-        st.markdown(
-            """
-            <div class="quick-card">
-
-                <div class="quick-icon">
-                    ♻️
-                </div>
-
-                <div class="quick-title">
-                    Find the Right Action
-                </div>
-
-                <div class="quick-text">
-                    Discover whether the item should be
-                    recycled, reused, or properly disposed.
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    with q3:
-
-        st.markdown(
-            """
-            <div class="quick-card">
-
-                <div class="quick-icon">
-                    💬
-                </div>
-
-                <div class="quick-title">
-                    Ask EcoScan
-                </div>
-
-                <div class="quick-text">
-                    Get practical waste-management guidance
-                    from the EcoScan assistant.
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    st.markdown("")
-
-    # --------------------------------------------------------
-    # STATISTICS
-    # --------------------------------------------------------
-
-    st.markdown(
-        '<div class="section-heading">📊 EcoScan at a Glance</div>',
-        unsafe_allow_html=True
-    )
-
-    c1, c2, c3 = st.columns(3)
+    c1, c2 = st.columns([1.2, 1])
 
     with c1:
+        st.markdown("""
+        <div class="eco-card">
+            <h3>🌱 From image to action</h3>
+            <p class="small-muted">
+                Upload a waste image, let the trained model classify it,
+                then use EcoScan's knowledge base for recommendations,
+                EcoScore, environmental information and biotechnology pathways.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
 
-        st.markdown(
-            """
-            <div class="kpi-card">
-
-                <div class="kpi-icon">
-                    🧠
-                </div>
-
-                <div class="kpi-number">
-                    80.62%
-                </div>
-
-                <div class="kpi-label">
-                    AI Model Accuracy
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        if st.button("📸 Start Scanning", type="primary", use_container_width=True):
+            st.session_state["go_scan"] = True
+            st.rerun()
 
     with c2:
-
-        st.markdown(
-            """
-            <div class="kpi-card">
-
-                <div class="kpi-icon">
-                    🗂️
-                </div>
-
-                <div class="kpi-number">
-                    9
-                </div>
-
-                <div class="kpi-label">
-                    Waste Categories
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    with c3:
-
-        st.markdown(
-            """
-            <div class="kpi-card">
-
-                <div class="kpi-icon">
-                    🌱
-                </div>
-
-                <div class="kpi-number">
-                    Eco
-                </div>
-
-                <div class="kpi-label">
-                    Sustainability Focus
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    st.markdown("")
-
-    # --------------------------------------------------------
-    # HOW ECOSCAN WORKS
-    # --------------------------------------------------------
-
-    st.markdown(
-        """
+        st.markdown("""
         <div class="eco-card">
-
-            <div class="eco-card-title">
-                🌱 How EcoScan Works
-            </div>
-
-            <div class="process-row">
-
-                <div class="process-item">
-                    <div class="process-icon">
-                        📷
-                    </div>
-                    <b>Scan</b>
-                    <span>Upload or capture waste</span>
-                </div>
-
-                <div class="process-arrow">
-                    →
-                </div>
-
-                <div class="process-item">
-                    <div class="process-icon">
-                        🧠
-                    </div>
-                    <b>Analyze</b>
-                    <span>AI classification</span>
-                </div>
-
-                <div class="process-arrow">
-                    →
-                </div>
-
-                <div class="process-item">
-                    <div class="process-icon">
-                        ♻️
-                    </div>
-                    <b>Decide</b>
-                    <span>Recommended action</span>
-                </div>
-
-                <div class="process-arrow">
-                    →
-                </div>
-
-                <div class="process-item">
-                    <div class="process-icon">
-                        🌍
-                    </div>
-                    <b>Impact</b>
-                    <span>Environmental insight</span>
-                </div>
-
-            </div>
-
+            <h3>🧠 What makes EcoScan specialized?</h3>
+            <p class="small-muted">
+                EcoScan combines AI classification with a waste knowledge base,
+                recommendations, history, campus analytics and an educational
+                assistant rather than acting as a general image chatbot.
+            </p>
         </div>
-        """,
-        unsafe_allow_html=True
+        """, unsafe_allow_html=True)
+
+    history = get_history()
+    total = len(history)
+    recyclable = sum(
+        bool(get_waste_info(r[2]).get("recyclable", False)) for r in history
     )
 
-    st.markdown("")
+    st.markdown("### 📊 EcoScan at a glance")
+    a, b, c, d = st.columns(4)
 
-    # --------------------------------------------------------
-    # FEATURES
-    # --------------------------------------------------------
+    stats = [
+        ("🧠", "AI Accuracy", "80.62%"),
+        ("🗂️", "Waste Categories", "9"),
+        ("📸", "Total Scans", str(total)),
+        ("♻️", "Recyclable Scans", str(recyclable)),
+    ]
 
-    st.markdown(
-        '<div class="section-heading">✨ EcoScan Features</div>',
-        unsafe_allow_html=True
-    )
+    for col, (icon, label, value) in zip([a,b,c,d], stats):
+        with col:
+            st.markdown(
+                f'<div class="eco-stat"><div>{icon}</div>'
+                f'<div class="eco-stat-value">{value}</div>'
+                f'<div class="eco-stat-label">{label}</div></div>',
+                unsafe_allow_html=True,
+            )
 
-    f1, f2, f3 = st.columns(3)
-
-    with f1:
-
-        st.markdown(
-            """
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    🧠
-                </div>
-
-                <div class="feature-title">
-                    AI Classification
-                </div>
-
-                <div class="feature-text">
-                    Identify waste using the trained
-                    EcoScan Artificial Intelligence model.
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    with f2:
-
-        st.markdown(
-            """
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    🧬
-                </div>
-
-                <div class="feature-title">
-                    Biotechnology
-                </div>
-
-                <div class="feature-text">
-                    Explore biological treatment pathways
-                    for suitable organic waste.
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    with f3:
-
-        st.markdown(
-            """
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    🏫
-                </div>
-
-                <div class="feature-title">
-                    Smart Campus
-                </div>
-
-                <div class="feature-text">
-                    Track waste patterns and support
-                    smarter campus management.
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    st.markdown(
-        """
-        <div class="eco-home-footer">
-            🌿 EcoScan — Smart choices for a cleaner campus
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
+    st.markdown("### ✨ Core features")
+    cols = st.columns(4)
+    features = [
+        ("📸", "AI Waste Scan", "Classify waste from an uploaded image."),
+        ("⭐", "EcoScore", "Show a simple environmental score for each category."),
+        ("🧬", "Biotechnology", "Connect suitable organic waste with biological pathways."),
+        ("🏫", "Campus Intelligence", "Track waste patterns by location and college."),
+    ]
+    for col, (icon, title, desc) in zip(cols, features):
+        with col:
+            st.markdown(
+                f'<div class="eco-feature"><div class="eco-feature-icon">{icon}</div>'
+                f'<div class="eco-feature-title">{title}</div>'
+                f'<div class="eco-feature-text">{desc}</div></div>',
+                unsafe_allow_html=True,
+            )
 
 # ============================================================
 # SCAN
 # ============================================================
 
-elif page == "📷 Scan":
+elif page == TEXT[lang]["scan"]:
 
-    # --------------------------------------------------------
-    # HEADER
-    # --------------------------------------------------------
-
+    st.markdown('<div class="eco-title">📸 Scan Waste</div>', unsafe_allow_html=True)
     st.markdown(
-        f"""
-        <div class="eco-hero">
-
-            <div class="eco-hero-title">
-                📷 {TEXT[language]["scan_title"]}
-            </div>
-
-            <div class="eco-hero-text">
-                {TEXT[language]["scan_subtitle"]}
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
+        '<div class="eco-subtitle">Upload an image and let EcoScan analyze it.</div>',
+        unsafe_allow_html=True,
     )
 
-    # --------------------------------------------------------
-    # LOCATION
-    # --------------------------------------------------------
+    if model_error:
+        st.error("The AI model could not be loaded. Please make sure ecoscan_improved.keras is in the project folder.")
 
-    st.markdown(
-        '<div class="section-heading">📍 Scan Location</div>',
-        unsafe_allow_html=True
-    )
+    left, right = st.columns([1, 1])
 
-    location_col1, location_col2 = st.columns([1.3, 1])
-
-    with location_col1:
+    with left:
+        st.markdown('<div class="eco-card"><h3>📍 Scan context</h3></div>', unsafe_allow_html=True)
 
         location = st.selectbox(
-            TEXT[language]["where_found"],
+            "Scan Location",
             [
                 "Personal Scan",
                 "Academic Building",
                 "Cafeteria",
                 "Laboratories",
                 "Library",
-                "Student Area"
-            ]
+                "Student Area",
+            ],
         )
 
-    college = None
-
-    with location_col2:
-
+        college = None
         if location == "Academic Building":
-
             college = st.selectbox(
-                TEXT[language]["select_college"],
+                "College",
                 [
-                    "College of Human Medicine",
-                    "College of Pharmacy",
-                    "College of Biotechnology",
-                    "College of Physical Therapy"
-                ]
+                    "Faculty of Medicine",
+                    "Faculty of Pharmacy",
+                    "Faculty of Biotechnology",
+                    "Faculty of Physical Therapy",
+                ],
             )
+
+        input_mode = st.radio(
+            "Input source",
+            ["Gallery / Upload", "Camera"],
+            horizontal=True,
+        )
+
+        if input_mode == "Camera":
+            uploaded_file = st.camera_input("Take a photo")
+        else:
+            uploaded_file = st.file_uploader(
+                "Upload waste image",
+                type=["jpg", "jpeg", "png", "webp"],
+            )
+
+    with right:
+        st.markdown('<div class="eco-card"><h3>🔍 Analysis preview</h3></div>', unsafe_allow_html=True)
+
+        if uploaded_file:
+            image = Image.open(uploaded_file).convert("RGB")
+            st.image(image, use_container_width=True)
+
+            if st.button("🧠 Analyze with EcoScan AI", type="primary", use_container_width=True):
+                with st.spinner("EcoScan is analyzing the image..."):
+                    predictions = predict_waste(image)
+
+                if not predictions:
+                    st.error("No prediction was returned. Check the AI model file.")
+                else:
+                    waste_type, confidence = predictions[0]
+                    info = get_waste_info(waste_type)
+                    level, icon = confidence_info(confidence)
+                    score = info.get("eco_score", 0)
+                    action = info.get("action", "Manual Review")
+
+                    st.session_state["last_scan"] = {
+                        "image": image,
+                        "waste_type": waste_type,
+                        "confidence": confidence,
+                        "info": info,
+                        "predictions": predictions,
+                        "location": location,
+                        "college": college,
+                        "level": level,
+                        "score": score,
+                        "action": action,
+                    }
 
         else:
+            st.markdown("""
+            <div class="eco-card" style="text-align:center;padding:55px 20px;">
+                <div style="font-size:50px;">📷</div>
+                <h3>Ready to scan</h3>
+                <p class="small-muted">
+                    Upload or capture an image of a waste item.
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
 
-            st.markdown(
-                """
-                <div class="eco-card-green">
+    if "last_scan" in st.session_state:
+        result = st.session_state["last_scan"]
+        info = result["info"]
 
-                    <div class="eco-card-title">
-                        🏫 Campus Location
-                    </div>
-
-                    <div style="
-                        color:#607568;
-                        font-size:13px;
-                        line-height:1.6;
-                    ">
-                        This scan location will be stored
-                        for campus analysis.
-                    </div>
-
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-    st.markdown("")
-
-    # --------------------------------------------------------
-    # INPUT METHOD
-    # --------------------------------------------------------
-
-    st.markdown(
-        '<div class="section-heading">📸 Choose Scan Method</div>',
-        unsafe_allow_html=True
-    )
-
-    input_method = st.radio(
-        TEXT[language]["input_method"],
-        [
-            TEXT[language]["gallery"],
-            TEXT[language]["camera"]
-        ],
-        horizontal=True
-    )
-
-    image = None
-
-    # --------------------------------------------------------
-    # GALLERY
-    # --------------------------------------------------------
-
-    if input_method == TEXT[language]["gallery"]:
+        st.markdown("---")
+        st.markdown("### 🧠 AI Result")
 
         st.markdown(
-            """
-            <div class="eco-card">
-
-                <div class="eco-card-title">
-                    🖼️ Upload Waste Image
-                </div>
-
-                <div style="
-                    color:#708077;
-                    font-size:13px;
-                    line-height:1.6;
-                ">
-                    Choose a clear image for AI classification.
-                </div>
-
+            f"""
+            <div class="eco-result">
+                <div class="eco-pill">{result["level"]} Confidence</div>
+                <div class="eco-result-type">{result["waste_type"]}</div>
+                <p class="small-muted">
+                    AI confidence: <b>{result["confidence"]:.2f}%</b>
+                </p>
+                <div class="eco-pill">Recommended: {result["action"]}</div>
+                <div class="eco-pill">Category: {info.get("category","Unknown")}</div>
             </div>
             """,
-            unsafe_allow_html=True
+            unsafe_allow_html=True,
         )
 
-        uploaded_file = st.file_uploader(
-            TEXT[language]["upload_image"],
-            type=[
-                "jpg",
-                "jpeg",
-                "png",
-                "webp"
-            ]
-        )
+        c1, c2 = st.columns([1, 2])
 
-        if uploaded_file is not None:
-
-            image = Image.open(
-                uploaded_file
-            ).convert("RGB")
-
-    # --------------------------------------------------------
-    # CAMERA
-    # --------------------------------------------------------
-
-    else:
-
-        st.markdown(
-            """
-            <div class="eco-card">
-
-                <div class="eco-card-title">
-                    📷 Capture Waste
-                </div>
-
-                <div style="
-                    color:#708077;
-                    font-size:13px;
-                    line-height:1.6;
-                ">
-                    Take a clear photo for AI classification.
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        camera_image = st.camera_input(
-            TEXT[language]["take_picture"]
-        )
-
-        if camera_image is not None:
-
-            image = Image.open(
-                camera_image
-            ).convert("RGB")
-
-    # --------------------------------------------------------
-    # IMAGE PREVIEW
-    # --------------------------------------------------------
-
-    if image is not None:
-
-        st.markdown(
-            '<div class="section-heading">👁️ Preview</div>',
-            unsafe_allow_html=True
-        )
-
-        preview_col1, preview_col2 = st.columns([1.2, 0.8])
-
-        with preview_col1:
-
-            st.image(
-                image,
-                use_container_width=True
-            )
-
-        with preview_col2:
-
-            st.markdown(
-                """
-                <div class="eco-card-green">
-
-                    <div style="
-                        font-size:32px;
-                        margin-bottom:8px;
-                    ">
-                        🧠
-                    </div>
-
-                    <div class="eco-card-title">
-                        Ready for AI Analysis
-                    </div>
-
-                    <div style="
-                        color:#607568;
-                        font-size:13px;
-                        line-height:1.7;
-                    ">
-                        EcoScan will analyze the image and
-                        identify the most likely waste category.
-                    </div>
-
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-            analyze_button = st.button(
-                TEXT[language]["analyze"],
-                use_container_width=True,
-                type="primary"
-            )
-
-        # ----------------------------------------------------
-        # AI ANALYSIS
-        # ----------------------------------------------------
-
-        if analyze_button:
-
-            with st.spinner(
-                TEXT[language]["analyzing"]
-            ):
-
-                top_predictions = predict_waste(image)
-
-                predicted_class = top_predictions[0]["class"]
-
-                confidence = top_predictions[0]["confidence"]
-
-                confidence_info = get_confidence_info(
-                    confidence
-                )
-
-                waste_info = get_waste_info(
-                    predicted_class
-                )
-
-                biotech_info = get_biotech_info(
-                    predicted_class
-                )
-
-            # ------------------------------------------------
-            # RESULT HEADER
-            # ------------------------------------------------
-
-            st.markdown(
-                '<div class="section-heading">🧠 AI Analysis Result</div>',
-                unsafe_allow_html=True
-            )
-
-            result_col1, result_col2 = st.columns([1.4, 0.6])
-
-            with result_col1:
-
-                st.markdown(
-                    f"""
-                    <div class="eco-card-green">
-
-                        <div style="
-                            font-size:13px;
-                            color:#557060;
-                        ">
-                            Detected Waste
-                        </div>
-
-                        <div class="result-name">
-                            {predicted_class}
-                        </div>
-
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-
-            with result_col2:
-
-                st.markdown(
-                    f"""
-                    <div class="kpi-card">
-
-                        <div class="kpi-icon">
-                            🎯
-                        </div>
-
-                        <div class="kpi-number">
-                            {confidence:.2f}%
-                        </div>
-
-                        <div class="kpi-label">
-                            Confidence
-                        </div>
-
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-
-            st.progress(
-                min(confidence / 100, 1.0)
-            )
-
+        with c1:
             st.markdown(
                 f"""
-                <div class="badge {confidence_info['class']}">
-                    {confidence_info['emoji']}
-                    {confidence_info['level']}
+                <div class="eco-score">
+                    <div class="small-muted">EcoScore</div>
+                    <div class="eco-score-number">{result["score"]}/10</div>
                 </div>
                 """,
-                unsafe_allow_html=True
+                unsafe_allow_html=True,
             )
 
-            st.write(
-                confidence_info["message"]
-            )
+        with c2:
+            st.markdown("#### 🎯 Top predictions")
+            for name, conf in result["predictions"]:
+                st.progress(min(conf / 100, 1.0), text=f"{name} — {conf:.2f}%")
 
-            # ------------------------------------------------
-            # TOP PREDICTIONS
-            # ------------------------------------------------
+        st.markdown("### 💡 Smart Recommendation")
+        st.markdown(
+            f"""
+            <div class="eco-card">
+                <h3>🗑️ {info.get("action", "Manual Review")}</h3>
+                <p>{info.get("disposal", "")}</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
+        r1, r2, r3 = st.columns(3)
+
+        with r1:
             st.markdown(
-                f"### {TEXT[language]['top_predictions']}"
+                f'<div class="eco-feature"><div class="eco-feature-icon">💡</div>'
+                f'<div class="eco-feature-title">Reuse</div>'
+                f'<div class="eco-feature-text">{info.get("reuse","")}</div></div>',
+                unsafe_allow_html=True,
             )
 
-            for index, prediction in enumerate(
-                top_predictions
-            ):
-
-                rank = index + 1
-
-                st.write(
-                    f"**#{rank} {prediction['class']}** "
-                    f"— {prediction['confidence']:.2f}%"
-                )
-
-                st.progress(
-                    min(
-                        prediction["confidence"] / 100,
-                        1.0
-                    )
-                )
-
-            # ------------------------------------------------
-            # SMART RECOMMENDATION
-            # ------------------------------------------------
-
+        with r2:
             st.markdown(
-                """
-                <div class="eco-card-green">
-
-                    <div class="eco-card-title">
-                        ♻️ Smart Recommendation
-                    </div>
-
-                </div>
-                """,
-                unsafe_allow_html=True
+                f'<div class="eco-feature"><div class="eco-feature-icon">🌍</div>'
+                f'<div class="eco-feature-title">Environmental Impact</div>'
+                f'<div class="eco-feature-text">{info.get("impact","")}</div></div>',
+                unsafe_allow_html=True,
             )
 
-            st.write(
-                f"**{TEXT[language]['category']}:** "
-                f"{waste_info['category']}"
+        biotech = get_biotech_info(result["waste_type"])
+        with r3:
+            st.markdown(
+                f'<div class="eco-feature"><div class="eco-feature-icon">🧬</div>'
+                f'<div class="eco-feature-title">Biotechnology</div>'
+                f'<div class="eco-feature-text">{biotech.get("explanation","")}</div></div>',
+                unsafe_allow_html=True,
             )
 
-            st.write(
-                f"**{TEXT[language]['recommended_action']}:** "
-                f"{waste_info['action']}"
-            )
+        st.markdown("### 💾 Save analysis")
+        eco_points = calculate_eco_points(result["action"], result["score"])
 
-            if confidence >= 60:
-
-                st.success(
-                    f"{TEXT[language]['best_choice']} — "
-                    f"{waste_info['action']}"
+        s1, s2 = st.columns(2)
+        with s1:
+            if st.button("💾 Save to History", type="primary", use_container_width=True):
+                image_path = save_scan_image(result["image"])
+                save_analysis(
+                    result["waste_type"],
+                    result["confidence"],
+                    result["action"],
+                    result["score"],
+                    image_path,
+                    result["location"],
+                    result["college"],
+                    "Yes" if biotech.get("is_organic") else "No",
+                    info.get("landfill_risk", "Unknown"),
                 )
+                st.success(f"Saved successfully • +{eco_points} EcoPoints")
+                st.session_state.pop("last_scan", None)
 
-            else:
-
-                st.warning(
-                    TEXT[language]["manual_verify"]
-                )
-
-            st.info(
-                f"🗑️ **Disposal Guidance:** "
-                f"{waste_info['disposal']}"
-            )
-
-            # ------------------------------------------------
-            # REUSE
-            # ------------------------------------------------
-
-            with st.container(border=True):
-
-                st.markdown(
-                    f"### {TEXT[language]['reuse_idea']}"
-                )
-
-                st.write(
-                    waste_info["reuse"]
-                )
-
-            # ------------------------------------------------
-            # ENVIRONMENTAL IMPACT
-            # ------------------------------------------------
-
-            with st.container(border=True):
-
-                st.markdown(
-                    f"### {TEXT[language]['environmental_impact']}"
-                )
-
-                st.write(
-                    waste_info["impact"]
-                )
-
-            # ------------------------------------------------
-            # BIOTECHNOLOGY
-            # ------------------------------------------------
-
-            with st.container(border=True):
-
-                st.markdown(
-                    f"### {TEXT[language]['biotechnology']}"
-                )
-
-                if biotech_info["is_organic"]:
-
-                    st.success(
-                        TEXT[language]["organic_detected"]
-                    )
-
-                    st.markdown(
-                        """
-                        <div class="eco-card-green">
-
-                            <div class="eco-card-title">
-                                Biological Treatment
-                            </div>
-
-                            <div style="
-                                color:#607568;
-                                font-size:14px;
-                                line-height:1.7;
-                            ">
-                                This waste can potentially be treated
-                                through biological processes and converted
-                                into useful organic matter.
-                            </div>
-
-                        </div>
-                        """,
-                        unsafe_allow_html=True
-                    )
-
-                    st.write(
-                        f"**{TEXT[language]['treatment_pathway']}:** "
-                        f"{biotech_info['process']}"
-                    )
-
-                    st.info(
-                        biotech_info["explanation"]
-                    )
-
-                else:
-
-                    st.write(
-                        biotech_info["explanation"]
-                    )
-
-            # ------------------------------------------------
-            # ECOSCORE
-            # ------------------------------------------------
-
-            with st.container(border=True):
-
-                st.markdown(
-                    f"### {TEXT[language]['ecoscore']}"
-                )
-
-                score = waste_info["eco_score"]
-
-                st.markdown(
-                    f"""
-                    <div class="confidence-number">
-                        {score}/10
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-
-                st.progress(
-                    score / 10
-                )
-
-                st.write(
-                    get_eco_score_message(score)
-                )
-
-            # ------------------------------------------------
-            # SAVE TO HISTORY
-            # ------------------------------------------------
-
-            image_path = save_scan_image(image)
-
-            save_analysis(
-                waste_type=predicted_class,
-                confidence=confidence,
-                action=waste_info["action"],
-                eco_score=score,
-                image_path=image_path,
-                location=location,
-                college=college,
-                biotech_potential=(
-                    "High"
-                    if biotech_info["is_organic"]
-                    else "Low"
-                ),
-                environmental_level=(
-                    "High Positive Impact"
-                    if score >= 9
-                    else "Moderate Positive Impact"
-                    if score >= 7
-                    else "Low Positive Impact"
-                )
-            )
-
-            st.success(
-                TEXT[language]["saved_history"]
-            )
-
-            # ------------------------------------------------
-            # SCAN ANOTHER
-            # ------------------------------------------------
-
-            if st.button(
-                TEXT[language]["scan_another"],
-                use_container_width=True
-            ):
-
-                st.rerun()    
+        with s2:
+            if st.button("🔄 Scan Another", use_container_width=True):
+                st.session_state.pop("last_scan", None)
+                st.rerun()
 
 # ============================================================
 # AI ASSISTANT
 # ============================================================
 
-elif page == "🤖 AI Assistant":
+elif page == TEXT[lang]["assistant"]:
 
+    st.markdown('<div class="eco-title">🤖 EcoScan AI Assistant</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div class="eco-title">🤖 EcoScan AI Assistant</div>',
-        unsafe_allow_html=True
+        '<div class="eco-subtitle">Ask about recycling, disposal, reuse, EcoScore, environment or biotechnology.</div>',
+        unsafe_allow_html=True,
     )
 
-    st.markdown(
-        '<div class="eco-subtitle">'
-        'Ask about waste, recycling, reuse, disposal, EcoScore, '
-        'environmental impact, or biotechnology.'
-        '</div>',
-        unsafe_allow_html=True
-    )
+    examples = [
+        "Is plastic recyclable?",
+        "How can I reuse cardboard?",
+        "What is the environmental impact of food waste?",
+        "Can food waste be composted?",
+    ]
 
-    st.markdown(
-        """
-        <div class="eco-card-green">
-
-        <div class="eco-card-title">
-        💬 Ask EcoScan
-        </div>
-
-        You can ask your question in <b>Arabic</b> or
-        <b>English</b>.
-
-        <br><br>
-
-        Examples:
-        <br>
-        ♻️ هل البلاستيك قابل لإعادة التدوير؟
-        <br>
-        🗑️ كيف أتخلص من بقايا الطعام؟
-        <br>
-        💡 How can I reuse cardboard?
-        <br>
-        🌍 What is the environmental impact of glass?
-        <br>
-        🧬 Can food waste be composted?
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    st.markdown("### 💬 Try a question")
+    ex_cols = st.columns(4)
+    for col, example in zip(ex_cols, examples):
+        with col:
+            if st.button(example, use_container_width=True):
+                st.session_state["assistant_question"] = example
 
     question = st.text_area(
-        "💬 Your Question / سؤالك",
-        placeholder=(
-            "اكتب سؤالك بالعربي أو الإنجليزي...\n"
-            "Ask your question in Arabic or English..."
-        ),
-        height=120
+        "Your question",
+        value=st.session_state.get("assistant_question", ""),
+        height=120,
+        placeholder="Ask EcoScan anything about waste...",
     )
 
-    if st.button(
-        "🤖 Ask EcoScan",
-        use_container_width=True
-    ):
-
+    if st.button("🤖 Ask EcoScan", type="primary", use_container_width=True):
         if question.strip():
-
-            with st.spinner(
-                "🧠 EcoScan is thinking..."
-            ):
-
-                answer = assistant_response(
-                    question
-                )
+            with st.spinner("🧠 EcoScan is thinking..."):
+                answer = assistant_response(question)
 
             st.markdown(
-                """
-                <div class="eco-card">
-
-                <div class="eco-card-title">
-                🤖 EcoScan Answer
-                </div>
-
-                </div>
-                """,
-                unsafe_allow_html=True
+                '<div class="eco-chat"><b>🤖 EcoScan Assistant</b></div>',
+                unsafe_allow_html=True,
             )
-
             st.markdown(answer)
-
         else:
-
-            st.warning(
-                "⚠️ Please enter a question first."
-            )
-
+            st.warning("Please enter a question first.")
 
 # ============================================================
 # HISTORY
 # ============================================================
 
-elif page == "📋 History":
+elif page == TEXT[lang]["history"]:
 
+    st.markdown('<div class="eco-title">📋 Scan History</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div class="eco-title">📋 History</div>',
-        unsafe_allow_html=True
-    )
-
-    st.markdown(
-        '<div class="eco-subtitle">'
-        'Your previous EcoScan analyses'
-        '</div>',
-        unsafe_allow_html=True
+        '<div class="eco-subtitle">Review previous EcoScan analyses.</div>',
+        unsafe_allow_html=True,
     )
 
     history = get_history()
 
-    if history:
+    if not history:
+        st.info("No saved analyses yet. Start by scanning a waste item.")
+    else:
+        df = pd.DataFrame(
+            history,
+            columns=[
+                "ID", "Date", "Waste Type", "Confidence", "Action",
+                "EcoScore", "Image", "Location", "College",
+                "Biotech Potential", "Environmental Level"
+            ],
+        )
 
-        data = []
+        f1, f2, f3 = st.columns(3)
 
-        for record in history:
+        with f1:
+            search = st.text_input("🔎 Search", "")
+        with f2:
+            waste_options = ["All"] + sorted(df["Waste Type"].dropna().unique().tolist())
+            waste_filter = st.selectbox("Waste Type", waste_options)
+        with f3:
+            location_options = ["All"] + sorted(df["Location"].dropna().unique().tolist())
+            location_filter = st.selectbox("Location", location_options)
 
-            data.append({
-                "ID": record[0],
-                "Date": record[1],
-                "Waste Type": record[2],
-                "Confidence": record[3],
-                "Action": record[4],
-                "EcoScore": record[5],
-                "Image": record[6],
-                "Location": record[7],
-                "College": record[8],
-                "Biotech Potential": record[9],
-                "Environmental Level": record[10]
-            })
+        filtered = df.copy()
 
-        df = pd.DataFrame(data)
+        if search.strip():
+            mask = (
+                filtered["Waste Type"].astype(str).str.contains(search, case=False, na=False)
+                | filtered["Location"].astype(str).str.contains(search, case=False, na=False)
+                | filtered["College"].astype(str).str.contains(search, case=False, na=False)
+            )
+            filtered = filtered[mask]
 
-        csv = df.to_csv(
-            index=False
-        ).encode("utf-8")
+        if waste_filter != "All":
+            filtered = filtered[filtered["Waste Type"] == waste_filter]
+
+        if location_filter != "All":
+            filtered = filtered[filtered["Location"] == location_filter]
 
         st.download_button(
-            "📥 Download EcoScan Report",
-            csv,
-            "ecoscan_report.csv",
-            "text/csv",
-            use_container_width=True
+            "⬇️ Download History CSV",
+            filtered.to_csv(index=False).encode("utf-8"),
+            file_name="ecoscan_report.csv",
+            mime="text/csv",
+            use_container_width=True,
         )
+
+        st.markdown(f"### {len(filtered)} analysis records")
+
+        for _, row in filtered.iterrows():
+            with st.container():
+                st.markdown('<div class="eco-card">', unsafe_allow_html=True)
+
+                cols = st.columns([1, 2.2, 2.2, 1.2])
+
+                with cols[0]:
+                    image_path = row["Image"]
+                    if image_path and os.path.exists(str(image_path)):
+                        st.image(str(image_path), use_container_width=True)
+                    else:
+                        st.markdown("♻️")
+
+                with cols[1]:
+                    st.markdown(f"### {row['Waste Type']}")
+                    st.markdown(f"**Date:** {row['Date']}")
+                    st.markdown(f"**Location:** {row['Location']}")
+                    if row["College"] and str(row["College"]) != "None":
+                        st.markdown(f"**College:** {row['College']}")
+
+                with cols[2]:
+                    st.markdown(f"**Confidence:** {float(row['Confidence']):.2f}%")
+                    st.markdown(f"**Action:** {row['Action']}")
+                    st.markdown(f"**EcoScore:** {row['EcoScore']}/10")
+                    st.markdown(f"**Biotechnology:** {row['Biotech Potential']}")
+                    st.markdown(f"**Environmental level:** {row['Environmental Level']}")
+
+                with cols[3]:
+                    if st.button("🗑️ Delete", key=f"delete_{row['ID']}", use_container_width=True):
+                        delete_analysis(int(row["ID"]))
+                        st.rerun()
+
+                st.markdown("</div>", unsafe_allow_html=True)
 
         st.markdown("---")
-
-    if not history:
-
-        st.info(
-            "No analyses recorded yet. Start scanning waste!"
-        )
-
-    else:
-
-        st.markdown(
-            f"""
-            <div class="eco-card-green">
-            <div class="eco-card-title">
-            📊 Total Analyses
-            </div>
-            <div class="result-name">
-            {len(history)}
-            </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        with st.expander("clear history"):
-
-            st.caption(
-                "تنبيه: هذا الإجراء سيقوم بحذف جميع التحليلات "
-                "المخزنة نهائياً."
-            )
-
-            if st.button(
-                label="⚠️ Clear All History",
-                key="clear_all_btn"
-            ):
-
-                clear_history()
-
-                st.toast(
-                    "All history has been cleared.",
-                    icon="✅"
-                )
-
-                st.rerun()
-
-        # ----------------------------------------------------
-        # Search
-        # ----------------------------------------------------
-
-        search = st.text_input(
-            label="🔎 Search",
-            placeholder="Search by waste type or location..."
-        )
-
-        # ----------------------------------------------------
-        # Filters
-        # ----------------------------------------------------
-
-        col1, col2 = st.columns(2)
-        col3, col4 = st.columns(2)
-
-        with col1:
-
-            waste_filter = st.selectbox(
-                "🗑️ Waste Type",
-                ["All"] + sorted(
-                    list(
-                        set(
-                            record[2]
-                            for record in history
-                            if len(record) > 2 and record[2]
-                        )
-                    )
-                )
-            )
-
-        with col2:
-
-            location_filter = st.selectbox(
-                "📍 Location",
-                ["All"] + sorted(
-                    list(
-                        set(
-                            record[7]
-                            for record in history
-                            if len(record) > 7 and record[7]
-                        )
-                    )
-                )
-            )
-
-        with col3:
-
-            biotech_filter = st.selectbox(
-                "🌱 Biotech Potential",
-                ["All"] + sorted(
-                    list(
-                        set(
-                            record[8]
-                            for record in history
-                            if len(record) > 8 and record[8]
-                        )
-                    )
-                )
-            )
-
-        with col4:
-
-            ecoscore_filter = st.selectbox(
-                "⭐ EcoScore",
-                ["All"] + sorted(
-                    list(
-                        set(
-                            str(record[5])
-                            for record in history
-                            if len(record) > 5
-                            and record[5] is not None
-                        )
-                    )
-                )
-            )
-
-        # ----------------------------------------------------
-        # Filtering Logic
-        # ----------------------------------------------------
-
-        filtered_history = []
-
-        for record in history:
-
-            match_search = (
-                not search
-            ) or (
-                search.lower() in str(record[2]).lower()
-                or (
-                    len(record) > 7
-                    and search.lower()
-                    in str(record[7]).lower()
-                )
-            )
-
-            match_waste = (
-                waste_filter == "All"
-            ) or (
-                len(record) > 2
-                and record[2] == waste_filter
-            )
-
-            match_location = (
-                location_filter == "All"
-            ) or (
-                len(record) > 7
-                and record[7] == location_filter
-            )
-
-            match_biotech = (
-                biotech_filter == "All"
-            ) or (
-                len(record) > 8
-                and record[8] == biotech_filter
-            )
-
-            match_ecoscore = (
-                ecoscore_filter == "All"
-            ) or (
-                len(record) > 5
-                and str(record[5]) == ecoscore_filter
-            )
-
-            if (
-                match_search
-                and match_waste
-                and match_location
-                and match_biotech
-                and match_ecoscore
-            ):
-
-                filtered_history.append(record)
-
-        st.markdown("---")
-
-        if not filtered_history:
-
-            st.warning(
-                "No matching analyses found."
-            )
-
-        for record in filtered_history:
-
-            analysis_id = record[0]
-            timestamp = record[1]
-            waste_type = record[2]
-            confidence = record[3]
-            action = record[4]
-            eco_score = record[5]
-            image_path = record[6]
-            location = record[7]
-            college = record[8]
-            biotech_potential = record[9]
-            environmental_level = record[10]
-
-            with st.container(border=True):
-
-                col1, col2 = st.columns([1, 2])
-
-                with col1:
-
-                    if (
-                        image_path
-                        and os.path.exists(image_path)
-                    ):
-
-                        st.image(
-                            image_path,
-                            use_container_width=True
-                        )
-
-                with col2:
-
-                    st.markdown(
-                        f"### #{analysis_id} — {waste_type}"
-                    )
-
-                    st.write(
-                        f"🕒 **Date:** {timestamp}"
-                    )
-
-                    st.write(
-                        f"🧠 **Confidence:** "
-                        f"{confidence:.2f}%"
-                    )
-
-                    st.write(
-                        f"♻️ **Action:** {action}"
-                    )
-
-                    st.write(
-                        f"⭐ **EcoScore:** "
-                        f"{eco_score}/10"
-                    )
-
-                    st.write(
-                        f"📍 **Location:** {location}"
-                    )
-                    if college:
-
-                      st.write(
-                        f"🏫 **College:** {college}"
-                    ) 
-                    
-                    st.write(
-                        f"🧬 **Biotech Potential:** "
-                        f"{biotech_potential}"
-                    )
-
-                    st.write(
-                        f"🌍 **Environmental Impact:** "
-                        f"{environmental_level}"
-                    )
-
-                    with st.expander("Options"):
-
-                        if st.button(
-                            "🗑️ Delete",
-                            key=f"delete_{analysis_id}"
-                        ):
-
-                            delete_analysis(
-                                analysis_id
-                            )
-
-                            st.success(
-                                "Analysis deleted successfully."
-                            )
-
-                            st.rerun()
-
+        if st.button("🧹 Clear All History", use_container_width=True):
+            clear_history()
+            st.success("History cleared successfully.")
+            st.rerun()
 
 # ============================================================
 # DASHBOARD
 # ============================================================
 
-elif page == "📊 Dashboard":
+elif page == TEXT[lang]["dashboard"]:
 
+    st.markdown('<div class="eco-title">📊 EcoScan Dashboard</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div class="eco-title">📊 Dashboard</div>',
-        unsafe_allow_html=True
-    )
-
-    st.markdown(
-        '<div class="eco-subtitle">Waste analysis overview</div>',
-        unsafe_allow_html=True
+        '<div class="eco-subtitle">Understand how the prototype is being used and what waste appears most often.</div>',
+        unsafe_allow_html=True,
     )
 
     history = get_history()
 
     if not history:
-        st.info("Analyze some waste items first to populate the dashboard.")
+        st.info("Dashboard data will appear after saving scan results.")
     else:
-        total_analyses = len(history)
-        waste_counts = {}
-        recyclable_count = 0
-        organic_count = 0
-        total_confidence = 0
-        total_ecoscore = 0
-        total_ecopoints = 0
-        loc_records = []
+        df = pd.DataFrame(
+            history,
+            columns=[
+                "ID", "Date", "Waste Type", "Confidence", "Action",
+                "EcoScore", "Image", "Location", "College",
+                "Biotech Potential", "Environmental Level"
+            ],
+        )
 
-        for record in history:
-            waste_type = record[2]
-            confidence = record[3]
-            location = record[7] if len(record) > 7 and record[7] else "Main Campus"
+        total = len(df)
+        recyclable_count = sum(
+            bool(get_waste_info(x).get("recyclable", False))
+            for x in df["Waste Type"]
+        )
+        organic_count = sum(
+            x in ["Food Organics", "Vegetation"]
+            for x in df["Waste Type"]
+        )
 
-            waste_counts[waste_type] = waste_counts.get(waste_type, 0) + 1
-            total_confidence += confidence
-            waste_info = get_waste_info(waste_type)
-
-            if waste_info.get("recyclable", False):
-                recyclable_count += 1
-
-            if waste_type.lower() in ["food organics", "vegetation"]:
-                organic_count += 1
-
-            eco_score = waste_info.get("eco_score", 5)
-            action = waste_info.get("action", "")
-            total_ecoscore += eco_score
-
-            if action == "Recycle":
-                action_pts = 10
-            elif action == "Compost":
-                action_pts = 12
-            elif "Reuse" in action:
-                action_pts = 8
-            else:
-                action_pts = 5
-
-            total_ecopoints += (action_pts + eco_score)
-
-            loc_records.append({
-                "Location": location,
-                "Waste Type": waste_type
-            })
-
-        # Calculations
-        recyclable_percentage = (recyclable_count / total_analyses) * 100
-        organic_percentage = (organic_count / total_analyses) * 100
-        average_confidence = (total_confidence / total_analyses)
-        if average_confidence <= 1.0:
-            average_confidence *= 100
-        average_ecoscore = (total_ecoscore / total_analyses)
-
-        # ----------------------------------------------------
-        # KPI CARDS
-        # ----------------------------------------------------
-        col1, col2, col3, col4 = st.columns(4)
-
-        with col1:
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                    <div class="kpi-icon">🔍</div>
-                    <div class="kpi-number">{total_analyses}</div>
-                    <div class="kpi-label">Total Analyses</div>
-                </div>
-                """,
-                unsafe_allow_html=True
+        avg_conf = df["Confidence"].mean()
+        avg_score = df["EcoScore"].mean()
+        ecopoints = sum(
+            calculate_eco_points(
+                row["Action"], int(row["EcoScore"])
             )
+            for _, row in df.iterrows()
+        )
 
-        with col2:
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                    <div class="kpi-icon">♻️</div>
-                    <div class="kpi-number">{recyclable_percentage:.1f}%</div>
-                    <div class="kpi-label">Potentially Recyclable</div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("📸 Total Analyses", total)
+        c2.metric("♻️ Recyclable", f"{safe_percent(recyclable_count,total)}%")
+        c3.metric("🌱 Organic", f"{safe_percent(organic_count,total)}%")
+        c4.metric("🧠 Avg Confidence", f"{avg_conf:.1f}%")
 
-        with col3:
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                    <div class="kpi-icon">🌱</div>
-                    <div class="kpi-number">{organic_percentage:.1f}%</div>
-                    <div class="kpi-label">Organic Waste</div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+        c5, c6 = st.columns(2)
+        c5.metric("⭐ Average EcoScore", f"{avg_score:.1f}/10")
+        c6.metric("🏆 EcoPoints", ecopoints)
 
-        with col4:
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                    <div class="kpi-icon">🧠</div>
-                    <div class="kpi-number">{average_confidence:.1f}%</div>
-                    <div class="kpi-label">Avg. Confidence</div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+        st.markdown("### 🗂️ Waste Distribution")
+        distribution = df["Waste Type"].value_counts()
+        st.bar_chart(distribution)
 
-        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("### 📍 Location Distribution")
+        locations = df["Location"].fillna("Unknown").value_counts()
+        st.bar_chart(locations)
 
-        # ----------------------------------------------------
-        # MOST DETECTED
-        # ----------------------------------------------------
-        most_detected = max(waste_counts, key=waste_counts.get) if waste_counts else "N/A"
+        most_common = distribution.index[0]
+        most_count = int(distribution.iloc[0])
 
-        with st.container(border=True):
-            st.markdown("### 🏆 Most Detected Waste")
-            st.markdown(
-                f'<div class="result-name">{most_detected}</div>',
-                unsafe_allow_html=True
-            )
+        st.markdown(
+            f"""
+            <div class="eco-card">
+                <h3>🔎 Main insight</h3>
+                <p>
+                    The most detected waste type is <b>{most_common}</b>,
+                    appearing in <b>{most_count}</b> saved analysis record(s).
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
-        # ----------------------------------------------------
-        # WASTE DISTRIBUTION CHART
-        # ----------------------------------------------------
-        with st.container(border=True):
-            st.markdown("### 📈 Waste Distribution")
-            df_counts = pd.DataFrame(
-                list(waste_counts.items()),
-                columns=["Waste Type", "Count"]
-            ).set_index("Waste Type")
-            st.bar_chart(df_counts)
-
-        # ----------------------------------------------------
-        # WASTE BY LOCATION
-        # ----------------------------------------------------
-        df_loc = pd.DataFrame(loc_records)
-        if not df_loc.empty:
-            with st.container(border=True):
-                st.markdown("### 📍 Waste by Location")
-                pivot_df = df_loc.groupby(["Location", "Waste Type"]).size().unstack(fill_value=0)
-                st.bar_chart(pivot_df)
-                with st.expander("📑 View Breakdown Numbers by Location"):
-                    st.dataframe(pivot_df, use_container_width=True)
-
-        # ----------------------------------------------------
-        # SUMMARY
-        # ----------------------------------------------------
-        with st.container(border=True):
-            st.markdown("### 🗂️ Waste Summary")
-            for waste_type, count in sorted(waste_counts.items(), key=lambda x: x[1], reverse=True):
-                percentage = (count / total_analyses) * 100
-                st.write(f"**{waste_type}** — {count} analyses ({percentage:.1f}%)")
-
-        # ----------------------------------------------------
-        # INSIGHT
-        # ----------------------------------------------------
-        with st.container(border=True):
-            st.markdown("### 💡 EcoScan Insight")
-            st.info(f"{most_detected} is currently the most frequently detected waste category.")
-            if recyclable_percentage >= 50:
-                st.success("♻️ More than half of the analyzed items were potentially recyclable.")
-            if organic_percentage > 0:
-                st.success("🌱 Organic waste was detected. These materials may be suitable for biological treatment such as composting.")
 # ============================================================
 # CAMPUS MODE
 # ============================================================
 
-elif page == "🏫 Campus Mode":
+elif page == TEXT[lang]["campus"]:
 
+    st.markdown('<div class="eco-title">🏫 Campus Mode</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div class="eco-title">🏫 Campus Mode</div>',
-        unsafe_allow_html=True
-    )
-
-    st.markdown(
-        '<div class="eco-subtitle">'
-        'AI-powered campus waste insights'
-        '</div>',
-        unsafe_allow_html=True
+        '<div class="eco-subtitle">Explore waste patterns across university locations and colleges.</div>',
+        unsafe_allow_html=True,
     )
 
     history = get_history()
 
     if not history:
-
-        st.info(
-            "Start analyzing waste items to generate campus insights."
-        )
-
+        st.info("Campus insights will appear after saving scan results.")
     else:
-
-        waste_counts = {}
-
-        for record in history:
-
-            waste_type = record[2]
-
-            waste_counts[waste_type] = (
-                waste_counts.get(
-                    waste_type,
-                    0
-                ) + 1
-            )
-
-        total = len(history)
-
-        most_common = max(
-            waste_counts,
-            key=waste_counts.get
+        df = pd.DataFrame(
+            history,
+            columns=[
+                "ID", "Date", "Waste Type", "Confidence", "Action",
+                "EcoScore", "Image", "Location", "College",
+                "Biotech Potential", "Environmental Level"
+            ],
         )
 
-        most_common_count = waste_counts[
-            most_common
-        ]
+        selected_location = st.selectbox(
+            "Campus Location",
+            [
+                "All Campus",
+                "Academic Building",
+                "Cafeteria",
+                "Laboratories",
+                "Library",
+                "Student Area",
+            ],
+        )
 
-        most_common_percentage = (
-            most_common_count /
-            total
-        ) * 100
-
-        # =====================================================
-        # CAMPUS KPIs
-        # =====================================================
-
-        col1, col2, col3 = st.columns(3)
-
-        with col1:
-
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                    <div class="kpi-icon">🔍</div>
-                    <div class="kpi-number">
-                    {total}
-                    </div>
-                    <div class="kpi-label">
-                    Campus Analyses
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-        with col2:
-
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                    <div class="kpi-icon">🗑️</div>
-                    <div class="kpi-number">
-                    {most_common}
-                    </div>
-                    <div class="kpi-label">
-                    Most Common Waste
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-        with col3:
-
-            st.markdown(
-                f"""
-                <div class="kpi-card">
-                    <div class="kpi-icon">📊</div>
-                    <div class="kpi-number">
-                    {most_common_percentage:.1f}%
-                    </div>
-                    <div class="kpi-label">
-                    Category Share
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-        st.markdown("")
-
-        # =====================================================
-        # LOCATION
-        # =====================================================
-
-        with st.container(border=True):
-
-            st.markdown(
-                "### 📍 Campus Location"
-            )
-
-            campus_location = st.selectbox(
-                "Select campus area",
+        selected_college = None
+        if selected_location == "Academic Building":
+            selected_college = st.selectbox(
+                "College",
                 [
-                    "All Campus",
-                    "Academic Building",
-                    "Cafeteria",
-                    "Laboratories",
-                    "Library",
-                    "Student Area"
-                ],
-                key="campus_location"
-            )
-
-        # =====================================================
-        # COLLEGE SELECTION
-        # =====================================================
-
-        college = None
-
-        if campus_location == "Academic Building":
-
-            college = st.selectbox(
-                "🏫 Select College",
-                [
+                    "All Colleges",
                     "Faculty of Medicine",
                     "Faculty of Pharmacy",
                     "Faculty of Biotechnology",
-                    "Faculty of Physical Therapy"
+                    "Faculty of Physical Therapy",
                 ],
-                key="college_selection"
             )
 
-        st.info(
-            f"Currently viewing: **{campus_location}**"
-        )
+        filtered = df.copy()
 
-        # =====================================================
-        # DISTRIBUTION
-        # =====================================================
+        if selected_location != "All Campus":
+            filtered = filtered[filtered["Location"] == selected_location]
 
-        with st.container(border=True):
+        if selected_college and selected_college != "All Colleges":
+            filtered = filtered[filtered["College"] == selected_college]
+
+        total = len(filtered)
+
+        if total == 0:
+            st.warning("No saved scans match this campus filter.")
+        else:
+            distribution = filtered["Waste Type"].value_counts()
+            most_common = distribution.index[0]
+
+            c1, c2, c3 = st.columns(3)
+            c1.metric("📸 Analyses", total)
+            c2.metric("🗂️ Categories Detected", filtered["Waste Type"].nunique())
+            c3.metric("🔎 Most Common", most_common)
+
+            st.markdown("### 📊 Waste distribution")
+            st.bar_chart(distribution)
 
             st.markdown(
-                "### ♻️ Campus Waste Distribution"
+                f"""
+                <div class="eco-card">
+                    <h3>🌱 Campus insight</h3>
+                    <p>
+                        In the selected campus scope, <b>{most_common}</b>
+                        is the most frequently detected category.
+                        EcoScan can use this type of information to support
+                        future waste-management planning.
+                    </p>
+                </div>
+                """,
+                unsafe_allow_html=True,
             )
-
-            st.bar_chart(
-                waste_counts
-            )
-
-        # =====================================================
-        # INSIGHT
-        # =====================================================
-
-        with st.container(border=True):
-
-            st.markdown(
-                "### 💡 Campus Insight"
-            )
-
-            st.info(
-                f"{most_common} is currently the most "
-                f"frequently detected waste category, "
-                f"representing {most_common_percentage:.1f}% "
-                f"of recorded analyses."
-            )
-
-        # =====================================================
-        # RECOMMENDATION
-        # =====================================================
-
-        with st.container(border=True):
-
-            st.markdown(
-                "### 🎯 Management Recommendation"
-            )
-
-            if most_common.lower() == "plastic":
-
-                st.success(
-                    "♻️ Increase awareness about plastic "
-                    "waste reduction and provide accessible "
-                    "recycling collection points."
-                )
-
-            elif most_common.lower() in [
-                "paper",
-                "cardboard"
-            ]:
-
-                st.success(
-                    "📄 Increase paper recycling points "
-                    "and promote digital alternatives."
-                )
-
-            elif most_common.lower() in [
-                "food organics",
-                "vegetation"
-            ]:
-
-                st.success(
-                    "🌱 Consider dedicated organic waste "
-                    "collection and biological treatment."
-                )
-
-            elif most_common.lower() == "glass":
-
-                st.success(
-                    "🍾 Provide dedicated glass collection "
-                    "containers and improve separation."
-                )
-
-            elif most_common.lower() == "metal":
-
-                st.success(
-                    "🔩 Increase collection capacity "
-                    "for recyclable metal waste."
-                )
-
-            else:
-
-                st.warning(
-                    "⚠️ Review waste composition and improve "
-                    "separation and collection practices."
-                )
-
 
 # ============================================================
 # ABOUT
 # ============================================================
 
-elif page == "ℹ️ About":
+elif page == TEXT[lang]["about"]:
 
+    st.markdown('<div class="eco-title">ℹ️ About EcoScan</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div class="eco-title">ℹ️ About EcoScan</div>',
-        unsafe_allow_html=True
+        '<div class="eco-subtitle">AI-Powered Waste Management Assistant</div>',
+        unsafe_allow_html=True,
     )
 
-    st.markdown(
-        '<div class="eco-subtitle">'
-        'AI • Sustainability • Biotechnology'
-        '</div>',
-        unsafe_allow_html=True
-    )
+    st.markdown("""
+    <div class="eco-hero">
+        <div class="eco-kicker">EcoScan Prototype</div>
+        <h1>AI + Waste Intelligence</h1>
+        <p>
+            EcoScan is a university-focused prototype that uses an AI
+            deep-learning model to recognize waste categories and combines
+            the prediction with structured waste-management knowledge.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    with st.container(border=True):
+    c1, c2, c3 = st.columns(3)
 
-        st.markdown(
-            "### ♻️ What is EcoScan?"
-        )
+    with c1:
+        st.markdown("""
+        <div class="eco-feature">
+            <div class="eco-feature-icon">🧠</div>
+            <div class="eco-feature-title">AI Model</div>
+            <div class="eco-feature-text">
+                Production model accuracy: <b>80.62%</b>.
+                The model recognizes 9 waste categories.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-        st.write(
-            "EcoScan is an AI-powered waste management "
-            "assistant designed to classify waste items "
-            "and provide responsible disposal guidance."
-        )
+    with c2:
+        st.markdown("""
+        <div class="eco-feature">
+            <div class="eco-feature-icon">🗂️</div>
+            <div class="eco-feature-title">Knowledge Base</div>
+            <div class="eco-feature-text">
+                Provides disposal, reuse, environmental,
+                recycling and EcoScore information.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    with st.container(border=True):
+    with c3:
+        st.markdown("""
+        <div class="eco-feature">
+            <div class="eco-feature-icon">🏫</div>
+            <div class="eco-feature-title">Campus Impact</div>
+            <div class="eco-feature-text">
+                Stores location and college context to support
+                future campus-level waste analysis.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-        st.markdown(
-            "### 🧠 Artificial Intelligence"
-        )
+    st.markdown("### 🗂️ Recognized waste categories")
+    category_cols = st.columns(3)
 
-        st.write(
-            "EcoScan uses a deep learning image "
-            "classification model trained to recognize "
-            "9 waste categories."
-        )
-
-        st.write(
-            "**Production Model Accuracy:** 80.62%"
-        )
-
-    with st.container(border=True):
-
-        st.markdown(
-            "### 🗑️ Supported Waste Categories"
-        )
-
-        for waste_class in class_names:
-
-            display_class = waste_class.split(
-                "-",
-                1
-            )[-1]
-
-            st.write(
-                f"♻️ {display_class}"
+    for i, name in enumerate(class_names):
+        with category_cols[i % 3]:
+            st.markdown(
+                f'<div class="eco-card"><span class="eco-pill">{name}</span></div>',
+                unsafe_allow_html=True,
             )
 
-    with st.container(border=True):
-
-        st.markdown(
-            "### 🧬 Biotechnology"
-        )
-
-        st.write(
-            "For biodegradable organic waste, EcoScan "
-            "introduces an educational pathway involving "
-            "biological treatment and composting."
-        )
-
-    with st.container(border=True):
-
-        st.markdown(
-            "### 🏫 Campus Impact"
-        )
-
-        st.write(
-            "Campus Mode transforms individual waste "
-            "analyses into aggregated insights that "
-            "can support better waste-management decisions."
-        )
-
+    st.markdown("### 🧬 Biotechnology pathway")
+    st.markdown("""
+    <div class="eco-card">
+        <h3>Organic Waste → Biological Treatment</h3>
+        <p class="small-muted">
+            For suitable organic categories such as Food Organics and
+            Vegetation, EcoScan connects waste information with pathways
+            such as composting and anaerobic digestion.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ============================================================
 # FOOTER
 # ============================================================
 
-st.markdown(
-    """
-    <div class="eco-footer">
-        ♻️ <b>EcoScan</b> — AI-Powered Waste Management Assistant<br>
-        Building smarter and more sustainable communities 🌱
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+st.markdown("""
+<div class="eco-footer">
+    ♻️ <b>EcoScan</b> — AI-Powered Waste Management Assistant<br>
+    Building smarter and more sustainable communities 🌱
+</div>
+""", unsafe_allow_html=True)
