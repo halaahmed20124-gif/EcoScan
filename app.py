@@ -238,7 +238,6 @@ TEXT = {
         "campus_impact": "🏫 تأثير النظام داخل الجامعة"
     }
 }
-
 # ============================================================
 # ECOSCAN ECO-TECH UI
 # ============================================================
@@ -252,16 +251,25 @@ st.markdown("""
 
 .stApp {
     background:
-        radial-gradient(circle at 90% 5%, rgba(91, 196, 132, 0.12), transparent 25%),
-        radial-gradient(circle at 5% 20%, rgba(39, 174, 96, 0.08), transparent 22%),
+        radial-gradient(
+            circle at 90% 5%,
+            rgba(91, 196, 132, 0.12),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 5% 20%,
+            rgba(39, 174, 96, 0.08),
+            transparent 22%
+        ),
         #f7fbf8;
 }
 
 .block-container {
     max-width: 1280px;
-    padding-top: 2.2rem;
+    padding-top: 2rem;
     padding-bottom: 4rem;
 }
+
 
 /* ============================================================
    SIDEBAR
@@ -275,6 +283,7 @@ section[data-testid="stSidebar"] {
             #e7f6ed 55%,
             #f7fbf8 100%
         );
+
     border-right: 1px solid #d7ebde;
 }
 
@@ -285,17 +294,17 @@ section[data-testid="stSidebar"] > div {
 section[data-testid="stSidebar"] h1 {
     color: #087443;
     font-size: 30px;
-    font-weight: 850;
+    font-weight: 800;
     letter-spacing: -1px;
 }
 
-/* Sidebar divider */
 section[data-testid="stSidebar"] hr {
     border-color: #d4e9dc;
 }
 
+
 /* ============================================================
-   HEADERS
+   MAIN TITLES
    ============================================================ */
 
 .eco-title {
@@ -313,9 +322,10 @@ section[data-testid="stSidebar"] hr {
     text-align: center;
     font-size: 17px;
     color: #60786b;
-    margin-bottom: 32px;
+    margin-bottom: 30px;
     line-height: 1.6;
 }
+
 
 /* ============================================================
    HERO
@@ -324,6 +334,7 @@ section[data-testid="stSidebar"] hr {
 .eco-hero {
     position: relative;
     overflow: hidden;
+
     background:
         linear-gradient(
             135deg,
@@ -331,19 +342,28 @@ section[data-testid="stSidebar"] hr {
             #f8fffa 50%,
             #e4f6eb 100%
         );
+
     border: 1px solid #cfe8d8;
     border-radius: 28px;
+
     padding: 38px;
+
     margin: 15px 0 25px 0;
-    box-shadow: 0 12px 35px rgba(25, 95, 55, 0.08);
+
+    box-shadow:
+        0 12px 35px rgba(25, 95, 55, 0.08);
 }
 
 .eco-hero::after {
     content: "♻️";
+
     position: absolute;
+
     right: 30px;
     bottom: -20px;
+
     font-size: 110px;
+
     opacity: 0.08;
 }
 
@@ -361,159 +381,225 @@ section[data-testid="stSidebar"] hr {
     max-width: 750px;
 }
 
+
 /* ============================================================
-   CARDS
+   GENERAL CARDS
    ============================================================ */
 
 .eco-card,
 .eco-card-green {
+
     border-radius: 22px;
+
     padding: 24px;
+
     margin-bottom: 20px;
-    transition: all 0.2s ease;
 }
 
 .eco-card {
-    background: rgba(255, 255, 255, 0.95);
+
+    background: rgba(255, 255, 255, 0.96);
+
     border: 1px solid #dcece2;
-    box-shadow: 0 8px 25px rgba(31, 92, 54, 0.055);
+
+    box-shadow:
+        0 8px 25px rgba(31, 92, 54, 0.055);
 }
 
 .eco-card-green {
+
     background:
         linear-gradient(
             135deg,
             #effbf3,
             #f8fffa
         );
+
     border: 1px solid #cce8d5;
-    box-shadow: 0 8px 25px rgba(31, 125, 70, 0.06);
+
+    box-shadow:
+        0 8px 25px rgba(31, 125, 70, 0.06);
 }
 
 .eco-card-title {
+
     color: #087443;
+
     font-size: 21px;
-    font-weight: 850;
+
+    font-weight: 800;
+
     margin-bottom: 10px;
 }
+
 
 /* ============================================================
    KPI CARDS
    ============================================================ */
 
 .kpi-card {
+
     background: rgba(255, 255, 255, 0.96);
+
     border: 1px solid #dcece2;
+
     border-radius: 22px;
+
     padding: 24px 18px;
+
     text-align: center;
+
     min-height: 145px;
-    box-shadow: 0 8px 25px rgba(31, 92, 54, 0.055);
+
+    box-shadow:
+        0 8px 25px rgba(31, 92, 54, 0.055);
 }
 
 .kpi-icon {
+
     font-size: 31px;
+
     margin-bottom: 4px;
 }
 
 .kpi-number {
+
     color: #087443;
+
     font-size: 31px;
+
     font-weight: 900;
+
     line-height: 1.2;
 }
 
 .kpi-label {
+
     color: #65796d;
+
     font-size: 13px;
+
     margin-top: 6px;
+
     font-weight: 600;
 }
+
+.kpi-small {
+
+    color: #7b8d82;
+
+    font-size: 11px;
+
+    margin-top: 5px;
+}
+
 
 /* ============================================================
    RESULT
    ============================================================ */
 
 .result-name {
+
     color: #087443;
+
     font-size: 35px;
+
     font-weight: 900;
+
     letter-spacing: -1px;
 }
 
 .confidence-number {
+
     color: #087443;
+
     font-size: 31px;
+
     font-weight: 900;
 }
+
 
 /* ============================================================
    BADGES
    ============================================================ */
 
 .badge {
+
     display: inline-flex;
+
     align-items: center;
+
     gap: 6px;
+
     padding: 8px 15px;
+
     border-radius: 999px;
-    font-weight: 750;
+
+    font-weight: 700;
+
     font-size: 13px;
+
     margin: 7px 0;
 }
 
 .badge-green {
+
     background: #dcf5e5;
+
     color: #087443;
+
     border: 1px solid #bfe5cd;
 }
 
 .badge-yellow {
+
     background: #fff5d6;
+
     color: #765b00;
+
     border: 1px solid #f0df9d;
 }
 
 .badge-red {
+
     background: #fde6e6;
+
     color: #9c2828;
+
     border: 1px solid #efc5c5;
 }
 
+
 /* ============================================================
-   STREAMLIT BUTTONS
+   BUTTONS
    ============================================================ */
 
 .stButton > button {
-    border-radius: 14px;
-    min-height: 46px;
-    border: 1px solid #bfe2ca;
-    background: #ffffff;
-    color: #087443;
-    font-weight: 750;
-    transition: all 0.2s ease;
+
+    border-radius: 15px !important;
+
+    min-height: 48px !important;
+
+    border: 1px solid #bfe2ca !important;
+
+    background: #ffffff !important;
+
+    color: #087443 !important;
+
+    font-weight: 700 !important;
+
+    transition: all 0.2s ease !important;
 }
 
 .stButton > button:hover {
-    border-color: #087443;
-    background: #effaf3;
-    color: #075d36;
+
+    border-color: #087443 !important;
+
+    background: #effaf3 !important;
+
+    color: #075d36 !important;
 }
 
-/* ============================================================
-   PRIMARY ACTION
-   ============================================================ */
-
-.stButton > button[kind="primary"] {
-    background: linear-gradient(
-        135deg,
-        #087443,
-        #18a15b
-    );
-    color: white;
-    border: none;
-    box-shadow: 0 8px 20px rgba(8, 116, 67, 0.18);
-}
 
 /* ============================================================
    INPUTS
@@ -522,75 +608,464 @@ section[data-testid="stSidebar"] hr {
 .stTextInput input,
 .stTextArea textarea,
 .stSelectbox div[data-baseweb="select"] > div {
+
     border-radius: 13px !important;
+
     border-color: #d3e8da !important;
 }
+
 
 /* ============================================================
    FILE UPLOADER
    ============================================================ */
 
 section[data-testid="stFileUploaderDropzone"] {
+
     border: 2px dashed #b9dec5;
+
     border-radius: 18px;
+
     background: #f5fcf7;
 }
+
 
 /* ============================================================
    PROGRESS
    ============================================================ */
 
 .stProgress > div > div > div > div {
+
     border-radius: 999px;
 }
+
 
 /* ============================================================
    IMAGES
    ============================================================ */
 
 img {
+
     border-radius: 18px;
 }
+
 
 /* ============================================================
    DATAFRAME
    ============================================================ */
 
 [data-testid="stDataFrame"] {
+
     border-radius: 16px;
+
     overflow: hidden;
 }
+
 
 /* ============================================================
    EXPANDERS
    ============================================================ */
 
 [data-testid="stExpander"] {
+
     border: 1px solid #dcece2;
+
     border-radius: 16px;
-    background: rgba(255, 255, 255, 0.7);
+
+    background: rgba(255, 255, 255, 0.75);
 }
+
 
 /* ============================================================
    ALERTS
    ============================================================ */
 
 [data-testid="stAlert"] {
+
     border-radius: 15px;
 }
+
+
+/* ============================================================
+   HOME DESIGN
+   ============================================================ */
+
+.hero-section {
+
+    background:
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(76, 175, 80, 0.14),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #f1faf4 100%
+        );
+
+    border: 1px solid #dcefe2;
+
+    border-radius: 28px;
+
+    padding: 42px 45px;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 10px 30px rgba(32, 91, 54, 0.08);
+}
+
+.hero-content {
+
+    max-width: 850px;
+}
+
+.hero-badge {
+
+    display: inline-block;
+
+    background: #e4f5e9;
+
+    color: #247342;
+
+    border-radius: 50px;
+
+    padding: 8px 15px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.6px;
+
+    margin-bottom: 16px;
+}
+
+.hero-title {
+
+    font-size: 42px;
+
+    font-weight: 800;
+
+    color: #173f29;
+
+    line-height: 1.15;
+
+    margin-bottom: 8px;
+}
+
+.hero-title span {
+
+    color: #2e8b57;
+}
+
+.hero-subtitle {
+
+    font-size: 20px;
+
+    font-weight: 600;
+
+    color: #4f765e;
+
+    margin-bottom: 14px;
+}
+
+.hero-description {
+
+    font-size: 15px;
+
+    line-height: 1.8;
+
+    color: #607568;
+
+    max-width: 760px;
+}
+
+
+/* ============================================================
+   HOME ACTION
+   ============================================================ */
+
+.main-action-card {
+
+    min-height: 145px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eaf8ef,
+            #f8fcf9
+        );
+
+    border: 1px solid #d7ebdd;
+
+    border-radius: 24px;
+
+    padding: 25px;
+
+    box-shadow:
+        0 8px 24px rgba(36, 115, 66, 0.06);
+}
+
+.action-icon {
+
+    width: 72px;
+
+    height: 72px;
+
+    border-radius: 20px;
+
+    background: #ffffff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 34px;
+
+    box-shadow:
+        0 5px 15px rgba(30, 90, 50, 0.08);
+}
+
+.action-title {
+
+    font-size: 22px;
+
+    font-weight: 800;
+
+    color: #173f29;
+
+    margin-bottom: 6px;
+}
+
+.action-text {
+
+    color: #607568;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   SECTION HEADINGS
+   ============================================================ */
+
+.section-heading {
+
+    font-size: 22px;
+
+    font-weight: 800;
+
+    color: #173f29;
+
+    margin: 10px 0 15px 2px;
+}
+
+
+/* ============================================================
+   QUICK CARDS
+   ============================================================ */
+
+.quick-card {
+
+    background: #ffffff;
+
+    border: 1px solid #e0eee4;
+
+    border-radius: 22px;
+
+    padding: 24px;
+
+    min-height: 155px;
+
+    box-shadow:
+        0 7px 20px rgba(35, 83, 50, 0.06);
+}
+
+.quick-icon {
+
+    font-size: 30px;
+
+    margin-bottom: 12px;
+}
+
+.quick-title {
+
+    color: #173f29;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    margin-bottom: 7px;
+}
+
+.quick-text {
+
+    color: #708077;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   PROCESS
+   ============================================================ */
+
+.process-row {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 15px 5px;
+}
+
+.process-item {
+
+    flex: 1;
+
+    text-align: center;
+
+    color: #173f29;
+}
+
+.process-item span {
+
+    display: block;
+
+    color: #718078;
+
+    font-size: 12px;
+
+    margin-top: 5px;
+}
+
+.process-icon {
+
+    width: 58px;
+
+    height: 58px;
+
+    margin: 0 auto 10px auto;
+
+    border-radius: 18px;
+
+    background: #eaf7ee;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 25px;
+}
+
+.process-arrow {
+
+    color: #70a783;
+
+    font-size: 22px;
+
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   FEATURE CARDS
+   ============================================================ */
+
+.feature-card {
+
+    background: #ffffff;
+
+    border: 1px solid #e0eee4;
+
+    border-radius: 22px;
+
+    padding: 25px;
+
+    min-height: 170px;
+
+    box-shadow:
+        0 7px 20px rgba(35, 83, 50, 0.06);
+}
+
+.feature-icon {
+
+    font-size: 30px;
+
+    margin-bottom: 12px;
+}
+
+.feature-title {
+
+    color: #173f29;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    margin-bottom: 8px;
+}
+
+.feature-text {
+
+    color: #718078;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+.eco-home-footer {
+
+    text-align: center;
+
+    color: #71917c;
+
+    font-size: 13px;
+
+    margin: 30px 0 10px 0;
+}
+
 
 /* ============================================================
    FOOTER
    ============================================================ */
 
 .eco-footer {
+
     text-align: center;
+
     color: #718479;
+
     margin-top: 55px;
+
     padding: 25px 15px;
+
     border-top: 1px solid #dcece2;
+
     font-size: 13px;
 }
+
 
 /* ============================================================
    MOBILE
@@ -599,325 +1074,100 @@ img {
 @media (max-width: 768px) {
 
     .block-container {
-        padding: 1.2rem 1rem 3rem 1rem;
+
+        padding:
+            1.2rem
+            1rem
+            3rem
+            1rem;
     }
 
     .eco-title {
+
         font-size: 38px;
+
         letter-spacing: -1px;
     }
 
     .eco-subtitle {
+
         font-size: 15px;
+
         margin-bottom: 22px;
     }
 
     .eco-card,
     .eco-card-green,
     .eco-hero {
+
         padding: 19px;
+
         border-radius: 19px;
     }
 
     .eco-hero-title {
+
         font-size: 26px;
     }
 
-    .result-name {
-        font-size: 28px;
-    }
-
-    .kpi-card {
-        min-height: 120px;
-        padding: 18px 10px;
-    }
-
-    .kpi-number {
-        font-size: 25px;
-    }
-
-    .kpi-label {
-        font-size: 12px;
-    }
-}
-
-</style>
-""", unsafe_allow_html=True)
-st.markdown("""
-<style>
-
-/* ============================================================
-   ECOSCAN HOME - ECO TECH UI
-   ============================================================ */
-
-.hero-section {
-    background:
-        radial-gradient(circle at 90% 10%, rgba(76, 175, 80, 0.14), transparent 30%),
-        linear-gradient(135deg, #ffffff 0%, #f1faf4 100%);
-    border: 1px solid #dcefe2;
-    border-radius: 28px;
-    padding: 42px 45px;
-    margin-bottom: 18px;
-    box-shadow: 0 10px 30px rgba(32, 91, 54, 0.08);
-}
-
-.hero-content {
-    max-width: 850px;
-}
-
-.hero-badge {
-    display: inline-block;
-    background: #e4f5e9;
-    color: #247342;
-    border-radius: 50px;
-    padding: 8px 15px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.6px;
-    margin-bottom: 16px;
-}
-
-.hero-title {
-    font-size: 42px;
-    font-weight: 800;
-    color: #173f29;
-    line-height: 1.15;
-    margin-bottom: 8px;
-}
-
-.hero-title span {
-    color: #2e8b57;
-}
-
-.hero-subtitle {
-    font-size: 20px;
-    font-weight: 600;
-    color: #4f765e;
-    margin-bottom: 14px;
-}
-
-.hero-description {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #607568;
-    max-width: 760px;
-}
-
-
-/* MAIN ACTION */
-
-.main-action-card {
-    min-height: 145px;
-    display: flex;
-    align-items: center;
-    gap: 22px;
-    background: linear-gradient(135deg, #eaf8ef, #f8fcf9);
-    border: 1px solid #d7ebdd;
-    border-radius: 24px;
-    padding: 25px;
-    box-shadow: 0 8px 24px rgba(36, 115, 66, 0.06);
-}
-
-.action-icon {
-    width: 72px;
-    height: 72px;
-    border-radius: 20px;
-    background: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 34px;
-    box-shadow: 0 5px 15px rgba(30, 90, 50, 0.08);
-}
-
-.action-title {
-    font-size: 22px;
-    font-weight: 800;
-    color: #173f29;
-    margin-bottom: 6px;
-}
-
-.action-text {
-    color: #607568;
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-
-/* SECTION TITLES */
-
-.section-heading {
-    font-size: 22px;
-    font-weight: 800;
-    color: #173f29;
-    margin: 10px 0 15px 2px;
-}
-
-
-/* QUICK ACTIONS */
-
-.quick-card {
-    background: #ffffff;
-    border: 1px solid #e0eee4;
-    border-radius: 22px;
-    padding: 24px;
-    min-height: 155px;
-    box-shadow: 0 7px 20px rgba(35, 83, 50, 0.06);
-    transition: all 0.2s ease;
-}
-
-.quick-icon {
-    font-size: 30px;
-    margin-bottom: 12px;
-}
-
-.quick-title {
-    color: #173f29;
-    font-size: 17px;
-    font-weight: 700;
-    margin-bottom: 7px;
-}
-
-.quick-text {
-    color: #708077;
-    font-size: 13px;
-    line-height: 1.6;
-}
-
-
-/* PROCESS */
-
-.process-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 15px 5px;
-}
-
-.process-item {
-    flex: 1;
-    text-align: center;
-    color: #173f29;
-}
-
-.process-item span {
-    display: block;
-    color: #718078;
-    font-size: 12px;
-    margin-top: 5px;
-}
-
-.process-icon {
-    width: 58px;
-    height: 58px;
-    margin: 0 auto 10px auto;
-    border-radius: 18px;
-    background: #eaf7ee;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 25px;
-}
-
-.process-arrow {
-    color: #70a783;
-    font-size: 22px;
-    font-weight: 700;
-}
-
-
-/* FEATURE CARDS */
-
-.feature-card {
-    background: #ffffff;
-    border: 1px solid #e0eee4;
-    border-radius: 22px;
-    padding: 25px;
-    min-height: 170px;
-    box-shadow: 0 7px 20px rgba(35, 83, 50, 0.06);
-}
-
-.feature-icon {
-    font-size: 30px;
-    margin-bottom: 12px;
-}
-
-.feature-title {
-    color: #173f29;
-    font-size: 17px;
-    font-weight: 800;
-    margin-bottom: 8px;
-}
-
-.feature-text {
-    color: #718078;
-    font-size: 13px;
-    line-height: 1.7;
-}
-
-
-/* HOME FOOTER */
-
-.eco-home-footer {
-    text-align: center;
-    color: #71917c;
-    font-size: 13px;
-    margin: 30px 0 10px 0;
-}
-
-
-/* STREAMLIT BUTTON */
-
-.stButton > button {
-    border-radius: 16px !important;
-    min-height: 52px !important;
-    font-weight: 700 !important;
-    border: 1px solid #b9dec5 !important;
-    background: #2e8b57 !important;
-    color: white !important;
-    box-shadow: 0 7px 18px rgba(46, 139, 87, 0.18) !important;
-}
-
-.stButton > button:hover {
-    background: #247548 !important;
-    border-color: #247548 !important;
-}
-
-
-/* MOBILE */
-
-@media (max-width: 768px) {
-
     .hero-section {
+
         padding: 28px 22px;
+
         border-radius: 22px;
     }
 
     .hero-title {
+
         font-size: 31px;
     }
 
     .hero-subtitle {
+
         font-size: 17px;
     }
 
     .hero-description {
+
         font-size: 13px;
     }
 
+    .result-name {
+
+        font-size: 28px;
+    }
+
+    .kpi-card {
+
+        min-height: 120px;
+
+        padding: 18px 10px;
+    }
+
+    .kpi-number {
+
+        font-size: 25px;
+    }
+
+    .kpi-label {
+
+        font-size: 12px;
+    }
+
     .process-row {
+
         flex-direction: column;
     }
 
     .process-arrow {
+
         transform: rotate(90deg);
     }
 
     .main-action-card {
+
         padding: 20px;
     }
-
 }
 
 </style>
@@ -1139,36 +1389,40 @@ with st.sidebar:
         """
     )
 # ============================================================
-# HOME - ECO-TECH DESIGN
+# HOME
 # ============================================================
 
 if page == "🏠 Home":
 
-    # Hero Section
+    # --------------------------------------------------------
+    # HEADER
+    # --------------------------------------------------------
+
     st.markdown(
         """
-        <div class="hero-section">
+        <div class="eco-card-green">
 
-            <div class="hero-content">
+            <div class="eco-card-title">
+                ♻️ Welcome to EcoScan
+            </div>
 
-                <div class="hero-badge">
-                    ♻️ AI • SUSTAINABILITY • SMART CAMPUS
-                </div>
+            <div style="
+                font-size:16px;
+                color:#557060;
+                margin-top:8px;
+            ">
+                AI-Powered Waste Management Assistant
+            </div>
 
-                <div class="hero-title">
-                    Welcome to <span>EcoScan</span>
-                </div>
-
-                <div class="hero-subtitle">
-                    AI-Powered Waste Management Assistant
-                </div>
-
-                <div class="hero-description">
-                    Turn everyday waste into smarter environmental decisions.
-                    Identify waste, understand its impact, and discover
-                    the right action using Artificial Intelligence.
-                </div>
-
+            <div style="
+                font-size:14px;
+                color:#6b7d72;
+                line-height:1.7;
+                margin-top:14px;
+            ">
+                Turn everyday waste into smarter environmental decisions.
+                Identify waste, understand its impact, and discover
+                the right action using Artificial Intelligence.
             </div>
 
         </div>
@@ -1178,30 +1432,39 @@ if page == "🏠 Home":
 
     st.markdown("")
 
-    # Main Scan Action
-    scan_col1, scan_col2 = st.columns([2, 1])
+    # --------------------------------------------------------
+    # MAIN ACTION
+    # --------------------------------------------------------
+
+    scan_col1, scan_col2 = st.columns(
+        [2, 1]
+    )
 
     with scan_col1:
 
         st.markdown(
             """
-            <div class="main-action-card">
+            <div class="eco-card">
 
-                <div class="action-icon">
+                <div style="
+                    font-size:34px;
+                    margin-bottom:10px;
+                ">
                     📷
                 </div>
 
-                <div class="action-content">
+                <div class="eco-card-title">
+                    Ready to Scan?
+                </div>
 
-                    <div class="action-title">
-                        Ready to Scan?
-                    </div>
-
-                    <div class="action-text">
-                        Take a photo or upload an image of waste
-                        and let EcoScan analyze it.
-                    </div>
-
+                <div style="
+                    color:#68796f;
+                    font-size:14px;
+                    line-height:1.6;
+                    margin-top:8px;
+                ">
+                    Take a photo or upload an image of waste
+                    and let EcoScan analyze it.
                 </div>
 
             </div>
@@ -1212,19 +1475,28 @@ if page == "🏠 Home":
     with scan_col2:
 
         if st.button(
-            "📷  Scan Waste",
+            "📷 Scan Waste",
             use_container_width=True
         ):
+
             st.info(
                 "Choose **📷 Scan** from the sidebar to start."
             )
 
-    st.markdown("<div style='height:15px'></div>", unsafe_allow_html=True)
+    st.markdown("")
 
-    # Quick Actions
+    # --------------------------------------------------------
+    # QUICK ACTIONS
+    # --------------------------------------------------------
+
     st.markdown(
         """
-        <div class="section-heading">
+        <div style="
+            font-size:22px;
+            font-weight:800;
+            color:#173f29;
+            margin-bottom:14px;
+        ">
             ⚡ Quick Actions
         </div>
         """,
@@ -1234,53 +1506,100 @@ if page == "🏠 Home":
     q1, q2, q3 = st.columns(3)
 
     with q1:
+
         st.markdown(
             """
-            <div class="quick-card">
-                <div class="quick-icon">🔍</div>
-                <div class="quick-title">Identify Waste</div>
-                <div class="quick-text">
+            <div class="eco-card">
+
+                <div style="font-size:28px;">
+                    🔍
+                </div>
+
+                <div class="eco-card-title">
+                    Identify Waste
+                </div>
+
+                <div style="
+                    color:#708077;
+                    font-size:13px;
+                    margin-top:7px;
+                ">
                     Use AI to recognize the waste category.
                 </div>
+
             </div>
             """,
             unsafe_allow_html=True
         )
 
     with q2:
+
         st.markdown(
             """
-            <div class="quick-card">
-                <div class="quick-icon">♻️</div>
-                <div class="quick-title">Find the Right Action</div>
-                <div class="quick-text">
-                    Learn how to recycle, reuse, or dispose of it.
+            <div class="eco-card">
+
+                <div style="font-size:28px;">
+                    ♻️
                 </div>
+
+                <div class="eco-card-title">
+                    Find the Right Action
+                </div>
+
+                <div style="
+                    color:#708077;
+                    font-size:13px;
+                    margin-top:7px;
+                ">
+                    Learn how to recycle, reuse, or dispose of waste.
+                </div>
+
             </div>
             """,
             unsafe_allow_html=True
         )
 
     with q3:
+
         st.markdown(
             """
-            <div class="quick-card">
-                <div class="quick-icon">💬</div>
-                <div class="quick-title">Ask EcoScan</div>
-                <div class="quick-text">
-                    Get waste-management guidance from the assistant.
+            <div class="eco-card">
+
+                <div style="font-size:28px;">
+                    💬
                 </div>
+
+                <div class="eco-card-title">
+                    Ask EcoScan
+                </div>
+
+                <div style="
+                    color:#708077;
+                    font-size:13px;
+                    margin-top:7px;
+                ">
+                    Get waste-management guidance from EcoScan.
+                </div>
+
             </div>
             """,
             unsafe_allow_html=True
         )
 
-    st.markdown("<div style='height:15px'></div>", unsafe_allow_html=True)
+    st.markdown("")
 
-    # AI & Sustainability Stats
+    # --------------------------------------------------------
+    # STATISTICS
+    # --------------------------------------------------------
+
     st.markdown(
         """
-        <div class="section-heading">
+        <div style="
+            font-size:22px;
+            font-weight:800;
+            color:#173f29;
+            margin-bottom:14px;
+        ">
             📊 EcoScan at a Glance
         </div>
         """,
@@ -1290,96 +1609,99 @@ if page == "🏠 Home":
     col1, col2, col3 = st.columns(3)
 
     with col1:
+
         st.markdown(
             """
             <div class="kpi-card">
-                <div class="kpi-icon">🧠</div>
-                <div class="kpi-number">80.62%</div>
-                <div class="kpi-label">AI Model Accuracy</div>
-                <div class="kpi-small">
-                    Current trained model
+
+                <div class="kpi-icon">
+                    🧠
                 </div>
+
+                <div class="kpi-number">
+                    80.62%
+                </div>
+
+                <div class="kpi-label">
+                    AI Model Accuracy
+                </div>
+
             </div>
             """,
             unsafe_allow_html=True
         )
 
     with col2:
+
         st.markdown(
             """
             <div class="kpi-card">
-                <div class="kpi-icon">🗂️</div>
-                <div class="kpi-number">9</div>
-                <div class="kpi-label">Waste Categories</div>
-                <div class="kpi-small">
-                    Supported by EcoScan
+
+                <div class="kpi-icon">
+                    🗂️
                 </div>
+
+                <div class="kpi-number">
+                    9
+                </div>
+
+                <div class="kpi-label">
+                    Waste Categories
+                </div>
+
             </div>
             """,
             unsafe_allow_html=True
         )
 
     with col3:
+
         st.markdown(
             """
             <div class="kpi-card">
-                <div class="kpi-icon">🌱</div>
-                <div class="kpi-number">Eco</div>
-                <div class="kpi-label">Sustainability Focus</div>
-                <div class="kpi-small">
-                    Smart environmental decisions
+
+                <div class="kpi-icon">
+                    🌱
                 </div>
+
+                <div class="kpi-number">
+                    Eco
+                </div>
+
+                <div class="kpi-label">
+                    Sustainability Focus
+                </div>
+
             </div>
             """,
             unsafe_allow_html=True
         )
 
-    st.markdown("<div style='height:15px'></div>", unsafe_allow_html=True)
+    st.markdown("")
 
-    # What EcoScan Does
+    # --------------------------------------------------------
+    # HOW ECOSCAN WORKS
+    # --------------------------------------------------------
+
     st.markdown(
         """
-        <div class="section-heading">
-            🌱 What EcoScan Does
-        </div>
-
         <div class="eco-card">
 
             <div class="eco-card-title">
-                From Image → AI → Action
+                🌱 From Image → AI → Action
             </div>
 
-            <div class="process-row">
+            <div style="
+                font-size:14px;
+                color:#68796f;
+                line-height:1.8;
+                margin-top:10px;
+            ">
 
-                <div class="process-item">
-                    <div class="process-icon">📷</div>
-                    <b>Scan</b>
-                    <span>Capture waste</span>
-                </div>
-
-                <div class="process-arrow">→</div>
-
-                <div class="process-item">
-                    <div class="process-icon">🧠</div>
-                    <b>Analyze</b>
-                    <span>AI classification</span>
-                </div>
-
-                <div class="process-arrow">→</div>
-
-                <div class="process-item">
-                    <div class="process-icon">♻️</div>
-                    <b>Decide</b>
-                    <span>Recommended action</span>
-                </div>
-
-                <div class="process-arrow">→</div>
-
-                <div class="process-item">
-                    <div class="process-icon">🌍</div>
-                    <b>Impact</b>
-                    <span>EcoScore & insights</span>
-                </div>
+                📷 <b>Scan</b>
+                → 🧠 <b>Analyze</b>
+                → ♻️ <b>Recommended Action</b>
+                → 🌍 <b>Eco Impact</b>
 
             </div>
 
@@ -1388,87 +1710,139 @@ if page == "🏠 Home":
         unsafe_allow_html=True
     )
 
-    st.markdown("<div style='height:15px'></div>", unsafe_allow_html=True)
+    st.markdown("")
 
-    # Feature Cards
+    # --------------------------------------------------------
+    # FEATURES
+    # --------------------------------------------------------
+
     f1, f2, f3 = st.columns(3)
 
     with f1:
+
         st.markdown(
             """
-            <div class="feature-card">
-                <div class="feature-icon">🧠</div>
-                <div class="feature-title">AI Classification</div>
-                <div class="feature-text">
+            <div class="eco-card">
+
+                <div style="font-size:28px;">
+                    🧠
+                </div>
+
+                <div class="eco-card-title">
+                    AI Classification
+                </div>
+
+                <div style="
+                    color:#708077;
+                    font-size:13px;
+                    line-height:1.6;
+                    margin-top:7px;
+                ">
                     Identify waste using the trained EcoScan AI model.
                 </div>
+
             </div>
             """,
             unsafe_allow_html=True
         )
 
     with f2:
+
         st.markdown(
             """
-            <div class="feature-card">
-                <div class="feature-icon">🧬</div>
-                <div class="feature-title">Biotechnology</div>
-                <div class="feature-text">
+            <div class="eco-card">
+
+                <div style="font-size:28px;">
+                    🧬
+                </div>
+
+                <div class="eco-card-title">
+                    Biotechnology
+                </div>
+
+                <div style="
+                    color:#708077;
+                    font-size:13px;
+                    line-height:1.6;
+                    margin-top:7px;
+                ">
                     Explore biological treatment pathways for suitable
                     organic waste.
                 </div>
+
             </div>
             """,
             unsafe_allow_html=True
         )
 
     with f3:
+
         st.markdown(
             """
-            <div class="feature-card">
-                <div class="feature-icon">🏫</div>
-                <div class="feature-title">Smart Campus</div>
-                <div class="feature-text">
+            <div class="eco-card">
+
+                <div style="font-size:28px;">
+                    🏫
+                </div>
+
+                <div class="eco-card-title">
+                    Smart Campus
+                </div>
+
+                <div style="
+                    color:#708077;
+                    font-size:13px;
+                    line-height:1.6;
+                    margin-top:7px;
+                ">
                     Understand waste patterns and support smarter
                     campus management.
                 </div>
+
             </div>
             """,
             unsafe_allow_html=True
         )
 
-    # Footer
     st.markdown(
         """
-        <div class="eco-home-footer">
+        <div style="
+            text-align:center;
+            color:#71917c;
+            font-size:13px;
+            margin:30px 0 10px 0;
+        ">
             🌿 EcoScan — Smart choices for a cleaner campus
         </div>
         """,
         unsafe_allow_html=True
     )
+
+
 # ============================================================
-# SCAN - ECO TECH DESIGN
+# SCAN
 # ============================================================
 
 elif page == "📷 Scan":
 
-    # ========================================================
-    # SCAN HEADER
-    # ========================================================
+    # --------------------------------------------------------
+    # HEADER
+    # --------------------------------------------------------
 
     st.markdown(
         f"""
-        <div class="scan-header">
+        <div class="eco-card-green">
 
-            <div class="scan-badge">
-                📷 AI WASTE SCANNER
+            <div class="eco-card-title">
+                📷 {TEXT[language]["scan_title"]}
             </div>
 
-            <div class="scan-title">
-                {TEXT[language]["scan_title"]}
-            </div>
-
-            <div class="scan-subtitle">
+            <div style="
+                color:#557060;
+                font-size:14px;
+                line-height:1.7;
+                margin-top:8px;
+            ">
                 {TEXT[language]["scan_subtitle"]}
             </div>
 
@@ -1479,20 +1853,27 @@ elif page == "📷 Scan":
 
     st.markdown("")
 
-    # ========================================================
-    # STEP 1 — LOCATION
-    # ========================================================
+    # --------------------------------------------------------
+    # LOCATION
+    # --------------------------------------------------------
 
     st.markdown(
         """
-        <div class="scan-section-title">
-            📍 Where was the waste found?
+        <div style="
+            font-size:20px;
+            font-weight:800;
+            color:#173f29;
+            margin-bottom:12px;
+        ">
+            📍 Scan Location
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    location_col1, location_col2 = st.columns([1.4, 1])
+    location_col1, location_col2 = st.columns(
+        [1.3, 1]
+    )
 
     with location_col1:
 
@@ -1507,10 +1888,6 @@ elif page == "📷 Scan":
                 "Student Area"
             ]
         )
-
-    # ========================================================
-    # COLLEGE SELECTION
-    # ========================================================
 
     college = None
 
@@ -1532,35 +1909,39 @@ elif page == "📷 Scan":
 
             st.markdown(
                 """
-                <div class="location-info-card">
+                <div class="eco-card">
 
                     🏫 <b>Campus Location</b>
 
-                    <br>
-
-                    <span>
-                    EcoScan will record this scan location
-                    for future campus analysis.
-                    </span>
+                    <div style="
+                        color:#708077;
+                        font-size:12px;
+                        margin-top:6px;
+                    ">
+                        This scan location will be stored
+                        for campus analysis.
+                    </div>
 
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
-    st.markdown(
-        "<div style='height:10px'></div>",
-        unsafe_allow_html=True
-    )
+    st.markdown("")
 
-    # ========================================================
-    # STEP 2 — INPUT METHOD
-    # ========================================================
+    # --------------------------------------------------------
+    # INPUT METHOD
+    # --------------------------------------------------------
 
     st.markdown(
         """
-        <div class="scan-section-title">
-            📸 Choose how to scan
+        <div style="
+            font-size:20px;
+            font-weight:800;
+            color:#173f29;
+            margin-bottom:12px;
+        ">
+            📸 Choose Scan Method
         </div>
         """,
         unsafe_allow_html=True
@@ -1577,27 +1958,33 @@ elif page == "📷 Scan":
 
     image = None
 
-    # ========================================================
+    # --------------------------------------------------------
     # GALLERY
-    # ========================================================
+    # --------------------------------------------------------
 
     if input_method == TEXT[language]["gallery"]:
 
         st.markdown(
             """
-            <div class="upload-guide">
+            <div class="eco-card">
 
-                <div class="upload-icon">
+                <div style="
+                    font-size:32px;
+                    margin-bottom:8px;
+                ">
                     🖼️
                 </div>
 
-                <div class="upload-title">
+                <div class="eco-card-title">
                     Upload Waste Image
                 </div>
 
-                <div class="upload-text">
-                    Choose a clear photo of the waste item
-                    for AI classification.
+                <div style="
+                    color:#708077;
+                    font-size:13px;
+                    margin-top:6px;
+                ">
+                    Choose a clear image for AI classification.
                 </div>
 
             </div>
@@ -1621,27 +2008,33 @@ elif page == "📷 Scan":
                 uploaded_file
             ).convert("RGB")
 
-    # ========================================================
+    # --------------------------------------------------------
     # CAMERA
-    # ========================================================
+    # --------------------------------------------------------
 
     else:
 
         st.markdown(
             """
-            <div class="upload-guide">
+            <div class="eco-card">
 
-                <div class="upload-icon">
+                <div style="
+                    font-size:32px;
+                    margin-bottom:8px;
+                ">
                     📷
                 </div>
 
-                <div class="upload-title">
+                <div class="eco-card-title">
                     Capture Waste
                 </div>
 
-                <div class="upload-text">
-                    Take a clear photo and let EcoScan
-                    analyze the item.
+                <div style="
+                    color:#708077;
+                    font-size:13px;
+                    margin-top:6px;
+                ">
+                    Take a clear photo for AI classification.
                 </div>
 
             </div>
@@ -1659,95 +2052,73 @@ elif page == "📷 Scan":
                 camera_image
             ).convert("RGB")
 
-    # ========================================================
-    # IMAGE PREVIEW & ANALYSIS
-    # ========================================================
+    # --------------------------------------------------------
+    # IMAGE PREVIEW
+    # --------------------------------------------------------
 
     if image is not None:
 
+        st.markdown("")
+
         st.markdown(
             """
-            <div class="scan-section-title">
-                👁️ Preview Your Waste
+            <div style="
+                font-size:20px;
+                font-weight:800;
+                color:#173f29;
+                margin-bottom:12px;
+            ">
+                👁️ Preview
             </div>
             """,
             unsafe_allow_html=True
         )
 
         preview_col1, preview_col2 = st.columns(
-            [1.15, 0.85]
+            [1.2, 0.8]
         )
 
-        # ----------------------------------------------------
-        # IMAGE PREVIEW
-        # ----------------------------------------------------
-
         with preview_col1:
-
-            st.markdown(
-                """
-                <div class="preview-card">
-
-                    <div class="preview-label">
-                        📷 Selected Image
-                    </div>
-
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
 
             st.image(
                 image,
                 use_container_width=True
             )
 
-        # ----------------------------------------------------
-        # ANALYSIS PANEL
-        # ----------------------------------------------------
-
         with preview_col2:
 
             st.markdown(
                 """
-                <div class="analysis-ready-card">
+                <div class="eco-card-green">
 
-                    <div class="analysis-icon">
+                    <div style="
+                        font-size:30px;
+                    ">
                         🧠
                     </div>
 
-                    <div class="analysis-title">
+                    <div class="eco-card-title">
                         Ready for AI Analysis
                     </div>
 
-                    <div class="analysis-text">
-                        EcoScan will analyze the image and identify
-                        the most likely waste category.
+                    <div style="
+                        color:#607568;
+                        font-size:13px;
+                        line-height:1.7;
+                        margin-top:8px;
+                    ">
+                        EcoScan will analyze the image and
+                        identify the most likely waste category.
                     </div>
 
                 </div>
                 """,
-                unsafe_allow_html=True
-            )
-
-            st.markdown(
-                "<div style='height:12px'></div>",
                 unsafe_allow_html=True
             )
 
             analyze_button = st.button(
                 TEXT[language]["analyze"],
                 use_container_width=True
-            )
-
-            st.markdown(
-                """
-                <div class="analysis-note">
-                    🔒 Your image is analyzed by the EcoScan model
-                    and the result can be saved to your history.
-                </div>
-                """,
-                unsafe_allow_html=True
             )
 
         # ====================================================
@@ -1780,25 +2151,21 @@ elif page == "📷 Scan":
                     predicted_class
                 )
 
-            # =================================================
-            # RESULT CARD
-            # =================================================
+            # ------------------------------------------------
+            # AI RESULT
+            # ------------------------------------------------
+
+            st.markdown("")
 
             st.markdown(
-                f"""
-                <div class="eco-card">
-
-                    <div class="eco-card-title">
-                        {TEXT[language]["ai_result"]}
-                    </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-            st.markdown(
-                f"""
-                <div class="result-name">
-                    {predicted_class}
+                """
+                <div style="
+                    font-size:22px;
+                    font-weight:800;
+                    color:#173f29;
+                    margin-bottom:12px;
+                ">
+                    🧠 AI Analysis Result
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -1806,8 +2173,23 @@ elif page == "📷 Scan":
 
             st.markdown(
                 f"""
-                <div class="confidence-number">
-                    {confidence:.2f}%
+                <div class="eco-card-green">
+
+                    <div style="
+                        font-size:13px;
+                        color:#557060;
+                    ">
+                        Detected Waste
+                    </div>
+
+                    <div class="result-name">
+                        {predicted_class}
+                    </div>
+
+                    <div class="confidence-number">
+                        {confidence:.2f}%
+                    </div>
+
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -1823,10 +2205,8 @@ elif page == "📷 Scan":
             st.markdown(
                 f"""
                 <div class="badge {confidence_info['class']}">
-
                     {confidence_info['emoji']}
                     {confidence_info['level']}
-
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -1836,14 +2216,9 @@ elif page == "📷 Scan":
                 confidence_info["message"]
             )
 
-            st.markdown(
-                "</div>",
-                unsafe_allow_html=True
-            )
-
-            # =================================================
+            # ------------------------------------------------
             # TOP PREDICTIONS
-            # =================================================
+            # ------------------------------------------------
 
             st.markdown(
                 f"### {TEXT[language]['top_predictions']}"
@@ -1867,17 +2242,19 @@ elif page == "📷 Scan":
                     )
                 )
 
-            # =================================================
+            # ------------------------------------------------
             # SMART RECOMMENDATION
-            # =================================================
+            # ------------------------------------------------
 
             st.markdown(
-                f"""
+                """
                 <div class="eco-card-green">
 
                     <div class="eco-card-title">
-                        {TEXT[language]["smart_recommendation"]}
+                        ♻️ Smart Recommendation
                     </div>
+
+                </div>
                 """,
                 unsafe_allow_html=True
             )
@@ -1910,14 +2287,9 @@ elif page == "📷 Scan":
                 f"{waste_info['disposal']}"
             )
 
-            st.markdown(
-                "</div>",
-                unsafe_allow_html=True
-            )
-
-            # =================================================
+            # ------------------------------------------------
             # REUSE
-            # =================================================
+            # ------------------------------------------------
 
             with st.container(border=True):
 
@@ -1929,9 +2301,9 @@ elif page == "📷 Scan":
                     waste_info["reuse"]
                 )
 
-            # =================================================
+            # ------------------------------------------------
             # ENVIRONMENTAL IMPACT
-            # =================================================
+            # ------------------------------------------------
 
             with st.container(border=True):
 
@@ -1943,9 +2315,9 @@ elif page == "📷 Scan":
                     waste_info["impact"]
                 )
 
-            # =================================================
+            # ------------------------------------------------
             # BIOTECHNOLOGY
-            # =================================================
+            # ------------------------------------------------
 
             with st.container(border=True):
 
@@ -1960,11 +2332,11 @@ elif page == "📷 Scan":
                     )
 
                     st.markdown(
-                        f"""
+                        """
                         <div class="eco-card-green">
 
                             <div class="eco-card-title">
-                                {TEXT[language]["high_biological"]}
+                                Biological Treatment
                             </div>
 
                             This waste can potentially be treated
@@ -1991,14 +2363,14 @@ elif page == "📷 Scan":
                         biotech_info["explanation"]
                     )
 
-            # =================================================
+            # ------------------------------------------------
             # ECOSCORE
-            # =================================================
+            # ------------------------------------------------
 
             with st.container(border=True):
 
                 st.markdown(
-                    f"{TEXT[language]['ecoscore']}"
+                    f"### {TEXT[language]['ecoscore']}"
                 )
 
                 score = waste_info["eco_score"]
@@ -2020,9 +2392,9 @@ elif page == "📷 Scan":
                     get_eco_score_message(score)
                 )
 
-            # =================================================
+            # ------------------------------------------------
             # SAVE TO HISTORY
-            # =================================================
+            # ------------------------------------------------
 
             image_path = save_scan_image(
                 image
@@ -2054,11 +2426,9 @@ elif page == "📷 Scan":
                 TEXT[language]["saved_history"]
             )
 
-            # =================================================
-            # SCAN ANOTHER ITEM
-            # =================================================
-
-            st.markdown("")
+            # ------------------------------------------------
+            # SCAN ANOTHER
+            # ------------------------------------------------
 
             if st.button(
                 TEXT[language]["scan_another"],
