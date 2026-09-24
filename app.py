@@ -1449,9 +1449,13 @@ if page == "🏠 Home":
 # ============================================================
 # SCAN - ECO TECH DESIGN
 # ============================================================
+
 elif page == "📷 Scan":
 
-    # Header
+    # ========================================================
+    # SCAN HEADER
+    # ========================================================
+
     st.markdown(
         f"""
         <div class="scan-header">
@@ -1504,7 +1508,10 @@ elif page == "📷 Scan":
             ]
         )
 
-    # College Selection
+    # ========================================================
+    # COLLEGE SELECTION
+    # ========================================================
+
     college = None
 
     with location_col2:
@@ -1526,18 +1533,25 @@ elif page == "📷 Scan":
             st.markdown(
                 """
                 <div class="location-info-card">
+
                     🏫 <b>Campus Location</b>
+
                     <br>
+
                     <span>
                     EcoScan will record this scan location
                     for future campus analysis.
                     </span>
+
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
-    st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+    st.markdown(
+        "<div style='height:10px'></div>",
+        unsafe_allow_html=True
+    )
 
     # ========================================================
     # STEP 2 — INPUT METHOD
@@ -1572,7 +1586,10 @@ elif page == "📷 Scan":
         st.markdown(
             """
             <div class="upload-guide">
-                <div class="upload-icon">🖼️</div>
+
+                <div class="upload-icon">
+                    🖼️
+                </div>
 
                 <div class="upload-title">
                     Upload Waste Image
@@ -1582,6 +1599,7 @@ elif page == "📷 Scan":
                     Choose a clear photo of the waste item
                     for AI classification.
                 </div>
+
             </div>
             """,
             unsafe_allow_html=True
@@ -1612,7 +1630,10 @@ elif page == "📷 Scan":
         st.markdown(
             """
             <div class="upload-guide">
-                <div class="upload-icon">📷</div>
+
+                <div class="upload-icon">
+                    📷
+                </div>
 
                 <div class="upload-title">
                     Capture Waste
@@ -1622,6 +1643,7 @@ elif page == "📷 Scan":
                     Take a clear photo and let EcoScan
                     analyze the item.
                 </div>
+
             </div>
             """,
             unsafe_allow_html=True
@@ -1636,118 +1658,128 @@ elif page == "📷 Scan":
             image = Image.open(
                 camera_image
             ).convert("RGB")
-   # --------------------------------------------------------
-# IMAGE PREVIEW & ANALYSIS
-# --------------------------------------------------------
 
-if image is not None:
+    # ========================================================
+    # IMAGE PREVIEW & ANALYSIS
+    # ========================================================
 
-    st.markdown(
-        """
-        <div class="scan-section-title">
-            👁️ Preview Your Waste
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    preview_col1, preview_col2 = st.columns([1.15, 0.85])
-
-    # ----------------------------------------------------
-    # IMAGE
-    # ----------------------------------------------------
-
-    with preview_col1:
+    if image is not None:
 
         st.markdown(
             """
-            <div class="preview-card">
-                <div class="preview-label">
-                    📷 Selected Image
-                </div>
+            <div class="scan-section-title">
+                👁️ Preview Your Waste
             </div>
             """,
             unsafe_allow_html=True
         )
 
-        st.image(
-            image,
-            use_container_width=True
+        preview_col1, preview_col2 = st.columns(
+            [1.15, 0.85]
         )
 
-    # ----------------------------------------------------
-    # ANALYSIS PANEL
-    # ----------------------------------------------------
+        # ----------------------------------------------------
+        # IMAGE PREVIEW
+        # ----------------------------------------------------
 
-    with preview_col2:
+        with preview_col1:
 
-        st.markdown(
-            """
-            <div class="analysis-ready-card">
+            st.markdown(
+                """
+                <div class="preview-card">
 
-                <div class="analysis-icon">
-                    🧠
+                    <div class="preview-label">
+                        📷 Selected Image
+                    </div>
+
                 </div>
-
-                <div class="analysis-title">
-                    Ready for AI Analysis
-                </div>
-
-                <div class="analysis-text">
-                    EcoScan will analyze the image and identify
-                    the most likely waste category.
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
-
-        analyze_button = st.button(
-            "🧠 Analyze with EcoScan AI",
-            use_container_width=True
-        )
-
-        st.markdown(
-            """
-            <div class="analysis-note">
-                🔒 Your image is analyzed by the EcoScan model
-                and the result can be saved to your history.
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    # ====================================================
-    # AI ANALYSIS
-    # ====================================================
-
-    if analyze_button:
-
-        with st.spinner(
-            TEXT[language]["analyzing"]
-        ):
-
-            top_predictions = predict_waste(image)
-
-            predicted_class = top_predictions[0]["class"]
-
-            confidence = top_predictions[0]["confidence"]
-
-            confidence_info = get_confidence_info(
-                confidence
+                """,
+                unsafe_allow_html=True
             )
 
-            waste_info = get_waste_info(
-                predicted_class
+            st.image(
+                image,
+                use_container_width=True
             )
 
-            biotech_info = get_biotech_info(
-                predicted_class
+        # ----------------------------------------------------
+        # ANALYSIS PANEL
+        # ----------------------------------------------------
+
+        with preview_col2:
+
+            st.markdown(
+                """
+                <div class="analysis-ready-card">
+
+                    <div class="analysis-icon">
+                        🧠
+                    </div>
+
+                    <div class="analysis-title">
+                        Ready for AI Analysis
+                    </div>
+
+                    <div class="analysis-text">
+                        EcoScan will analyze the image and identify
+                        the most likely waste category.
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
             )
-   
+
+            st.markdown(
+                "<div style='height:12px'></div>",
+                unsafe_allow_html=True
+            )
+
+            analyze_button = st.button(
+                TEXT[language]["analyze"],
+                use_container_width=True
+            )
+
+            st.markdown(
+                """
+                <div class="analysis-note">
+                    🔒 Your image is analyzed by the EcoScan model
+                    and the result can be saved to your history.
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        # ====================================================
+        # AI ANALYSIS
+        # ====================================================
+
+        if analyze_button:
+
+            with st.spinner(
+                TEXT[language]["analyzing"]
+            ):
+
+                top_predictions = predict_waste(
+                    image
+                )
+
+                predicted_class = top_predictions[0]["class"]
+
+                confidence = top_predictions[0]["confidence"]
+
+                confidence_info = get_confidence_info(
+                    confidence
+                )
+
+                waste_info = get_waste_info(
+                    predicted_class
+                )
+
+                biotech_info = get_biotech_info(
+                    predicted_class
+                )
+
             # =================================================
             # RESULT CARD
             # =================================================
@@ -1756,9 +1788,9 @@ if image is not None:
                 f"""
                 <div class="eco-card">
 
-                <div class="eco-card-title">
-                  {TEXT[language]['ai_result']}"
-                </div>
+                    <div class="eco-card-title">
+                        {TEXT[language]["ai_result"]}
+                    </div>
                 """,
                 unsafe_allow_html=True
             )
@@ -1766,7 +1798,7 @@ if image is not None:
             st.markdown(
                 f"""
                 <div class="result-name">
-                {predicted_class}
+                    {predicted_class}
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -1775,21 +1807,26 @@ if image is not None:
             st.markdown(
                 f"""
                 <div class="confidence-number">
-                {confidence:.2f}%
+                    {confidence:.2f}%
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
             st.progress(
-                min(confidence / 100, 1.0)
+                min(
+                    confidence / 100,
+                    1.0
+                )
             )
 
             st.markdown(
                 f"""
                 <div class="badge {confidence_info['class']}">
-                {confidence_info['emoji']}
-                {confidence_info['level']}
+
+                    {confidence_info['emoji']}
+                    {confidence_info['level']}
+
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -1804,11 +1841,17 @@ if image is not None:
                 unsafe_allow_html=True
             )
 
+            # =================================================
+            # TOP PREDICTIONS
+            # =================================================
+
             st.markdown(
                 f"### {TEXT[language]['top_predictions']}"
             )
 
-            for index, prediction in enumerate(top_predictions):
+            for index, prediction in enumerate(
+                top_predictions
+            ):
 
                 rank = index + 1
 
@@ -1825,43 +1868,42 @@ if image is not None:
                 )
 
             # =================================================
-            # RECOMMENDATION
+            # SMART RECOMMENDATION
             # =================================================
 
             st.markdown(
                 f"""
                 <div class="eco-card-green">
 
-                <div class="eco-card-title">
-                 {TEXT[language]
-                 ["smart_recommendation"]}
-                </div>
+                    <div class="eco-card-title">
+                        {TEXT[language]["smart_recommendation"]}
+                    </div>
                 """,
                 unsafe_allow_html=True
             )
 
             st.write(
-                f"**{ TEXT[language]['category']}:** {waste_info['category']}"
+                f"**{TEXT[language]['category']}:** "
+                f"{waste_info['category']}"
             )
 
             st.write(
-                f"**{ TEXT[language]['recommended_action']}:** "
+                f"**{TEXT[language]['recommended_action']}:** "
                 f"{waste_info['action']}"
             )
 
             if confidence >= 60:
 
                 st.success(
-                    f"{ TEXT[language]['best_choice']} — "
+                    f"{TEXT[language]['best_choice']} — "
                     f"{waste_info['action']}"
                 )
 
             else:
-                st.warning(
-                  f"{TEXT[language]['manual_verify']} because AI confidence is low."
-              )
 
-                
+                st.warning(
+                    TEXT[language]["manual_verify"]
+                )
 
             st.info(
                 f"🗑️ **Disposal Guidance:** "
@@ -1881,7 +1923,7 @@ if image is not None:
 
                 st.markdown(
                     f"### {TEXT[language]['reuse_idea']}"
-                 )
+                )
 
                 st.write(
                     waste_info["reuse"]
@@ -1894,7 +1936,7 @@ if image is not None:
             with st.container(border=True):
 
                 st.markdown(
-                    f"### { TEXT[language]['environmental_impact']}"
+                    f"### {TEXT[language]['environmental_impact']}"
                 )
 
                 st.write(
@@ -1914,24 +1956,28 @@ if image is not None:
                 if biotech_info["is_organic"]:
 
                     st.success(
-                         TEXT[language]["organic_detected"]
+                        TEXT[language]["organic_detected"]
                     )
 
                     st.markdown(
                         f"""
-                          <div class="eco-card-green">
+                        <div class="eco-card-green">
 
-                    <div class="eco-card-title">
-                    {TEXT[language]["high_biological"]}
-                    </div>
+                            <div class="eco-card-title">
+                                {TEXT[language]["high_biological"]}
+                            </div>
 
-                    This waste can potentially be treated through biological processes and converted into useful organic matter.
-                    </div>""",
+                            This waste can potentially be treated
+                            through biological processes and converted
+                            into useful organic matter.
+
+                        </div>
+                        """,
                         unsafe_allow_html=True
                     )
 
                     st.write(
-                        f"**{ TEXT[language]['treatment_pathway']}:** "
+                        f"**{TEXT[language]['treatment_pathway']}:** "
                         f"{biotech_info['process']}"
                     )
 
@@ -1960,7 +2006,7 @@ if image is not None:
                 st.markdown(
                     f"""
                     <div class="confidence-number">
-                    {score}/10
+                        {score}/10
                     </div>
                     """,
                     unsafe_allow_html=True
@@ -1975,39 +2021,41 @@ if image is not None:
                 )
 
             # =================================================
-            # SAVE
+            # SAVE TO HISTORY
             # =================================================
 
-            image_path = save_scan_image(image)
+            image_path = save_scan_image(
+                image
+            )
 
             save_analysis(
-              waste_type=predicted_class,
-              confidence=confidence,
-              action=waste_info["action"],
-              eco_score=score,
-              image_path=image_path,
-              location=location,
-              college=college,
-              biotech_potential=(
-                "High"
-                if biotech_info["is_organic"]
-                else "Low"
-          ),
-          environmental_level=(
-                "High Positive Impact"
-                 if score >= 9
-                else "Moderate Positive Impact"
-                 if score >= 7
-                else "Low Positive Impact"
-          )
-)
+                waste_type=predicted_class,
+                confidence=confidence,
+                action=waste_info["action"],
+                eco_score=score,
+                image_path=image_path,
+                location=location,
+                college=college,
+                biotech_potential=(
+                    "High"
+                    if biotech_info["is_organic"]
+                    else "Low"
+                ),
+                environmental_level=(
+                    "High Positive Impact"
+                    if score >= 9
+                    else "Moderate Positive Impact"
+                    if score >= 7
+                    else "Low Positive Impact"
+                )
+            )
 
             st.success(
-                 TEXT[language]["saved_history"]
+                TEXT[language]["saved_history"]
             )
 
             # =================================================
-            # RESET
+            # SCAN ANOTHER ITEM
             # =================================================
 
             st.markdown("")
@@ -2018,7 +2066,6 @@ if image is not None:
             ):
 
                 st.rerun()
-
 
 # ============================================================
 # AI ASSISTANT
