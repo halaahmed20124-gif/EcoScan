@@ -643,6 +643,9 @@ img {
 
 </style>
 """, unsafe_allow_html=True)
+st.markdown("""
+<style>
+
 /* ============================================================
    ECOSCAN HOME - ECO TECH UI
    ============================================================ */
@@ -771,7 +774,7 @@ img {
 .quick-title {
     color: #173f29;
     font-size: 17px;
-    font-weight: 750;
+    font-weight: 700;
     margin-bottom: 7px;
 }
 
@@ -916,6 +919,9 @@ img {
     }
 
 }
+
+</style>
+""", unsafe_allow_html=True)
 # ============================================================
 # DATABASE
 # ============================================================
